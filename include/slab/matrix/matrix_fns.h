@@ -25,7 +25,10 @@
 #include <type_traits>
 
 #include "slab/__config"
+
+#ifndef _SLAB_USE_NO_LAPACK
 #include "slab/matrix/lapack_interface.h"
+#endif
 
 #include "slab/matrix/fns/eye.h"
 #include "slab/matrix/fns/ones.h"
