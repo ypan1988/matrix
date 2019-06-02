@@ -212,8 +212,8 @@ class PackedMatrix {
   std::size_t n_cols() const { return desc_.extents[1]; }
 
   reference operator()(std::size_t i, std::size_t j) {
-    assert(i < n_rows());
-    assert(j < n_cols());
+    _SLAB_ASSERT(i < n_rows(), "row index out of bounds");
+    _SLAB_ASSERT(j < n_cols(), "column index out of bounds");
 
     if (!this->desc_.other_half(i, j))
       return PackedMatrixElement<T, TRI>(*this, i, j,
@@ -225,8 +225,8 @@ class PackedMatrix {
   }
 
   const T operator()(std::size_t i, std::size_t j) const {
-    assert(i < n_rows());
-    assert(j < n_cols());
+    _SLAB_ASSERT(i < n_rows(), "row index out of bounds");
+    _SLAB_ASSERT(j < n_cols(), "column index out of bounds");
 
     if (!this->desc_.other_half(i, j))
       return *(this->data() + this->desc_(i, j));
@@ -235,8 +235,8 @@ class PackedMatrix {
   }
 
   void assign_element(std::size_t i, std::size_t j, const T &val) {
-    assert(i < n_rows());
-    assert(j < n_cols());
+    _SLAB_ASSERT(i < n_rows(), "row index out of bounds");
+    _SLAB_ASSERT(j < n_cols(), "column index out of bounds");
 
     if (!this->desc_.other_half(i, j))
       *(this->data() + this->desc_(i, j)) = val;
