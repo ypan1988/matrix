@@ -20,13 +20,13 @@
 #ifndef _SLAB_MATRIX_MATRIX_BASE_H
 #define _SLAB_MATRIX_MATRIX_BASE_H
 
-#include <cassert>
 #include <cstddef>
 #include <cstdio>
 
 #include <iostream>
 
 #include "slab/__config"
+#include "slab/__error"
 
 #include "slab/matrix/matrix_slice.h"
 #include "slab/matrix/support.h"
@@ -57,7 +57,7 @@ class MatrixBase {
   static constexpr std::size_t order() { return order_; }
   //! #elements in the nth dimension
   std::size_t extent(std::size_t n) const {
-    assert(n < order_);
+    _SLAB_ASSERT(n < order_, "index out of bounds");
     return desc_.extents[n];
   }
   //! total number of elements
@@ -91,7 +91,7 @@ template <typename T, std::size_t N>
 template <typename... Args>
 Enable_if<matrix_impl::Requesting_element<Args...>(), T &> MatrixBase<T, N>::
 operator()(Args... args) {
-  assert(matrix_impl::check_bounds(this->desc_, args...));
+  _SLAB_ASSERT(matrix_impl::check_bounds(this->desc_, args...), "index out of bounds");
   return *(data() + this->desc_(args...));
 }
 
@@ -99,7 +99,7 @@ template <typename T, std::size_t N>
 template <typename... Args>
 Enable_if<matrix_impl::Requesting_element<Args...>(), const T &>
 MatrixBase<T, N>::operator()(Args... args) const {
-  assert(matrix_impl::check_bounds(this->desc_, args...));
+  _SLAB_ASSERT(matrix_impl::check_bounds(this->desc_, args...), "index out of bounds");
   return *(data() + this->desc_(args...));
 }
 
