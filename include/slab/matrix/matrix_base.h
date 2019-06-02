@@ -91,7 +91,8 @@ template <typename T, std::size_t N>
 template <typename... Args>
 Enable_if<matrix_impl::Requesting_element<Args...>(), T &> MatrixBase<T, N>::
 operator()(Args... args) {
-  _SLAB_ASSERT(matrix_impl::check_bounds(this->desc_, args...), "index out of bounds");
+  _SLAB_ASSERT(matrix_impl::check_bounds(this->desc_, args...),
+               "index out of bounds");
   return *(data() + this->desc_(args...));
 }
 
@@ -99,7 +100,8 @@ template <typename T, std::size_t N>
 template <typename... Args>
 Enable_if<matrix_impl::Requesting_element<Args...>(), const T &>
 MatrixBase<T, N>::operator()(Args... args) const {
-  _SLAB_ASSERT(matrix_impl::check_bounds(this->desc_, args...), "index out of bounds");
+  _SLAB_ASSERT(matrix_impl::check_bounds(this->desc_, args...),
+               "index out of bounds");
   return *(data() + this->desc_(args...));
 }
 

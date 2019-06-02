@@ -20,7 +20,6 @@
 #ifndef _SLAB_MATRIX_MATRIX_SLICE_H
 #define _SLAB_MATRIX_MATRIX_SLICE_H
 
-#include <cassert>
 #include <cstddef>
 
 #include <algorithm>
@@ -29,6 +28,7 @@
 #include <iostream>
 #include <numeric>  // std::inner_product
 
+#include "slab/__config"
 #include "slab/matrix/support.h"
 
 _SLAB_BEGIN_NAMESPACE
@@ -79,7 +79,7 @@ template <std::size_t N>
 MatrixSlice<N>::MatrixSlice(std::size_t s,
                             std::initializer_list<std::size_t> exts)
     : start(s) {
-  assert(exts.size() == N);
+  _SLAB_ASSERT(exts.size() == N, "dimension mismatch");
   std::copy(exts.begin(), exts.end(), extents.begin());
   size = matrix_impl::compute_strides(extents, strides);
 }
@@ -89,7 +89,7 @@ MatrixSlice<N>::MatrixSlice(std::size_t s,
                             std::initializer_list<std::size_t> exts,
                             std::initializer_list<std::size_t> strs)
     : start(s) {
-  assert(exts.size() == N);
+  _SLAB_ASSERT(exts.size() == N, "dimension mismatch");
   std::copy(exts.begin(), exts.end(), extents.begin());
   std::copy(strs.begin(), strs.end(), strides.begin());
   size = matrix_impl::compute_size(extents);
@@ -98,7 +98,7 @@ MatrixSlice<N>::MatrixSlice(std::size_t s,
 template <std::size_t N>
 MatrixSlice<N>::MatrixSlice(const std::array<std::size_t, N> &exts)
     : start{0}, extents(exts) {
-  assert(exts.size() == N);
+  _SLAB_ASSERT(exts.size() == N, "dimension mismatch");
   size = matrix_impl::compute_strides(extents, strides);
 }
 
@@ -126,7 +126,7 @@ std::size_t MatrixSlice<N>::operator()(Dims... dims) const {
 template <std::size_t N>
 std::size_t MatrixSlice<N>::offset(
     const std::array<std::size_t, N> &pos) const {
-  assert(pos.size() == N);
+  _SLAB_ASSERT(pos.size() == N, "dimension mismatch");
   return start +
          std::inner_product(pos.begin(), pos.end(), strides.begin(), size_t{0});
 }
