@@ -139,7 +139,7 @@ void MatrixSlice<N>::clear() {
   strides.fill(0);
 }
 
-template <size_t N>
+template <std::size_t N>
 bool same_extents(const MatrixSlice<N> &a, const MatrixSlice<N> &b) {
   return a.extents == b.extents;
 }
