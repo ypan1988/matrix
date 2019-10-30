@@ -106,7 +106,7 @@ std::size_t compute_strides(const std::array<std::size_t, N> &exts,
 }
 
 template <std::size_t N>
-std::size_t compute_size(const std::array<size_t, N> &exts) {
+std::size_t compute_size(const std::array<std::size_t, N> &exts) {
   return std::accumulate(exts.begin(), exts.end(), 1,
                          std::multiplies<std::size_t>{});
 }
@@ -167,12 +167,12 @@ void slice_dim(std::size_t offset, const MatrixSlice<N> &desc,
 
 template <typename... Args>
 constexpr bool Requesting_element() {
-  return All(Convertible<Args, size_t>()...);
+  return All(Convertible<Args, std::size_t>()...);
 }
 
 template <typename... Args>
 constexpr bool Requesting_slice() {
-  return All((Convertible<Args, size_t>() || Same<Args, slice>())...) &&
+  return All((Convertible<Args, std::size_t>() || Same<Args, slice>())...) &&
          Some(Same<Args, slice>()...);
 }
 
@@ -197,7 +197,7 @@ std::size_t do_slice_dim(const MatrixSlice<N> &os, MatrixSlice<N> &ns,
                          slice s) {
   std::size_t i = N - NRest;
   ns.strides[i] = s.stride * os.strides[i];
-  ns.extents[i] = (s.length == size_t(-1))
+  ns.extents[i] = (s.length == std::size_t(-1))
                       ? (os.extents[i] - s.start + s.stride - 1) / s.stride
                       : s.length;
   return s.start * os.strides[i];
@@ -208,7 +208,7 @@ std::size_t do_slice_dim2(const MatrixSlice<N> &os, MatrixSlice<N> &ns, slice s,
                           std::size_t NRest) {
   std::size_t i = N - NRest;
   ns.strides[i] = s.stride * os.strides[i];
-  ns.extents[i] = (s.length == size_t(-1))
+  ns.extents[i] = (s.length == std::size_t(-1))
                       ? (os.extents[i] - s.start + s.stride - 1) / s.stride
                       : s.length;
   return s.start * os.strides[i];
