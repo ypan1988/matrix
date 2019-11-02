@@ -17,6 +17,28 @@
 /// @file rcpp_as_wrap.h
 /// @brief Data interchange between R and C++ for the Matrix template
 
+inline void Rf_copyCubeByRow(SEXP target, SEXP source) {
+  SEXP dims = Rf_getAttrib(source, R_DimSymbol);
+
+  int dim0 = INTEGER(dims)[0];
+  int dim1 = INTEGER(dims)[1];
+  int dim2 = INTEGER(dims)[2];
+
+  int s_idx = 0, t_idx = 0;
+  for (int i = 0; i != dim0; ++i) {
+    for (int j = 0; j != dim1; ++j) {
+      for (int k = 0; k != dim2; ++k, ++t_idx) {
+        s_idx = k * (dim0 * dim1) + j * dim0 + i;
+
+        if (Rf_isReal(source))
+          REAL(target)[t_idx] = REAL(source)[s_idx];
+        else if (Rf_isInteger(source))
+          INTEGER(target)[t_idx] = INTEGER(source)[s_idx];
+      }
+    }
+  }
+}
+
 template <typename T, std::size_t N>
 Matrix<T, N>::Matrix(SEXP s) {
   SEXP dims = Rf_getAttrib(s, R_DimSymbol);
@@ -49,22 +71,8 @@ Matrix<T, N>::Matrix(SEXP s) {
   Rf_setAttrib(s2, R_DimSymbol, dims2);
   if (num_dims <= 2)
     Rf_copyMatrix(s2, s, TRUE);
-  else if (num_dims == 3) {
-    int s1_idx = 0, s2_idx = 0;
-    Rcpp::Rcout << exts[2] << " " << exts[1] << " " << exts[0] << std::endl;
-    for (int i = 0; i != exts[2]; ++i) {
-      for (int j = 0; j != exts[1]; ++j) {
-        for (int k = 0; k != exts[0]; ++k, ++s2_idx) {
-          s1_idx = k * (exts[2] * exts[1]) + j * exts[2] + i;
-
-          if (Rf_isReal(s))
-            REAL(s2)[s2_idx] = REAL(s)[s1_idx];
-          else if (Rf_isInteger(s))
-            INTEGER(s2)[s2_idx] = INTEGER(s)[s1_idx];
-        }
-      }
-    }
-  }
+  else if (num_dims == 3)
+    Rf_copyCubeByRow(s2, s);
 
   elems_.reserve(num_elem);
   for (int i = 0; i != num_elem; ++i) {
