@@ -54,29 +54,6 @@ inline Matrix<double, 2> solve(const Matrix<double, 2> &a,
 }
 
 template <>
-inline Matrix<float, 2> solve(const Matrix<float, 2> &a,
-                              const Matrix<float, 2> &b) {
-  assert(a.n_rows() == b.n_rows());
-  assert(a.n_rows() == a.n_cols());
-
-  std::size_t n = a.n_rows();
-  std::size_t nrhs = b.n_cols();
-  std::size_t lda = a.n_cols();
-  std::size_t ldb = b.n_cols();
-
-  Matrix<float, 2> a_copy(a);
-  Matrix<int, 1> ipiv(n);
-  Matrix<float, 2> b_copy(b);
-
-  int info =
-      LAPACKE_sgesv(LAPACK_ROW_MAJOR, (int)n, (int)nrhs, (float *)a_copy.data(),
-                    (int)lda, ipiv.data(), (float *)b_copy.data(), (int)ldb);
-  if (info < 0) _SLAB_ERROR("parameter i had an illegal value.");
-
-  return b_copy;
-}
-
-template <>
 inline Matrix<std::complex<double>, 2> solve(
     const Matrix<std::complex<double>, 2> &a,
     const Matrix<std::complex<double>, 2> &b) {
@@ -97,6 +74,30 @@ inline Matrix<std::complex<double>, 2> solve(
       reinterpret_cast<lapack_complex_double *>(a_copy.data()), (int)lda,
       ipiv.data(), reinterpret_cast<lapack_complex_double *>(b_copy.data()),
       (int)ldb);
+  if (info < 0) _SLAB_ERROR("parameter i had an illegal value.");
+
+  return b_copy;
+}
+
+#ifndef _SLAB_USE_R_LAPACK
+template <>
+inline Matrix<float, 2> solve(const Matrix<float, 2> &a,
+                              const Matrix<float, 2> &b) {
+  assert(a.n_rows() == b.n_rows());
+  assert(a.n_rows() == a.n_cols());
+
+  std::size_t n = a.n_rows();
+  std::size_t nrhs = b.n_cols();
+  std::size_t lda = a.n_cols();
+  std::size_t ldb = b.n_cols();
+
+  Matrix<float, 2> a_copy(a);
+  Matrix<int, 1> ipiv(n);
+  Matrix<float, 2> b_copy(b);
+
+  int info =
+      LAPACKE_sgesv(LAPACK_ROW_MAJOR, (int)n, (int)nrhs, (float *)a_copy.data(),
+                    (int)lda, ipiv.data(), (float *)b_copy.data(), (int)ldb);
   if (info < 0) _SLAB_ERROR("parameter i had an illegal value.");
 
   return b_copy;
@@ -127,6 +128,7 @@ inline Matrix<std::complex<float>, 2> solve(
 
   return b_copy;
 }
+#endif
 
 template <typename T>
 inline Matrix<T, 2> solve(const Matrix<T, 2> &a) {

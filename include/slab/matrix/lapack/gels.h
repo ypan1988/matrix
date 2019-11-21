@@ -33,23 +33,30 @@ inline int lapack_gels(char trans, Matrix<T, 2> &a, Matrix<T, 2> &b) {
   int lda = a.n_cols();
   int ldb = b.n_cols();
 
+  T *a_ptr = a.data() + a.descriptor().start;
+  T *b_ptr = b.data() + b.descriptor().start;
+
   int info = 0;
   if (is_double<T>::value) {
-    info = LAPACKE_dgels(LAPACK_ROW_MAJOR, trans, m, n, nrhs,
-                         (double *)a.data(), lda, (double *)b.data(), ldb);
+    info = LAPACKE_dgels(LAPACK_ROW_MAJOR, trans, m, n, nrhs, (double *)a_ptr,
+                         lda, (double *)b_ptr, ldb);
+  }
+#ifndef _SLAB_USE_R_LAPACK
+  else if (is_complex_double<T>::value) {
+    info = LAPACKE_zgels(LAPACK_ROW_MAJOR, trans, m, n, nrhs,
+                         reinterpret_cast<lapack_complex_double *>(a_ptr), lda,
+                         reinterpret_cast<lapack_complex_double *>(b_ptr), ldb);
   } else if (is_float<T>::value) {
-    info = LAPACKE_sgels(LAPACK_ROW_MAJOR, trans, m, n, nrhs, (float *)a.data(),
-                         lda, (float *)b.data(), ldb);
-  } else if (is_complex_double<T>::value) {
-    info =
-        LAPACKE_zgels(LAPACK_ROW_MAJOR, trans, m, n, nrhs,
-                      reinterpret_cast<lapack_complex_double *>(a.data()), lda,
-                      reinterpret_cast<lapack_complex_double *>(b.data()), ldb);
+    info = LAPACKE_sgels(LAPACK_ROW_MAJOR, trans, m, n, nrhs, (float *)a_ptr,
+                         lda, (float *)b_ptr, ldb);
   } else if (is_complex_float<T>::value) {
-    info =
-        LAPACKE_cgels(LAPACK_ROW_MAJOR, trans, m, n, nrhs,
-                      reinterpret_cast<lapack_complex_float *>(a.data()), lda,
-                      reinterpret_cast<lapack_complex_float *>(b.data()), ldb);
+    info = LAPACKE_cgels(LAPACK_ROW_MAJOR, trans, m, n, nrhs,
+                         reinterpret_cast<lapack_complex_float *>(a_ptr), lda,
+                         reinterpret_cast<lapack_complex_float *>(b_ptr), ldb);
+  }
+#endif
+  else {
+    _SLAB_ERROR("lapack_gels(): unsupported element type.");
   }
 
   return info;

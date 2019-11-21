@@ -40,17 +40,27 @@ inline int lapack_gesvd(char jobu, char jobvt, Matrix<T, 2> &a, Matrix<T, 1> &s,
   vt = Matrix<T, 2>(n, n);
   superb = Matrix<T, 1>(std::min(m, n));
 
+  T *a_ptr = a.data() + a.descriptor().start;
+  T *s_ptr = s.data() + s.descriptor().start;
+  T *u_ptr = u.data() + u.descriptor().start;
+  T *vt_ptr = vt.data() + vt.descriptor().start;
+  T *superb_ptr = superb.data() + superb.descriptor().start;
+
   int info = 0;
   if (is_double<T>::value) {
-    info =
-        LAPACKE_dgesvd(LAPACK_ROW_MAJOR, jobu, jobvt, m, n, (double *)a.data(),
-                       lda, (double *)s.data(), (double *)u.data(), ldu,
-                       (double *)vt.data(), ldvt, (double *)superb.data());
-  } else if (is_float<T>::value) {
-    info =
-        LAPACKE_sgesvd(LAPACK_ROW_MAJOR, jobu, jobvt, m, n, (float *)a.data(),
-                       lda, (float *)s.data(), (float *)u.data(), ldu,
-                       (float *)vt.data(), ldvt, (float *)superb.data());
+    info = LAPACKE_dgesvd(LAPACK_ROW_MAJOR, jobu, jobvt, m, n, (double *)a_ptr,
+                          lda, (double *)s_ptr, (double *)u_ptr, ldu,
+                          (double *)vt_ptr, ldvt, (double *)superb_ptr);
+  }
+#ifndef _SLAB_USE_R_LAPACK
+  else if (is_float<T>::value) {
+    info = LAPACKE_sgesvd(LAPACK_ROW_MAJOR, jobu, jobvt, m, n, (float *)a_ptr,
+                          lda, (float *)s_ptr, (float *)u_ptr, ldu,
+                          (float *)vt_ptr, ldvt, (float *)superb_ptr);
+  }
+#endif
+  else {
+    _SLAB_ERROR("lapack_gesvd(): unsupported element type.");
   }
 
   if (jobu == 'S') u = u.cols(0, std::min(m, n) - 1);

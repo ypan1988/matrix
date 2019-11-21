@@ -31,19 +31,26 @@ inline int lapack_potrf(Matrix<T, 2> &a) {
   int n = a.n_rows();
   int lda = a.n_cols();
 
+  T *a_ptr = a.data() + a.descriptor().start;
+
   int info = 0;
   if (is_double<T>::value) {
-    info = LAPACKE_dpotrf(LAPACK_ROW_MAJOR, uplo, n, (double *)a.data(), lda);
-  } else if (is_float<T>::value) {
-    info = LAPACKE_spotrf(LAPACK_ROW_MAJOR, uplo, n, (float *)a.data(), lda);
-  } else if (is_complex_double<T>::value) {
-    info = LAPACKE_zpotrf(LAPACK_ROW_MAJOR, uplo, n,
-                          reinterpret_cast<lapack_complex_double *>(a.data()),
-                          lda);
-  } else if (is_complex_float<T>::value) {
+    info = LAPACKE_dpotrf(LAPACK_ROW_MAJOR, uplo, n, (double *)a_ptr, lda);
+  }
+#ifndef _SLAB_USE_R_LAPACK
+  else if (is_complex_double<T>::value) {
     info =
-        LAPACKE_cpotrf(LAPACK_ROW_MAJOR, uplo, n,
-                       reinterpret_cast<lapack_complex_float *>(a.data()), lda);
+        LAPACKE_zpotrf(LAPACK_ROW_MAJOR, uplo, n,
+                       reinterpret_cast<lapack_complex_double *>(a_ptr), lda);
+  } else if (is_float<T>::value) {
+    info = LAPACKE_spotrf(LAPACK_ROW_MAJOR, uplo, n, (float *)a_ptr, lda);
+  } else if (is_complex_float<T>::value) {
+    info = LAPACKE_cpotrf(LAPACK_ROW_MAJOR, uplo, n,
+                          reinterpret_cast<lapack_complex_float *>(a_ptr), lda);
+  }
+#endif
+  else {
+    _SLAB_ERROR("lapack_potrf(): unsupported element type.");
   }
 
   return info;

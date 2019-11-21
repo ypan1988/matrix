@@ -38,21 +38,25 @@ inline bool inverse(Matrix<T, 2> &b, const Matrix<T, 2> &a) {
     info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR, m, n, (double *)b.data(), lda,
                           ipiv.data());
     LAPACKE_dgetri(LAPACK_ROW_MAJOR, n, (double *)b.data(), lda, ipiv.data());
-  } else if (is_float<T>::value) {
-    info = LAPACKE_sgetrf(LAPACK_ROW_MAJOR, m, n, (float *)b.data(), lda,
-                          ipiv.data());
-    LAPACKE_sgetri(LAPACK_ROW_MAJOR, n, (float *)b.data(), lda, ipiv.data());
-  } else if (is_complex_double<T>::value) {
+  }
+#ifndef _SLAB_USE_R_LAPACK
+  else if (is_complex_double<T>::value) {
     info = LAPACKE_zgetrf(LAPACK_ROW_MAJOR, m, n,
                           (lapack_complex_double *)b.data(), lda, ipiv.data());
     LAPACKE_zgetri(LAPACK_ROW_MAJOR, n, (lapack_complex_double *)b.data(), lda,
                    ipiv.data());
+  } else if (is_float<T>::value) {
+    info = LAPACKE_sgetrf(LAPACK_ROW_MAJOR, m, n, (float *)b.data(), lda,
+                          ipiv.data());
+    LAPACKE_sgetri(LAPACK_ROW_MAJOR, n, (float *)b.data(), lda, ipiv.data());
   } else if (is_complex_float<T>::value) {
     info = LAPACKE_cgetrf(LAPACK_ROW_MAJOR, m, n,
                           (lapack_complex_float *)b.data(), lda, ipiv.data());
     LAPACKE_cgetri(LAPACK_ROW_MAJOR, n, (lapack_complex_float *)b.data(), lda,
                    ipiv.data());
-  } else {
+  }
+#endif
+  else {
     _SLAB_ERROR("inverse(): unspported element type.");
   }
 
@@ -76,21 +80,25 @@ inline bool inverse(Matrix<T, 2> &b, const MatrixRef<T, 2> &a) {
     info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR, m, n, (double *)b.data(), lda,
                           ipiv.data());
     LAPACKE_dgetri(LAPACK_ROW_MAJOR, n, (double *)b.data(), lda, ipiv.data());
-  } else if (is_float<T>::value) {
-    info = LAPACKE_sgetrf(LAPACK_ROW_MAJOR, m, n, (float *)b.data(), lda,
-                          ipiv.data());
-    LAPACKE_sgetri(LAPACK_ROW_MAJOR, n, (float *)b.data(), lda, ipiv.data());
-  } else if (is_complex_double<T>::value) {
+  }
+#ifndef _SLAB_USE_R_LAPACK
+  else if (is_complex_double<T>::value) {
     info = LAPACKE_zgetrf(LAPACK_ROW_MAJOR, m, n,
                           (lapack_complex_double *)b.data(), lda, ipiv.data());
     LAPACKE_zgetri(LAPACK_ROW_MAJOR, n, (lapack_complex_double *)b.data(), lda,
                    ipiv.data());
+  } else if (is_float<T>::value) {
+    info = LAPACKE_sgetrf(LAPACK_ROW_MAJOR, m, n, (float *)b.data(), lda,
+                          ipiv.data());
+    LAPACKE_sgetri(LAPACK_ROW_MAJOR, n, (float *)b.data(), lda, ipiv.data());
   } else if (is_complex_float<T>::value) {
     info = LAPACKE_cgetrf(LAPACK_ROW_MAJOR, m, n,
                           (lapack_complex_float *)b.data(), lda, ipiv.data());
     LAPACKE_cgetri(LAPACK_ROW_MAJOR, n, (lapack_complex_float *)b.data(), lda,
                    ipiv.data());
-  } else {
+  }
+#endif
+  else {
     _SLAB_ERROR("inverse(): unspported element type.");
   }
 

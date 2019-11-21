@@ -36,14 +36,21 @@ inline int lapack_getrf(Matrix<T, 2> &a, Matrix<int, 1> &ipiv) {
   ipiv.clear();
   ipiv = Matrix<int, 1>(std::max(1, std::min(m, n)));
 
+  T *a_ptr = a.data() + a.descriptor().start;
   const int lda = n;
 
   if (is_double<T>::value) {
-    info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR, m, n, (double *)a.data(), lda,
+    info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR, m, n, (double *)a_ptr, lda,
                           ipiv.data());
-  } else if (is_float<T>::value) {
-    info = LAPACKE_sgetrf(LAPACK_ROW_MAJOR, m, n, (float *)a.data(), lda,
+  }
+#ifndef _SLAB_USE_R_LAPACK
+  else if (is_float<T>::value) {
+    info = LAPACKE_sgetrf(LAPACK_ROW_MAJOR, m, n, (float *)a_ptr, lda,
                           ipiv.data());
+  }
+#endif
+  else {
+    _SLAB_ERROR("lapack_getrf(): unsupported element type.");
   }
 
   return info;
