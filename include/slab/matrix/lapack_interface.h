@@ -32,6 +32,8 @@
 #if defined(_SLAB_USE_NO_LAPACK)
 #elif defined(_SLAB_USE_MKL)
 #include "mkl.h"
+#elif defined(_SLAB_USE_R_LAPACK)
+#include "rlapack/lapacke.h"
 #else
 extern "C" {
 #include "lapacke.h"

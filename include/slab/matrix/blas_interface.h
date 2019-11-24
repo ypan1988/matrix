@@ -34,6 +34,8 @@
 #include "mkl.h"
 #elif defined(_SLAB_USE_SUNPERF)
 #include "sunperf.h"
+#elif defined(_SLAB_USE_R_BLAS)
+#include "rblas/cblas.h"
 #else
 #include "cblas.h"
 #endif
