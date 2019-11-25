@@ -54,7 +54,7 @@ Matrix<T, N>::Matrix(SEXP s) {
     num_dims = Rf_length(dims);
 
   SEXP s2 = PROTECT(Rf_allocVector(TYPEOF(s), (R_xlen_t)num_elem));
-  SEXP dims2 = PROTECT(Rf_allocVector(TYPEOF(dims), (R_xlen_t)num_dims));
+  SEXP dims2 = PROTECT(Rf_allocVector(INTSXP, (R_xlen_t)num_dims));
 
   std::array<std::size_t, N> exts;
   if (num_dims == 1) {
