@@ -1,12 +1,11 @@
+#include "matrix.h"
+
 #include <cassert>
 #include <iostream>
 #include <string>
-
-#include "matrix.h"
 using namespace matrix_lib;
 
-void test_print(const Matrix<double, 1>& m, std::string msg = "")
-{
+void test_print(const Matrix<double, 1>& m, std::string msg = "") {
   if (!msg.empty()) std::cout << msg << std::endl;
   for (uword r = 0; r != m.n_rows(); ++r) {
     std::cout << m(r);
@@ -14,8 +13,7 @@ void test_print(const Matrix<double, 1>& m, std::string msg = "")
   }
 }
 
-void test_print(const Matrix<double, 2>& m, std::string msg = "")
-{
+void test_print(const Matrix<double, 2>& m, std::string msg = "") {
   if (!msg.empty()) std::cout << msg << std::endl;
   for (uword r = 0; r != m.n_rows(); ++r) {
     for (uword c = 0; c != m.n_cols(); ++c) {
@@ -25,8 +23,7 @@ void test_print(const Matrix<double, 2>& m, std::string msg = "")
   }
 }
 
-void test_print(const Matrix<double, 3>& m, std::string msg = "")
-{
+void test_print(const Matrix<double, 3>& m, std::string msg = "") {
   if (!msg.empty()) std::cout << msg << std::endl;
   for (uword s = 0; s != m.n_slices(); ++s) {
     std::cout << "slice " << s << ":" << std::endl;
@@ -38,7 +35,6 @@ void test_print(const Matrix<double, 3>& m, std::string msg = "")
     }
     std::cout << '\n';
   }
-
 }
 
 void matrix_test_constructor_02(bool print = false) {
@@ -64,7 +60,8 @@ void matrix_test_constructor_02(bool print = false) {
 }
 
 void matrix_test_constructor_03(bool print = false) {
-  std::cout << "[TEST]: Constructs a Matrix with val, n_rows, n_cols and n_slices\n";
+  std::cout
+      << "[TEST]: Constructs a Matrix with val, n_rows, n_cols and n_slices\n";
 
   Matrix<double, 1> mat1d(1.0, 4);
   if (print) test_print(mat1d, "mat1d =");
@@ -79,11 +76,11 @@ void matrix_test_constructor_03(bool print = false) {
   Matrix<double, 3> mat3d(3.0, 4, 3, 2);
   if (print) test_print(mat3d, "mat3d =");
   assert(mat3d(0, 0, 0) == 3.0);
-  assert(mat3d(mat3d.n_rows() - 1, mat3d.n_cols() - 1, mat3d.n_slices() - 1) == 3.0);
+  assert(mat3d(mat3d.n_rows() - 1, mat3d.n_cols() - 1, mat3d.n_slices() - 1) ==
+         3.0);
 }
 
-int main()
-{
+int main() {
   bool print_flag = false;
   matrix_test_constructor_02(print_flag);
   matrix_test_constructor_03(print_flag);
