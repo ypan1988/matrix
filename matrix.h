@@ -102,6 +102,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
  public:
   typedef _Tp value_type;
 
+  Matrix() : _Matrix_base<_Tp>(), _M_d1(0) {}
   Matrix(uword __n1) : _Matrix_base<_Tp>(__n1), _M_d1(__n1) {}
 
   Matrix(const value_type& __x, uword __n1)
@@ -167,6 +168,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
  public:
   typedef _Tp value_type;
 
+  Matrix() : _Matrix_base<_Tp>(), _M_d1(0), _M_d2(0) {}
   Matrix(uword __n1, uword __n2)
       : _Matrix_base<_Tp>(__n1 * __n2), _M_d1(__n1), _M_d2(__n2) {}
 
@@ -249,6 +251,7 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
  public:
   typedef _Tp value_type;
 
+  Matrix() : _Matrix_base<_Tp>(), _M_d1(0), _M_d2(0), _M_d3(0) {}
   Matrix(uword __n1, uword __n2, uword __n3)
       : _Matrix_base<_Tp>(__n1 * __n2 * __n3),
         _M_d1(__n1),

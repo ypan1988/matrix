@@ -37,6 +37,28 @@ void test_print(const Matrix<double, 3>& m, std::string msg = "") {
   }
 }
 
+void matrix_test_constructor_01(bool print = false) {
+  std::cout << "[TEST]: Constructs an empty Matrix\n";
+
+  Matrix<double, 1> mat1d;
+  if (print) test_print(mat1d, "mat1d =");
+  assert(mat1d.n_elem() == 0);
+  assert(mat1d.n_rows() == 0);
+
+  Matrix<double, 2> mat2d;
+  if (print) test_print(mat2d, "mat2d =");
+  assert(mat2d.n_elem() == 0);
+  assert(mat2d.n_rows() == 0);
+  assert(mat2d.n_cols() == 0);
+
+  Matrix<double, 3> mat3d;
+  if (print) test_print(mat3d, "mat3d =");
+  assert(mat3d.n_elem() == 0);
+  assert(mat3d.n_rows() == 0);
+  assert(mat3d.n_cols() == 0);
+  assert(mat3d.n_slices() == 0);
+}
+
 void matrix_test_constructor_02(bool print = false) {
   std::cout << "[TEST]: Constructs a Matrix with n_rows, n_cols and n_slices\n";
 
@@ -82,6 +104,7 @@ void matrix_test_constructor_03(bool print = false) {
 
 int main() {
   bool print_flag = false;
+  matrix_test_constructor_01(print_flag);
   matrix_test_constructor_02(print_flag);
   matrix_test_constructor_03(print_flag);
 
