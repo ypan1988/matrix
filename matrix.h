@@ -129,89 +129,33 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
     return this->_M_elem[__n1];
   }
 
- public:  // Scalar computed assignment.
-  Matrix& operator+=(const value_type& __x) {
-    this->_M_elem += __x;
-    return *this;
-  }
-  Matrix& operator-=(const value_type& __x) {
-    this->_M_elem -= __x;
-    return *this;
-  }
-  Matrix& operator*=(const value_type& __x) {
-    this->_M_elem *= __x;
-    return *this;
-  }
-  Matrix& operator/=(const value_type& __x) {
-    this->_M_elem /= __x;
-    return *this;
-  }
-  Matrix& operator%=(const value_type& __x) {
-    this->_M_elem %= __x;
-    return *this;
-  }
-  Matrix& operator&=(const value_type& __x) {
-    this->_M_elem &= __x;
-    return *this;
-  }
-  Matrix& operator|=(const value_type& __x) {
-    this->_M_elem |= __x;
-    return *this;
-  }
-  Matrix& operator^=(const value_type& __x) {
-    this->_M_elem ^= __x;
-    return *this;
-  }
-  Matrix& operator<<=(const value_type& __x) {
-    this->_M_elem <<= __x;
-    return *this;
-  }
-  Matrix& operator>>=(const value_type& __x) {
-    this->_M_elem >>= __x;
-    return *this;
-  }
+ public:
+  // clang-format off
+  Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }
+  Matrix& operator-=(const value_type& __x) { this->_M_elem -= __x; return *this; }
+  Matrix& operator*=(const value_type& __x) { this->_M_elem *= __x; return *this; }
+  Matrix& operator/=(const value_type& __x) { this->_M_elem /= __x; return *this; }
+  Matrix& operator%=(const value_type& __x) { this->_M_elem %= __x; return *this; }
+  Matrix& operator&=(const value_type& __x) { this->_M_elem &= __x; return *this; }
+  Matrix& operator|=(const value_type& __x) { this->_M_elem |= __x; return *this; }
+  Matrix& operator^=(const value_type& __x) { this->_M_elem ^= __x; return *this; }
+  Matrix& operator<<=(const value_type& __x) { this->_M_elem <<= __x; return *this; }
+  Matrix& operator>>=(const value_type& __x) { this->_M_elem >>= __x; return *this; }
+  // clang-format on
 
  public:
-  Matrix& operator+=(const Matrix& __x) {
-    this->_M_elem += __x._M_elem;
-    return *this;
-  }
-  Matrix& operator-=(const Matrix& __x) {
-    this->_M_elem -= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator*=(const Matrix& __x) {
-    this->_M_elem *= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator/=(const Matrix& __x) {
-    this->_M_elem /= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator%=(const Matrix& __x) {
-    this->_M_elem %= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator&=(const Matrix& __x) {
-    this->_M_elem &= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator|=(const Matrix& __x) {
-    this->_M_elem |= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator^=(const Matrix& __x) {
-    this->_M_elem ^= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator<<=(const Matrix& __x) {
-    this->_M_elem <<= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator>>=(const Matrix& __x) {
-    this->_M_elem >>= __x._M_elem;
-    return *this;
-  }
+  // clang-format off
+  Matrix& operator+=(const Matrix& __x) { this->_M_elem += __x._M_elem; return *this; }
+  Matrix& operator-=(const Matrix& __x) { this->_M_elem -= __x._M_elem; return *this; }
+  Matrix& operator*=(const Matrix& __x) { this->_M_elem *= __x._M_elem; return *this; }
+  Matrix& operator/=(const Matrix& __x) { this->_M_elem /= __x._M_elem; return *this; }
+  Matrix& operator%=(const Matrix& __x) { this->_M_elem %= __x._M_elem; return *this; }
+  Matrix& operator&=(const Matrix& __x) { this->_M_elem &= __x._M_elem; return *this; }
+  Matrix& operator|=(const Matrix& __x) { this->_M_elem |= __x._M_elem; return *this; }
+  Matrix& operator^=(const Matrix& __x) { this->_M_elem ^= __x._M_elem; return *this; }
+  Matrix& operator<<=(const Matrix& __x) { this->_M_elem <<= __x._M_elem; return *this; }
+  Matrix& operator>>=(const Matrix& __x) { this->_M_elem >>= __x._M_elem; return *this; }
+  // clang-format on
 };
 
 //-----------------------------------------------------------------------------
@@ -264,89 +208,33 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
     return this->_M_elem[std::slice(__c * _M_d1, _M_d1, 1)];
   }
 
- public:  // Scalar computed assignment.
-  Matrix& operator+=(const value_type& __x) {
-    this->_M_elem += __x;
-    return *this;
-  }
-  Matrix& operator-=(const value_type& __x) {
-    this->_M_elem -= __x;
-    return *this;
-  }
-  Matrix& operator*=(const value_type& __x) {
-    this->_M_elem *= __x;
-    return *this;
-  }
-  Matrix& operator/=(const value_type& __x) {
-    this->_M_elem /= __x;
-    return *this;
-  }
-  Matrix& operator%=(const value_type& __x) {
-    this->_M_elem %= __x;
-    return *this;
-  }
-  Matrix& operator&=(const value_type& __x) {
-    this->_M_elem &= __x;
-    return *this;
-  }
-  Matrix& operator|=(const value_type& __x) {
-    this->_M_elem |= __x;
-    return *this;
-  }
-  Matrix& operator^=(const value_type& __x) {
-    this->_M_elem ^= __x;
-    return *this;
-  }
-  Matrix& operator<<=(const value_type& __x) {
-    this->_M_elem <<= __x;
-    return *this;
-  }
-  Matrix& operator>>=(const value_type& __x) {
-    this->_M_elem >>= __x;
-    return *this;
-  }
+ public:
+  // clang-format off
+  Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }
+  Matrix& operator-=(const value_type& __x) { this->_M_elem -= __x; return *this; }
+  Matrix& operator*=(const value_type& __x) { this->_M_elem *= __x; return *this; }
+  Matrix& operator/=(const value_type& __x) { this->_M_elem /= __x; return *this; }
+  Matrix& operator%=(const value_type& __x) { this->_M_elem %= __x; return *this; }
+  Matrix& operator&=(const value_type& __x) { this->_M_elem &= __x; return *this; }
+  Matrix& operator|=(const value_type& __x) { this->_M_elem |= __x; return *this; }
+  Matrix& operator^=(const value_type& __x) { this->_M_elem ^= __x; return *this; }
+  Matrix& operator<<=(const value_type& __x) { this->_M_elem <<= __x; return *this; }
+  Matrix& operator>>=(const value_type& __x) { this->_M_elem >>= __x; return *this; }
+  // clang-format on
 
  public:
-  Matrix& operator+=(const Matrix& __x) {
-    this->_M_elem += __x._M_elem;
-    return *this;
-  }
-  Matrix& operator-=(const Matrix& __x) {
-    this->_M_elem -= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator*=(const Matrix& __x) {
-    this->_M_elem *= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator/=(const Matrix& __x) {
-    this->_M_elem /= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator%=(const Matrix& __x) {
-    this->_M_elem %= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator&=(const Matrix& __x) {
-    this->_M_elem &= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator|=(const Matrix& __x) {
-    this->_M_elem |= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator^=(const Matrix& __x) {
-    this->_M_elem ^= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator<<=(const Matrix& __x) {
-    this->_M_elem <<= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator>>=(const Matrix& __x) {
-    this->_M_elem >>= __x._M_elem;
-    return *this;
-  }
+  // clang-format off
+  Matrix& operator+=(const Matrix& __x) { this->_M_elem += __x._M_elem; return *this; }
+  Matrix& operator-=(const Matrix& __x) { this->_M_elem -= __x._M_elem; return *this; }
+  Matrix& operator*=(const Matrix& __x) { this->_M_elem *= __x._M_elem; return *this; }
+  Matrix& operator/=(const Matrix& __x) { this->_M_elem /= __x._M_elem; return *this; }
+  Matrix& operator%=(const Matrix& __x) { this->_M_elem %= __x._M_elem; return *this; }
+  Matrix& operator&=(const Matrix& __x) { this->_M_elem &= __x._M_elem; return *this; }
+  Matrix& operator|=(const Matrix& __x) { this->_M_elem |= __x._M_elem; return *this; }
+  Matrix& operator^=(const Matrix& __x) { this->_M_elem ^= __x._M_elem; return *this; }
+  Matrix& operator<<=(const Matrix& __x) { this->_M_elem <<= __x._M_elem; return *this; }
+  Matrix& operator>>=(const Matrix& __x) { this->_M_elem >>= __x._M_elem; return *this; }
+  // clang-format on
 };
 
 //-----------------------------------------------------------------------------
@@ -412,89 +300,33 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
     return this->_M_elem[__n1 + __n2 * _M_d1 + __n3 * _M_d1xd2];
   }
 
- public:  // Scalar computed assignment.
-  Matrix& operator+=(const value_type& __x) {
-    this->_M_elem += __x;
-    return *this;
-  }
-  Matrix& operator-=(const value_type& __x) {
-    this->_M_elem -= __x;
-    return *this;
-  }
-  Matrix& operator*=(const value_type& __x) {
-    this->_M_elem *= __x;
-    return *this;
-  }
-  Matrix& operator/=(const value_type& __x) {
-    this->_M_elem /= __x;
-    return *this;
-  }
-  Matrix& operator%=(const value_type& __x) {
-    this->_M_elem %= __x;
-    return *this;
-  }
-  Matrix& operator&=(const value_type& __x) {
-    this->_M_elem &= __x;
-    return *this;
-  }
-  Matrix& operator|=(const value_type& __x) {
-    this->_M_elem |= __x;
-    return *this;
-  }
-  Matrix& operator^=(const value_type& __x) {
-    this->_M_elem ^= __x;
-    return *this;
-  }
-  Matrix& operator<<=(const value_type& __x) {
-    this->_M_elem <<= __x;
-    return *this;
-  }
-  Matrix& operator>>=(const value_type& __x) {
-    this->_M_elem >>= __x;
-    return *this;
-  }
+ public:
+  // clang-format off
+  Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }
+  Matrix& operator-=(const value_type& __x) { this->_M_elem -= __x; return *this; }
+  Matrix& operator*=(const value_type& __x) { this->_M_elem *= __x; return *this; }
+  Matrix& operator/=(const value_type& __x) { this->_M_elem /= __x; return *this; }
+  Matrix& operator%=(const value_type& __x) { this->_M_elem %= __x; return *this; }
+  Matrix& operator&=(const value_type& __x) { this->_M_elem &= __x; return *this; }
+  Matrix& operator|=(const value_type& __x) { this->_M_elem |= __x; return *this; }
+  Matrix& operator^=(const value_type& __x) { this->_M_elem ^= __x; return *this; }
+  Matrix& operator<<=(const value_type& __x) { this->_M_elem <<= __x; return *this; }
+  Matrix& operator>>=(const value_type& __x) { this->_M_elem >>= __x; return *this; }
+  // clang-format on
 
  public:
-  Matrix& operator+=(const Matrix& __x) {
-    this->_M_elem += __x._M_elem;
-    return *this;
-  }
-  Matrix& operator-=(const Matrix& __x) {
-    this->_M_elem -= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator*=(const Matrix& __x) {
-    this->_M_elem *= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator/=(const Matrix& __x) {
-    this->_M_elem /= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator%=(const Matrix& __x) {
-    this->_M_elem %= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator&=(const Matrix& __x) {
-    this->_M_elem &= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator|=(const Matrix& __x) {
-    this->_M_elem |= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator^=(const Matrix& __x) {
-    this->_M_elem ^= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator<<=(const Matrix& __x) {
-    this->_M_elem <<= __x._M_elem;
-    return *this;
-  }
-  Matrix& operator>>=(const Matrix& __x) {
-    this->_M_elem >>= __x._M_elem;
-    return *this;
-  }
+  // clang-format off
+  Matrix& operator+=(const Matrix& __x) { this->_M_elem += __x._M_elem; return *this; }
+  Matrix& operator-=(const Matrix& __x) { this->_M_elem -= __x._M_elem; return *this; }
+  Matrix& operator*=(const Matrix& __x) { this->_M_elem *= __x._M_elem; return *this; }
+  Matrix& operator/=(const Matrix& __x) { this->_M_elem /= __x._M_elem; return *this; }
+  Matrix& operator%=(const Matrix& __x) { this->_M_elem %= __x._M_elem; return *this; }
+  Matrix& operator&=(const Matrix& __x) { this->_M_elem &= __x._M_elem; return *this; }
+  Matrix& operator|=(const Matrix& __x) { this->_M_elem |= __x._M_elem; return *this; }
+  Matrix& operator^=(const Matrix& __x) { this->_M_elem ^= __x._M_elem; return *this; }
+  Matrix& operator<<=(const Matrix& __x) { this->_M_elem <<= __x._M_elem; return *this; }
+  Matrix& operator>>=(const Matrix& __x) { this->_M_elem >>= __x._M_elem; return *this; }
+  // clang-format on
 };
 
 //-----------------------------------------------------------------------------
