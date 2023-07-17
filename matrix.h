@@ -95,13 +95,14 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 
   Matrix() : _Matrix_base<_Tp>(), _M_d1(0) {}
   Matrix(uword __n1) : _Matrix_base<_Tp>(__n1), _M_d1(__n1) {}
-
   Matrix(const value_type& __x, uword __n1)
       : _Matrix_base<_Tp>(__x, __n1), _M_d1(__n1) {}
   Matrix(const value_type* __x, uword __n1)
       : _Matrix_base<_Tp>(__x, __n1), _M_d1(__n1) {}
   Matrix(const std::valarray<_Tp>& __x, uword __n1)
-      : _Matrix_base<_Tp>(__x), _M_d1(__n1) {}
+      : _Matrix_base<_Tp>(__x), _M_d1(__n1) {
+    if (__x.size() != __n1) error("1D Cstor error: dimension mismatch");
+  }
   Matrix(const std::slice_array<_Tp>& __x, uword __n1)
       : _Matrix_base<_Tp>(__x), _M_d1(__n1) {}
 
@@ -162,13 +163,14 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix() : _Matrix_base<_Tp>(), _M_d1(0), _M_d2(0) {}
   Matrix(uword __n1, uword __n2)
       : _Matrix_base<_Tp>(__n1 * __n2), _M_d1(__n1), _M_d2(__n2) {}
-
   Matrix(const value_type& __x, uword __n1, uword __n2)
       : _Matrix_base<_Tp>(__x, __n1 * __n2), _M_d1(__n1), _M_d2(__n2) {}
   Matrix(const value_type* __x, uword __n1, uword __n2)
       : _Matrix_base<_Tp>(__x, __n1 * __n2), _M_d1(__n1), _M_d2(__n2) {}
   Matrix(const std::valarray<_Tp>& __x, uword __n1, uword __n2)
-      : _Matrix_base<_Tp>(__x), _M_d1(__n1), _M_d2(__n2) {}
+      : _Matrix_base<_Tp>(__x), _M_d1(__n1), _M_d2(__n2) {
+    if (__x.size() != __n1 * __n2) error("2D Cstor error: dimension mismatch");
+  }
   Matrix(const std::slice_array<_Tp>& __x, uword __n1, uword __n2)
       : _Matrix_base<_Tp>(__x), _M_d1(__n1), _M_d2(__n2) {}
   uword n_rows() const { return _M_d1; }
@@ -266,7 +268,10 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
         _M_d1(__n1),
         _M_d2(__n2),
         _M_d3(__n3),
-        _M_d1xd2(__n1 * __n2) {}
+        _M_d1xd2(__n1 * __n2) {
+    if (__x.size() != __n1 * __n2 * __n3)
+      error("3D Cstor error: dimension mismatch");
+  }
   Matrix(const std::slice_array<_Tp>& __x, uword __n1, uword __n2, uword __n3)
       : _Matrix_base<_Tp>(__x),
         _M_d1(__n1),
