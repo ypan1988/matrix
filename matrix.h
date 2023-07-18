@@ -15,6 +15,7 @@
 #ifndef __MATRIX_H
 #define __MATRIX_H
 
+#include <algorithm>
 #include <cstddef>
 #include <iostream>
 #include <string>

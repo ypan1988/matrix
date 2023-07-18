@@ -182,6 +182,93 @@ void matrix_test_constructor_05(bool print = false) {
   assert(mat3d(3, 2, 1) == 24.0);
 }
 
+void matrix_test_member_function_sum(bool print = false) {
+  std::cout << "[TEST]: Calculates the sum of all elements\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d(a1, 4);
+  if (print) {
+    test_print(mat1d, "mat1d =");
+    std::cout << "mat1d.sum() = " << mat1d.sum() << std::endl;
+  }
+  assert(mat1d.sum() == 10.0);
+
+  const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d(a2, 4, 3);
+  if (print) {
+    test_print(mat2d, "mat2d =");
+    std::cout << "mat2d.sum() = " << mat2d.sum() << std::endl;
+  }
+  assert(mat2d.sum() == 78.0);
+
+  const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                       13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  Matrix<double, 3> mat3d(a3, 4, 3, 2);
+  if (print) {
+    test_print(mat3d, "mat3d =");
+    std::cout << "mat3d.sum() = " << mat3d.sum() << std::endl;
+  }
+  assert(mat3d.sum() == 300.0);
+}
+
+void matrix_test_member_function_min(bool print = false) {
+  std::cout << "[TEST]: Gets the smallest element\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d(a1, 4);
+  if (print) {
+    test_print(mat1d, "mat1d =");
+    std::cout << "mat1d.min() = " << mat1d.min() << std::endl;
+  }
+  assert(mat1d.min() == 1.0);
+
+  const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d(a2, 4, 3);
+  if (print) {
+    test_print(mat2d, "mat2d =");
+    std::cout << "mat2d.min() = " << mat2d.min() << std::endl;
+  }
+  assert(mat2d.min() == 1.0);
+
+  const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                       13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  Matrix<double, 3> mat3d(a3, 4, 3, 2);
+  if (print) {
+    test_print(mat3d, "mat3d =");
+    std::cout << "mat3d.min() = " << mat3d.min() << std::endl;
+  }
+  assert(mat3d.min() == 1.0);
+}
+
+void matrix_test_member_function_max(bool print = false) {
+  std::cout << "[TEST]: Gets the largest element\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d(a1, 4);
+  if (print) {
+    test_print(mat1d, "mat1d =");
+    std::cout << "mat1d.max() = " << mat1d.max() << std::endl;
+  }
+  assert(mat1d.max() == 4.0);
+
+  const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d(a2, 4, 3);
+  if (print) {
+    test_print(mat2d, "mat2d =");
+    std::cout << "mat2d.max() = " << mat2d.max() << std::endl;
+  }
+  assert(mat2d.max() == 12.0);
+
+  const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                       13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  Matrix<double, 3> mat3d(a3, 4, 3, 2);
+  if (print) {
+    test_print(mat3d, "mat3d =");
+    std::cout << "mat3d.max() = " << mat3d.max() << std::endl;
+  }
+  assert(mat3d.max() == 24.0);
+}
+
 int main() {
   bool print_flag = false;
   matrix_test_constructor_01(print_flag);
@@ -189,6 +276,9 @@ int main() {
   matrix_test_constructor_03(print_flag);
   matrix_test_constructor_04(print_flag);
   matrix_test_constructor_05(print_flag);
+  matrix_test_member_function_sum(print_flag);
+  matrix_test_member_function_min(print_flag);
+  matrix_test_member_function_max(print_flag);
 
   return 0;
 }
