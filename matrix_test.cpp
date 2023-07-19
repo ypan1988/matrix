@@ -377,6 +377,37 @@ void matrix_test_member_function_max(bool print = false) {
   assert(mat3d.max() == 24.0);
 }
 
+void matrix_1d_test_slice_array(bool print = false) {
+  std::cout
+      << "[TEST]: 1D Matrix's std::slice_array related member functions\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d(a1, 4);
+  if (print) test_print(mat1d, "mat1d =");
+  mat1d.subvec(2, 3) = 5.0;
+  if (print) std::cout << "Apply mat1d.subvec(2, 3) = 5\n";
+  if (print) test_print(mat1d, "mat1d =");
+  assert(mat1d(0) == 1.0);
+  assert(mat1d(1) == 2.0);
+  assert(mat1d(2) == 5.0);
+  assert(mat1d(3) == 5.0);
+
+  // mat1d.subvec(0, 2) is a std::slice_arrary
+  const Matrix<double, 1> mat1d_a(mat1d.subvec(0, 2));
+  if (print) test_print(mat1d_a, "mat1d_a =");
+  assert(mat1d_a.n_elem() == 3);
+  assert(mat1d_a(0) == 1.0);
+  assert(mat1d_a(1) == 2.0);
+  assert(mat1d_a(2) == 5.0);
+
+  // mat1d_a.subvec(0, 2) is a std::valarray
+  Matrix<double, 1> mat1d_b(mat1d_a.subvec(0, 1));
+  if (print) test_print(mat1d_a, "mat1d_b =");
+  assert(mat1d_b.n_elem() == 2);
+  assert(mat1d_b(0) == 1.0);
+  assert(mat1d_b(1) == 2.0);
+}
+
 int main() {
   bool print_flag = false;
   matrix_test_constructor_01(print_flag);
@@ -393,6 +424,8 @@ int main() {
   matrix_test_member_function_sum(print_flag);
   matrix_test_member_function_min(print_flag);
   matrix_test_member_function_max(print_flag);
+
+  matrix_1d_test_slice_array(print_flag);
 
   return 0;
 }

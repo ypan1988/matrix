@@ -100,12 +100,15 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
       : _Matrix_base<_Tp>(__x, __n1), _M_d1(__n1) {}
   Matrix(const value_type* __x, uword __n1)
       : _Matrix_base<_Tp>(__x, __n1), _M_d1(__n1) {}
+  Matrix(const std::valarray<_Tp>& __x)
+      : _Matrix_base<_Tp>(__x), _M_d1(__x.size()) {}
   Matrix(const std::valarray<_Tp>& __x, uword __n1)
       : _Matrix_base<_Tp>(__x), _M_d1(__n1) {
     if (__x.size() != __n1) error("1D Cstor error: dimension mismatch");
   }
-  Matrix(const std::slice_array<_Tp>& __x, uword __n1)
-      : _Matrix_base<_Tp>(__x), _M_d1(__n1) {}
+  Matrix(const std::slice_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) {
+    _M_d1 = this->n_elem();
+  }
 
   uword n_rows() const { return _M_d1; }
 
@@ -121,6 +124,15 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   const value_type& operator()(uword __n1) const {
     range_check(__n1);
     return this->_M_elem[__n1];
+  }
+
+  std::valarray<_Tp> subvec(std::size_t __i, std::size_t __j) const {
+    if (__i > __j || __j >= _M_d1) error("1D subscription error");
+    return this->_M_elem[std::slice(__i, __j - __i + 1, 1)];
+  }
+  std::slice_array<_Tp> subvec(std::size_t __i, std::size_t __j) {
+    if (__i > __j || __j >= _M_d1) error("1D subscription error");
+    return this->_M_elem[std::slice(__i, __j - __i + 1, 1)];
   }
 
  public:
