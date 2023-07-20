@@ -408,6 +408,51 @@ void matrix_1d_test_slice_array(bool print = false) {
   assert(mat1d_b(1) == 2.0);
 }
 
+void matrix_2d_test_slice_array(bool print = false) {
+  std::cout
+      << "[TEST]: 2D Matrix's std::slice_array related member functions\n";
+
+  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d_a(arr, 4, 3);
+
+  if (print) test_print(mat2d_a, "mat2d_a =");
+  if (print) std::cout << "Apply mat2d_a.row(3) = 0\n";
+  mat2d_a.row(3) = 0;
+  if (print) test_print(mat2d_a, "mat2d_a =");
+  assert(mat2d_a(0, 0) == 1);
+  assert(mat2d_a(0, 1) == 5);
+  assert(mat2d_a(0, 2) == 9);
+  assert(mat2d_a(3, 0) == 0);
+  assert(mat2d_a(3, 1) == 0);
+  assert(mat2d_a(3, 2) == 0);
+
+  if (print) std::cout << "Apply mat2d_a.col(1) = 8\n";
+  mat2d_a.col(1) = 8;
+  if (print) test_print(mat2d_a, "mat2d_a =");
+  assert(mat2d_a(0, 1) == 8);
+  assert(mat2d_a(1, 1) == 8);
+  assert(mat2d_a(2, 1) == 8);
+  assert(mat2d_a(3, 1) == 8);
+
+  const Matrix<double, 2> mat2d_b(arr, 4, 3);
+  if (print) test_print(mat2d_b, "mat2d_b =");
+
+  Matrix<double, 1> mat1d_a(mat2d_b.row(3));
+  if (print) test_print(mat1d_a, "mat1d_a (mat2d_b.row(3)) =");
+  assert(mat1d_a.n_elem() == 3);
+  assert(mat1d_a(0) == 4.0);
+  assert(mat1d_a(1) == 8.0);
+  assert(mat1d_a(2) == 12.0);
+
+  Matrix<double, 1> mat1d_b(mat2d_b.col(1));
+  if (print) test_print(mat1d_b, "mat1d_b (mat2d_b.col(1)) =");
+  assert(mat1d_b.n_elem() == 4);
+  assert(mat1d_b(0) == 5.0);
+  assert(mat1d_b(1) == 6.0);
+  assert(mat1d_b(2) == 7.0);
+  assert(mat1d_b(3) == 8.0);
+}
+
 int main() {
   bool print_flag = false;
   matrix_test_constructor_01(print_flag);
@@ -426,6 +471,7 @@ int main() {
   matrix_test_member_function_max(print_flag);
 
   matrix_1d_test_slice_array(print_flag);
+  matrix_2d_test_slice_array(print_flag);
 
   return 0;
 }

@@ -204,12 +204,23 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
     return this->_M_elem[__n1 + __n2 * _M_d1];
   }
 
+  std::valarray<_Tp> diag() const {
+    return this->_M_elem[std::slice(0, std::min(_M_d1, _M_d2), _M_d1 + 1)];
+  }
   std::slice_array<_Tp> diag() {
     return this->_M_elem[std::slice(0, std::min(_M_d1, _M_d2), _M_d1 + 1)];
+  }
+  std::valarray<_Tp> row(uword __r) const {
+    range_check(__r, 0);
+    return this->_M_elem[std::slice(__r, _M_d2, _M_d1)];
   }
   std::slice_array<_Tp> row(uword __r) {
     range_check(__r, 0);
     return this->_M_elem[std::slice(__r, _M_d2, _M_d1)];
+  }
+  std::valarray<_Tp> col(uword __c) const {
+    range_check(0, __c);
+    return this->_M_elem[std::slice(__c * _M_d1, _M_d1, 1)];
   }
   std::slice_array<_Tp> col(uword __c) {
     range_check(0, __c);
