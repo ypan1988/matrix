@@ -137,6 +137,12 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 
  public:
   // clang-format off
+  Matrix operator+() const { return *this; }
+  Matrix operator-() const { return Matrix<_Tp, 1>(-this->_M_elem, _M_d1); }
+  // clang-format on
+
+ public:
+  // clang-format off
   Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }
   Matrix& operator-=(const value_type& __x) { this->_M_elem -= __x; return *this; }
   Matrix& operator*=(const value_type& __x) { this->_M_elem *= __x; return *this; }
@@ -226,6 +232,12 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
     range_check(0, __c);
     return this->_M_elem[std::slice(__c * _M_d1, _M_d1, 1)];
   }
+
+ public:
+  // clang-format off
+  Matrix operator+() const { return *this; }
+  Matrix operator-() const { return Matrix<_Tp, 2>(-this->_M_elem, _M_d1, _M_d2); }
+  // clang-format on
 
  public:
   // clang-format off
@@ -322,6 +334,12 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
     range_check(__n1, __n2, __n3);
     return this->_M_elem[__n1 + __n2 * _M_d1 + __n3 * _M_d1xd2];
   }
+
+ public:
+  // clang-format off
+  Matrix operator+() const { return *this; }
+  Matrix operator-() const { return Matrix<_Tp, 3>(-this->_M_elem, _M_d1, _M_d2, _M_d3); }
+  // clang-format on
 
  public:
   // clang-format off
