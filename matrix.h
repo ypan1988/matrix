@@ -135,14 +135,14 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
     return this->_M_elem[std::slice(__i, __j - __i + 1, 1)];
   }
 
- public:
   // clang-format off
+ public:
   Matrix operator+() const { return *this; }
-  Matrix operator-() const { return Matrix<_Tp, 1>(-this->_M_elem, _M_d1); }
-  // clang-format on
+  Matrix operator-() const { return Matrix(-this->_M_elem, _M_d1); }
+  Matrix operator~() const { return Matrix(~this->_M_elem, _M_d1); }
+  Matrix<bool, 1> operator!() const { return Matrix<bool, 1>(!this->_M_elem, _M_d1); }
 
  public:
-  // clang-format off
   Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }
   Matrix& operator-=(const value_type& __x) { this->_M_elem -= __x; return *this; }
   Matrix& operator*=(const value_type& __x) { this->_M_elem *= __x; return *this; }
@@ -153,10 +153,8 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix& operator^=(const value_type& __x) { this->_M_elem ^= __x; return *this; }
   Matrix& operator<<=(const value_type& __x) { this->_M_elem <<= __x; return *this; }
   Matrix& operator>>=(const value_type& __x) { this->_M_elem >>= __x; return *this; }
-  // clang-format on
 
  public:
-  // clang-format off
   Matrix& operator+=(const Matrix& __x) { this->_M_elem += __x._M_elem; return *this; }
   Matrix& operator-=(const Matrix& __x) { this->_M_elem -= __x._M_elem; return *this; }
   Matrix& operator*=(const Matrix& __x) { this->_M_elem *= __x._M_elem; return *this; }
@@ -233,14 +231,14 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
     return this->_M_elem[std::slice(__c * _M_d1, _M_d1, 1)];
   }
 
- public:
   // clang-format off
+ public:
   Matrix operator+() const { return *this; }
-  Matrix operator-() const { return Matrix<_Tp, 2>(-this->_M_elem, _M_d1, _M_d2); }
-  // clang-format on
+  Matrix operator-() const { return Matrix(-this->_M_elem, _M_d1, _M_d2); }
+  Matrix operator~() const { return Matrix(~this->_M_elem, _M_d1, _M_d2); }
+  Matrix<bool, 2> operator!() const { return Matrix<bool, 2>(!this->_M_elem, _M_d1, _M_d2); }
 
  public:
-  // clang-format off
   Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }
   Matrix& operator-=(const value_type& __x) { this->_M_elem -= __x; return *this; }
   Matrix& operator*=(const value_type& __x) { this->_M_elem *= __x; return *this; }
@@ -251,10 +249,8 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix& operator^=(const value_type& __x) { this->_M_elem ^= __x; return *this; }
   Matrix& operator<<=(const value_type& __x) { this->_M_elem <<= __x; return *this; }
   Matrix& operator>>=(const value_type& __x) { this->_M_elem >>= __x; return *this; }
-  // clang-format on
 
  public:
-  // clang-format off
   Matrix& operator+=(const Matrix& __x) { this->_M_elem += __x._M_elem; return *this; }
   Matrix& operator-=(const Matrix& __x) { this->_M_elem -= __x._M_elem; return *this; }
   Matrix& operator*=(const Matrix& __x) { this->_M_elem *= __x._M_elem; return *this; }
@@ -335,14 +331,14 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
     return this->_M_elem[__n1 + __n2 * _M_d1 + __n3 * _M_d1xd2];
   }
 
- public:
   // clang-format off
+ public:
   Matrix operator+() const { return *this; }
-  Matrix operator-() const { return Matrix<_Tp, 3>(-this->_M_elem, _M_d1, _M_d2, _M_d3); }
-  // clang-format on
+  Matrix operator-() const { return Matrix(-this->_M_elem, _M_d1, _M_d2, _M_d3); }
+  Matrix operator~() const { return Matrix(~this->_M_elem, _M_d1, _M_d2, _M_d3); }
+  Matrix<bool, 3> operator!() const { return Matrix<bool, 3>(!this->_M_elem, _M_d1, _M_d2, _M_d3); }
 
  public:
-  // clang-format off
   Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }
   Matrix& operator-=(const value_type& __x) { this->_M_elem -= __x; return *this; }
   Matrix& operator*=(const value_type& __x) { this->_M_elem *= __x; return *this; }
@@ -353,10 +349,8 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   Matrix& operator^=(const value_type& __x) { this->_M_elem ^= __x; return *this; }
   Matrix& operator<<=(const value_type& __x) { this->_M_elem <<= __x; return *this; }
   Matrix& operator>>=(const value_type& __x) { this->_M_elem >>= __x; return *this; }
-  // clang-format on
 
  public:
-  // clang-format off
   Matrix& operator+=(const Matrix& __x) { this->_M_elem += __x._M_elem; return *this; }
   Matrix& operator-=(const Matrix& __x) { this->_M_elem -= __x._M_elem; return *this; }
   Matrix& operator*=(const Matrix& __x) { this->_M_elem *= __x._M_elem; return *this; }
