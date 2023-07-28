@@ -83,7 +83,7 @@ struct _Matrix_base {
   value_type* data() { return &(_M_elem[0]); }
   const value_type* data() const { return &(_M_elem[0]); }
   void set_elem(const std::valarray<_Tp>& __x) { _M_elem = __x; }
-  const std::valarray<_Tp>& get_elem() const { return _M_elem; }
+  std::valarray<_Tp> get_elem() const { return _M_elem; }
   uword n_elem() const { return _M_elem.size(); }
 
  public:  // Other member functions.
@@ -107,19 +107,20 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 
  public:
   Matrix() = default;
-  Matrix(uword __n1) : _Matrix_base<_Tp>{__n1}, _M_dims{{ __n1 }} {}
-  Matrix(const std::array<uword, 1>& __dims)
-      : _Matrix_base<_Tp>{__dims[0]}, _M_dims(__dims) {}
+  Matrix(uword __n1) : _Matrix_base<_Tp>(__n1), _M_dims({__n1}) {}
   Matrix(const value_type& __x, uword __n1)
-      : _Matrix_base<_Tp>{__x, __n1}, _M_dims{{__n1}} {}
+      : _Matrix_base<_Tp>(__x, __n1), _M_dims({__n1}) {}
   Matrix(const value_type* __x, uword __n1)
-      : _Matrix_base<_Tp>{__x, __n1}, _M_dims{{__n1}} {}
-  Matrix(const std::valarray<_Tp>& __x)
-      : _Matrix_base<_Tp>{__x}, _M_dims{{__x.size()}} {}
+      : _Matrix_base<_Tp>(__x, __n1), _M_dims({__n1}) {}
   Matrix(const std::valarray<_Tp>& __x, uword __n1)
-      : _Matrix_base<_Tp>{__x}, _M_dims{{__n1}} {
+      : _Matrix_base<_Tp>(__x), _M_dims({__n1}) {
     if (__x.size() != __n1) error("1D Cstor error: dimension mismatch");
   }
+  Matrix(const std::valarray<_Tp>& __x, const std::array<uword, 1>& __dims)
+    : _Matrix_base<_Tp>(__x), _M_dims(__dims) {
+    if (__x.size() != __dims[0]) error("1D Cstor error: dimension mismatch");
+  }
+  std::array<uword, 1> get_dims() const { return _M_dims; }
 #else
  private:
   uword _M_dims[1];
@@ -127,24 +128,27 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
  public:
   Matrix() : _Matrix_base<_Tp>() { _M_dims[0] = 0; }
   Matrix(uword __n1) : _Matrix_base<_Tp>(__n1) { _M_dims[0] = __n1; }
-  Matrix(uword __dims[1]) : _Matrix_base<_Tp>(__dims[0]) {
-    _M_dims[0] = __dims[0];
-  }
   Matrix(const value_type& __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) {
     _M_dims[0] = __n1;
   }
   Matrix(const value_type* __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) {
     _M_dims[0] = __n1;
   }
-  Matrix(const std::valarray<_Tp>& __x) : _Matrix_base<_Tp>(__x) {
-    _M_dims[0] = __x.size();
-  }
   Matrix(const std::valarray<_Tp>& __x, uword __n1) : _Matrix_base<_Tp>(__x) {
     if (__x.size() != __n1) error("1D Cstor error: dimension mismatch");
     _M_dims[0] = __n1;
   }
+  Matrix(const std::valarray<_Tp>& __x, uword __dims[1]) : _Matrix_base<_Tp>(__x) {
+    if (__x.size() != __dims[0]) error("1D Cstor error: dimension mismatch");
+    _M_dims[0] = __dims[0];
+  }
+  uword* get_dims() const { return _M_dims; }
 #endif
   // clang-format on
+
+  Matrix(const std::valarray<_Tp>& __x) : _Matrix_base<_Tp>(__x) {
+    _M_dims[0] = __x.size();
+  }
 
   // Matrix(const std::slice_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) {
   //   _M_dims[0] = this->n_elem();
@@ -223,17 +227,20 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
  public:
   Matrix() = default;
   Matrix(uword __n1, uword __n2)
-      : _Matrix_base<_Tp>{__n1 * __n2}, _M_dims{{__n1, __n2}} {}
-  Matrix(const std::array<uword, 2>& __dims)
-      : _Matrix_base<_Tp>{__dims[0] * __dims[1]}, _M_dims(__dims) {}
+      : _Matrix_base<_Tp>(__n1 * __n2), _M_dims({__n1, __n2}) {}
   Matrix(const value_type& __x, uword __n1, uword __n2)
-      : _Matrix_base<_Tp>{__x, __n1 * __n2}, _M_dims{{__n1, __n2}} {}
+      : _Matrix_base<_Tp>(__x, __n1 * __n2), _M_dims({__n1, __n2}) {}
   Matrix(const value_type* __x, uword __n1, uword __n2)
-      : _Matrix_base<_Tp>{__x, __n1 * __n2}, _M_dims{{__n1, __n2}} {}
+      : _Matrix_base<_Tp>(__x, __n1 * __n2), _M_dims({__n1, __n2}) {}
   Matrix(const std::valarray<_Tp>& __x, uword __n1, uword __n2)
-      : _Matrix_base<_Tp>(__x), _M_dims{{__n1, __n2}} {
+      : _Matrix_base<_Tp>(__x), _M_dims({__n1, __n2}) {
     if (__x.size() != __n1 * __n2) error("2D Cstor error: dimension mismatch");
   }
+  Matrix(const std::valarray<_Tp>& __x, const std::array<uword, 2>& __dims)
+    : _Matrix_base<_Tp>(__x), _M_dims(__dims) {
+    if (__x.size() != __dims[0] * __dims[1]) error("2D Cstor error: dimension mismatch");
+  }
+  std::array<uword, 2> get_dims() const { return _M_dims; }
 #else
  private:
   uword _M_dims[2];
@@ -259,6 +266,13 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
     if (__x.size() != __n1 * __n2) error("2D Cstor error: dimension mismatch");
     _M_dims[0] = __n1, _M_dims[1] = __n2;
   }
+  Matrix(const std::valarray<_Tp>& __x, uword __dims[2])
+    : _Matrix_base<_Tp>(__x) {
+    if (__x.size() != __dims[0] * __dims[1]) error("2D Cstor error: dimension mismatch");
+    _M_dims[0] = __dims[0], _M_dims[1] = __dims[1];
+  }
+
+  uword* get_dims() const { return _M_dims; }
 #endif
   // clang-format on
 
@@ -355,22 +369,27 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
  public:
   Matrix() = default;
   Matrix(uword __n1, uword __n2, uword __n3)
-      : _Matrix_base<_Tp>{__n1 * __n2 * __n3},
-        _M_dims{{ __n1, __n2, __n3 }}, _M_d1xd2{__n1 * __n2} {}
-  Matrix(const std::array<uword, 3>& __dims)
-      : _Matrix_base<_Tp>{__dims[0] * __dims[1] * __dims[2]}, _M_dims(__dims) {}
+      : _Matrix_base<_Tp>(__n1 * __n2 * __n3),
+        _M_dims({ __n1, __n2, __n3 }), _M_d1xd2(__n1 * __n2) {}
   Matrix(const value_type& __x, uword __n1, uword __n2, uword __n3)
-      : _Matrix_base<_Tp>{__x, __n1 * __n2 * __n3},
-        _M_dims{{ __n1, __n2, __n3 }}, _M_d1xd2{__n1 * __n2} {}
+      : _Matrix_base<_Tp>(__x, __n1 * __n2 * __n3),
+        _M_dims({ __n1, __n2, __n3 }), _M_d1xd2(__n1 * __n2) {}
   Matrix(const value_type* __x, uword __n1, uword __n2, uword __n3)
-      : _Matrix_base<_Tp>{__x, __n1 * __n2 * __n3},
-        _M_dims{{ __n1, __n2, __n3 }}, _M_d1xd2{__n1 * __n2} {}
+      : _Matrix_base<_Tp>(__x, __n1 * __n2 * __n3),
+        _M_dims({ __n1, __n2, __n3 }), _M_d1xd2(__n1 * __n2) {}
   Matrix(const std::valarray<_Tp>& __x, uword __n1, uword __n2, uword __n3)
       : _Matrix_base<_Tp>(__x),
-        _M_dims{{ __n1, __n2, __n3 }}, _M_d1xd2{__n1 * __n2} {
+        _M_dims({ __n1, __n2, __n3 }), _M_d1xd2(__n1 * __n2) {
     if (__x.size() != __n1 * __n2 * __n3)
       error("3D Cstor error: dimension mismatch");
   }
+  Matrix(const std::valarray<_Tp>& __x, const std::array<uword, 3>& __dims)
+    : _Matrix_base<_Tp>(__x),
+    _M_dims(__dims), _M_d1xd2(__dims[0] * __dims[1]) {
+    if (__x.size() != __dims[0] * __dims[1] * __dims[2])
+      error("3D Cstor error: dimension mismatch");
+  }
+  std::array<uword, 3> get_dims() const { return _M_dims; }
 #else
  private:
   uword _M_dims[3];
@@ -399,6 +418,14 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
     _M_dims[0] = __n1, _M_dims[1] = __n2, _M_dims[2] = __n3;
     _M_d1xd2 = __n1 * __n2;
   }
+  Matrix(const std::valarray<_Tp>& __x, uword __dims[3])
+    : _Matrix_base<_Tp>(__x) {
+    if (__x.size() != __dims[0] * __dims[1] * __dims[2])
+      error("3D Cstor error: dimension mismatch");
+    _M_dims[0] = __dims[0], _M_dims[1] = __dims[1], _M_dims[2] = __dims[2];
+    _M_d1xd2 = __dims[0] * __dims[1];
+  }
+  uword* get_dims() const { return _M_dims; }
 #endif
   // clang-format off
 
@@ -464,6 +491,12 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
 };
 
 //-----------------------------------------------------------------------------
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> abs(const Matrix<_Tp, _Size>& __x) {
+  Matrix<_Tp, _Size> __tmp(std::abs(__x.get_elem()), __x.get_dims());
+  return __tmp;
+}
 
 }  // namespace matrix_lib
 
