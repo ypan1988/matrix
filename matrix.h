@@ -502,6 +502,24 @@ inline Matrix<_Tp, _Size> abs(const Matrix<_Tp, _Size>& __x) {
   return __tmp;
 }
 
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> exp(const Matrix<_Tp, _Size>& __x) {
+  Matrix<_Tp, _Size> __tmp(std::exp(__x.get_elem()), __x.get_dims());
+  return __tmp;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> log(const Matrix<_Tp, _Size>& __x) {
+  Matrix<_Tp, _Size> __tmp(std::log(__x.get_elem()), __x.get_dims());
+  return __tmp;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> log10(const Matrix<_Tp, _Size>& __x) {
+  Matrix<_Tp, _Size> __tmp(std::log10(__x.get_elem()), __x.get_dims());
+  return __tmp;
+}
+
 }  // namespace matrix_lib
 
 #endif

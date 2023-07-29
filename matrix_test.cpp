@@ -569,6 +569,49 @@ void matrix_test_abs(bool print = false) {
   assert(mat3d_abs(3, 2, 1) == 24.0);
 }
 
+void matrix_test_exp(bool print = false) {
+  std::cout << "[TEST]: Applies the function exp to each element\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d(a1, 4);
+  if (print) test_print(mat1d, "mat1d =");
+  Matrix<double, 1> mat1d_exp = exp(mat1d);
+  if (print) test_print(mat1d_exp, "mat1d_exp =");
+  assert(std::abs(mat1d_exp(0) - std::exp(1.0)) < 1e-5);
+  assert(std::abs(mat1d_exp(1) - std::exp(2.0)) < 1e-5);
+  assert(std::abs(mat1d_exp(2) - std::exp(3.0)) < 1e-5);
+  assert(std::abs(mat1d_exp(3) - std::exp(4.0)) < 1e-5);
+
+  const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d(a2, 4, 3);
+  if (print) test_print(mat2d, "mat2d =");
+  Matrix<double, 2> mat2d_exp = exp(mat2d);
+  if (print) test_print(mat2d_exp, "mat2d_exp =");
+  assert(std::abs(mat2d_exp(0, 0) - std::exp(1.0)) < 1e-5);
+  assert(std::abs(mat2d_exp(1, 0) - std::exp(2.0)) < 1e-5);
+  assert(std::abs(mat2d_exp(2, 0) - std::exp(3.0)) < 1e-5);
+  assert(std::abs(mat2d_exp(3, 0) - std::exp(4.0)) < 1e-5);
+  assert(std::abs(mat2d_exp(0, 2) - std::exp(9.0)) < 1e-5);
+  assert(std::abs(mat2d_exp(1, 2) - std::exp(10.0)) < 1e-5);
+  assert(std::abs(mat2d_exp(2, 2) - std::exp(11.0)) < 1e-5);
+  assert(std::abs(mat2d_exp(3, 2) - std::exp(12.0)) < 1e-5);
+
+  const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                       13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  Matrix<double, 3> mat3d(a3, 4, 3, 2);
+  if (print) test_print(mat3d, "mat3d =");
+  Matrix<double, 3> mat3d_exp = exp(mat3d);
+  if (print) test_print(mat3d_exp, "mat3d_exp =");
+  assert(std::abs(mat3d_exp(0, 0, 0) - std::exp(1.0)) < 1e-5);
+  assert(std::abs(mat3d_exp(1, 0, 0) - std::exp(2.0)) < 1e-5);
+  assert(std::abs(mat3d_exp(2, 0, 0) - std::exp(3.0)) < 1e-5);
+  assert(std::abs(mat3d_exp(3, 0, 0) - std::exp(4.0)) < 1e-5);
+  assert(std::abs(mat3d_exp(0, 2, 1) - std::exp(21.0)) < 1e-5);
+  assert(std::abs(mat3d_exp(1, 2, 1) - std::exp(22.0)) < 1e-5);
+  assert(std::abs(mat3d_exp(2, 2, 1) - std::exp(23.0)) < 1e-5);
+  assert(std::abs(mat3d_exp(3, 2, 1) - std::exp(24.0)) < 1e-5);
+}
+
 int main() {
   bool print_flag = false;
   matrix_test_constructor_01(print_flag);
@@ -591,6 +634,7 @@ int main() {
   matrix_2d_test_slice_array(print_flag);
 
   matrix_test_abs(print_flag);
+  matrix_test_exp(print_flag);
 
   return 0;
 }
