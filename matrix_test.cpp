@@ -274,7 +274,7 @@ void matrix_test_addition_assignment_operator(bool print = false) {
   if (print) test_print(mat1d_b, "mat1d_b = ");
   if (print) std::cout << "Apply mat1d_b += mat1d_a\n";
   mat1d_b += mat1d_a;
-  if (print) test_print(mat1d_a, "mat1d_b = ");
+  if (print) test_print(mat1d_b, "mat1d_b = ");
   assert(mat1d_b(0) == 3.0);
   assert(mat1d_b(1) == 5.0);
   assert(mat1d_b(2) == 7.0);
@@ -301,7 +301,7 @@ void matrix_test_subtraction_assignment_operator(bool print = false) {
   if (print) test_print(mat1d_b, "mat1d_b = ");
   if (print) std::cout << "Apply mat1d_b -= mat1d_a\n";
   mat1d_b -= mat1d_a;
-  if (print) test_print(mat1d_a, "mat1d_b = ");
+  if (print) test_print(mat1d_b, "mat1d_b = ");
   assert(mat1d_b(0) == 1.0);
   assert(mat1d_b(1) == 1.0);
   assert(mat1d_b(2) == 1.0);
@@ -328,7 +328,7 @@ void matrix_test_multiplication_assignment_operator(bool print = false) {
   if (print) test_print(mat1d_b, "mat1d_b = ");
   if (print) std::cout << "Apply mat1d_b *= mat1d_a\n";
   mat1d_b *= mat1d_a;
-  if (print) test_print(mat1d_a, "mat1d_b = ");
+  if (print) test_print(mat1d_b, "mat1d_b = ");
   assert(mat1d_b(0) == 2.0);
   assert(mat1d_b(1) == 8.0);
   assert(mat1d_b(2) == 18.0);
@@ -355,7 +355,7 @@ void matrix_test_division_assignment_operator(bool print = false) {
   if (print) test_print(mat1d_b, "mat1d_b = ");
   if (print) std::cout << "Apply mat1d_b /= mat1d_a\n";
   mat1d_b /= mat1d_a;
-  if (print) test_print(mat1d_a, "mat1d_b = ");
+  if (print) test_print(mat1d_b, "mat1d_b = ");
   assert(mat1d_b(0) == 2.0);
   assert(mat1d_b(1) == 2.0);
   assert(mat1d_b(2) == 2.0);
@@ -525,6 +525,58 @@ void matrix_2d_test_slice_array(bool print = false) {
   assert(mat1d_b(3) == 8.0);
 }
 
+void matrix_test_binary_addition_operator(bool print = false) {
+  std::cout << "[TEST]: Applies binary addition operators to each element\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a1, 4);
+  Matrix<double, 1> mat1d_b(a1, 4);
+
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  if (print) std::cout << "Apply mat1d_a += 1\n";
+  mat1d_a = mat1d_a + 1.0;
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a(0) == 2.0);
+  assert(mat1d_a(1) == 3.0);
+  assert(mat1d_a(2) == 4.0);
+  assert(mat1d_a(3) == 5.0);
+
+  if (print) test_print(mat1d_b, "mat1d_b = ");
+  if (print) std::cout << "Apply mat1d_b += mat1d_a\n";
+  mat1d_b = mat1d_b + mat1d_a;
+  if (print) test_print(mat1d_b, "mat1d_b = ");
+  assert(mat1d_b(0) == 3.0);
+  assert(mat1d_b(1) == 5.0);
+  assert(mat1d_b(2) == 7.0);
+  assert(mat1d_b(3) == 9.0);
+}
+
+void matrix_test_binary_subtraction_operator(bool print = false) {
+  std::cout << "[TEST]: Applies binary subtraction operators to each element\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a1, 4);
+  Matrix<double, 1> mat1d_b(a1, 4);
+
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  if (print) std::cout << "Apply mat1d_a = mat1d_a - 1.0\n";
+  mat1d_a = mat1d_a - 1.0;
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a(0) == 0.0);
+  assert(mat1d_a(1) == 1.0);
+  assert(mat1d_a(2) == 2.0);
+  assert(mat1d_a(3) == 3.0);
+
+  if (print) test_print(mat1d_b, "mat1d_b = ");
+  if (print) std::cout << "Apply mat1d_b = mat1d_b - mat1d_a\n";
+  mat1d_b = mat1d_b - mat1d_a;
+  if (print) test_print(mat1d_b, "mat1d_b = ");
+  assert(mat1d_b(0) == 1.0);
+  assert(mat1d_b(1) == 1.0);
+  assert(mat1d_b(2) == 1.0);
+  assert(mat1d_b(3) == 1.0);
+}
+
 void matrix_test_abs(bool print = false) {
   std::cout << "[TEST]: Applies the function abs to each element\n";
 
@@ -632,6 +684,9 @@ int main() {
 
   matrix_1d_test_slice_array(print_flag);
   matrix_2d_test_slice_array(print_flag);
+
+  matrix_test_binary_addition_operator(print_flag);
+  matrix_test_binary_subtraction_operator(print_flag);
 
   matrix_test_abs(print_flag);
   matrix_test_exp(print_flag);

@@ -497,6 +497,117 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
 //-----------------------------------------------------------------------------
 
 template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator+(const Matrix<_Tp, _Size>& __x,
+                                    const Matrix<_Tp, _Size>& __y) {
+  Matrix<_Tp, _Size> __tmp(__x);
+  return __tmp += __y;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator-(const Matrix<_Tp, _Size>& __x,
+                                    const Matrix<_Tp, _Size>& __y) {
+  Matrix<_Tp, _Size> __tmp(__x);
+  return __tmp -= __y;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator*(const Matrix<_Tp, _Size>& __x,
+                                    const Matrix<_Tp, _Size>& __y) {
+  Matrix<_Tp, _Size> __tmp(__x);
+  return __tmp *= __y;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator/(const Matrix<_Tp, _Size>& __x,
+                                    const Matrix<_Tp, _Size>& __y) {
+  Matrix<_Tp, _Size> __tmp(__x);
+  return __tmp /= __y;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator%(const Matrix<_Tp, _Size>& __x,
+                                    const Matrix<_Tp, _Size>& __y) {
+  Matrix<_Tp, _Size> __tmp(__x);
+  return __tmp %= __y;
+}
+
+//-----------------------------------------------------------------------------
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator+(const Matrix<_Tp, _Size>& __x,
+                                    const _Tp& __c) {
+  Matrix<_Tp, _Size> __tmp(__x);
+  return __tmp += __c;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator-(const Matrix<_Tp, _Size>& __x,
+                                    const _Tp& __c) {
+  Matrix<_Tp, _Size> __tmp(__x);
+  return __tmp -= __c;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator*(const Matrix<_Tp, _Size>& __x,
+                                    const _Tp& __c) {
+  Matrix<_Tp, _Size> __tmp(__x);
+  return __tmp *= __c;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator/(const Matrix<_Tp, _Size>& __x,
+                                    const _Tp& __c) {
+  Matrix<_Tp, _Size> __tmp(__x);
+  return __tmp /= __c;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator%(const Matrix<_Tp, _Size>& __x,
+                                    const _Tp& __c) {
+  Matrix<_Tp, _Size> __tmp(__x);
+  return __tmp %= __c;
+}
+
+//-----------------------------------------------------------------------------
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator+(const _Tp& __c,
+                                    const Matrix<_Tp, _Size>& __x) {
+  Matrix<_Tp, _Size> __tmp(__c + __x.get_elem(), __x.get_elem());
+  return __tmp;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator-(const _Tp& __c,
+                                    const Matrix<_Tp, _Size>& __x) {
+  Matrix<_Tp, _Size> __tmp(__c - __x.get_elem(), __x.get_elem());
+  return __tmp;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator*(const _Tp& __c,
+                                    const Matrix<_Tp, _Size>& __x) {
+  Matrix<_Tp, _Size> __tmp(__c * __x.get_elem(), __x.get_elem());
+  return __tmp;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator/(const _Tp& __c,
+                                    const Matrix<_Tp, _Size>& __x) {
+  Matrix<_Tp, _Size> __tmp(__c / __x.get_elem(), __x.get_elem());
+  return __tmp;
+}
+
+template <class _Tp, uword _Size>
+inline Matrix<_Tp, _Size> operator%(const _Tp& __c,
+                                    const Matrix<_Tp, _Size>& __x) {
+  Matrix<_Tp, _Size> __tmp(__c % __x.get_elem(), __x.get_elem());
+  return __tmp;
+}
+
+//-----------------------------------------------------------------------------
+
+template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> abs(const Matrix<_Tp, _Size>& __x) {
   Matrix<_Tp, _Size> __tmp(std::abs(__x.get_elem()), __x.get_dims());
   return __tmp;
