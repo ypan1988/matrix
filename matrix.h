@@ -145,13 +145,13 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   uword* get_dims() const { return _M_dims; }
 #endif
 
-  Matrix(const std::valarray<_Tp>& __x) : _Matrix_base<_Tp>(__x) {
-    _M_dims[0] = __x.size();
-  }
-
-  // Matrix(const std::slice_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) {
-  //   _M_dims[0] = this->n_elem();
-  // }
+  // clang-format off
+  Matrix(const std::valarray<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = __x.size(); }
+  Matrix(const std::slice_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = this->n_elem(); }
+  Matrix(const std::gslice_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = this->n_elem(); }
+  Matrix(const std::mask_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = this->n_elem(); }
+  Matrix(const std::indirect_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = this->n_elem(); }
+  // clang-format on
 
   uword n_rows() const { return _M_dims[0]; }
 
