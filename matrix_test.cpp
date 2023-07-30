@@ -525,6 +525,35 @@ void matrix_2d_test_slice_array(bool print = false) {
   assert(mat1d_b(3) == 8.0);
 }
 
+void matrix_2d_test_gslice_array(bool print = false) {
+  std::cout
+      << "[TEST]: 2D Matrix's std::gslice_array related member functions\n";
+
+  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d_a(arr, 4, 3);
+
+  if (print) test_print(mat2d_a, "mat2d_a =");
+  if (print) std::cout << "Apply mat2d_a.submat(1,1,3,2) = 0\n";
+  mat2d_a.submat(1, 1, 3, 2) = 0;
+  if (print) test_print(mat2d_a, "mat2d_a =");
+  assert(mat2d_a(0, 0) == 1);
+  assert(mat2d_a(0, 1) == 5);
+  assert(mat2d_a(0, 2) == 9);
+  assert(mat2d_a(3, 0) == 4);
+  assert(mat2d_a(3, 1) == 0);
+  assert(mat2d_a(3, 2) == 0);
+
+  const Matrix<double, 2> mat2d_b(arr, 4, 3);
+  Matrix<double, 2> mat2d_c(mat2d_b.submat(1, 1, 3, 2), 3, 2);
+  if (print) test_print(mat2d_c, "mat2d_c = ");
+  assert(mat2d_c(0, 0) == 6);
+  assert(mat2d_c(1, 0) == 7);
+  assert(mat2d_c(2, 0) == 8);
+  assert(mat2d_c(0, 1) == 10);
+  assert(mat2d_c(1, 1) == 11);
+  assert(mat2d_c(2, 1) == 12);
+}
+
 void matrix_test_binary_addition_operator(bool print = false) {
   std::cout << "[TEST]: Applies binary addition operators to each element\n";
 
@@ -684,6 +713,7 @@ int main() {
 
   matrix_1d_test_slice_array(print_flag);
   matrix_2d_test_slice_array(print_flag);
+  matrix_2d_test_gslice_array(print_flag);
 
   matrix_test_binary_addition_operator(print_flag);
   matrix_test_binary_subtraction_operator(print_flag);

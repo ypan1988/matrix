@@ -1,6 +1,6 @@
 //  matrix.h: this single header matrix lib is a wrapper of std::valarray
 //
-//  Copyright (C) 2023 Yi Pan <ypan1988@gmail.com>
+//  Copyright (C) 2022-2023 Yi Pan <ypan1988@gmail.com>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -234,6 +234,14 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
       : _Matrix_base<_Tp>(__x), _M_dims({__n1, __n2}) {
     if (__x.size() != __n1 * __n2) error("2D Cstor error: dimension mismatch");
   }
+  Matrix(const std::slice_array<_Tp>& __x, uword __n1, uword __n2)
+      : _Matrix_base<_Tp>(__x), _M_dims({__n1, __n2}) {
+    if (__x.size() != __n1 * __n2) error("2D Cstor error: dimension mismatch");
+  }
+  Matrix(const std::gslice_array<_Tp>& __x, uword __n1, uword __n2)
+      : _Matrix_base<_Tp>(__x), _M_dims({__n1, __n2}) {
+    if (__x.size() != __n1 * __n2) error("2D Cstor error: dimension mismatch");
+  }
   Matrix(const std::valarray<_Tp>& __x, const std::array<uword, 2>& __dims)
       : _Matrix_base<_Tp>(__x), _M_dims(__dims) {
     if (__x.size() != __dims[0] * __dims[1])
@@ -265,6 +273,16 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
     if (__x.size() != __n1 * __n2) error("2D Cstor error: dimension mismatch");
     _M_dims[0] = __n1, _M_dims[1] = __n2;
   }
+  Matrix(const std::slice_array<_Tp>& __x, uword __n1, uword __n2)
+      : _Matrix_base<_Tp>(__x) {
+    if (__x.size() != __n1 * __n2) error("2D Cstor error: dimension mismatch");
+    _M_dims[0] = 0, _M_dims[1] = 0;
+  }
+  Matrix(const std::gslice_array<_Tp>& __x, uword __n1, uword __n2)
+      : _Matrix_base<_Tp>(__x) {
+    if (__x.size() != __n1 * __n2) error("2D Cstor error: dimension mismatch");
+    _M_dims[0] = 0, _M_dims[1] = 0;
+  }
   Matrix(const std::valarray<_Tp>& __x, uword __dims[2])
       : _Matrix_base<_Tp>(__x) {
     if (__x.size() != __dims[0] * __dims[1])
@@ -275,8 +293,6 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   uword* get_dims() const { return _M_dims; }
 #endif
 
-  // Matrix(const std::slice_array<_Tp>& __x, uword __n1, uword __n2)
-  //    : _Matrix_base<_Tp>(__x) { _M_dims[0] = 0, _M_dims[1] = 0; }
   uword n_rows() const { return _M_dims[0]; }
   uword n_cols() const { return _M_dims[1]; }
 
@@ -319,6 +335,10 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
     range_check(0, __c);
     return this->_M_elem[std::slice(__c * _M_dims[0], _M_dims[0], 1)];
   }
+  std::valarray<_Tp> submat(uword __first_row, uword __first_col,
+                            uword __last_row, uword __last_col) const;
+  std::gslice_array<_Tp> submat(uword __first_row, uword __first_col,
+                                uword __last_row, uword __last_col);
 
   // clang-format off
  public:
@@ -493,6 +513,42 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   Matrix& operator>>=(const Matrix& __x) { this->_M_elem >>= __x._M_elem; return *this; }
   // clang-format on
 };
+
+//-----------------------------------------------------------------------------
+
+template <class _Tp>
+inline std::valarray<_Tp> Matrix<_Tp, 2>::submat(uword __first_row,
+                                                 uword __first_col,
+                                                 uword __last_row,
+                                                 uword __last_col) const {
+  uword __nr = __last_row - __first_row + 1;
+  uword __nc = __last_col - __first_col + 1;
+  uword __start = n_rows() * __first_col + __first_row;
+#if defined(__MATRIX_LIB_USE_CPP11)
+  return this->_M_elem[std::gslice(__start, {__nc, __nr}, {n_rows(), 1})];
+#else
+  std::valarray<std::size_t> __size(2), __stride(2);
+  __size[0] = __nc, __size[1] = __nr, __stride[0] = n_rows(), __stride[1] = 1;
+  return this->_M_elem[std::gslice(__start, __size, __stride)];
+#endif
+}
+
+template <class _Tp>
+inline std::gslice_array<_Tp> Matrix<_Tp, 2>::submat(uword __first_row,
+                                                     uword __first_col,
+                                                     uword __last_row,
+                                                     uword __last_col) {
+  uword __nr = __last_row - __first_row + 1;
+  uword __nc = __last_col - __first_col + 1;
+  uword __start = n_rows() * __first_col + __first_row;
+#if defined(__MATRIX_LIB_USE_CPP11)
+  return this->_M_elem[std::gslice(__start, {__nc, __nr}, {n_rows(), 1})];
+#else
+  std::valarray<std::size_t> __size(2), __stride(2);
+  __size[0] = __nc, __size[1] = __nr, __stride[0] = n_rows(), __stride[1] = 1;
+  return this->_M_elem[std::gslice(__start, __size, __stride)];
+#endif
+}
 
 //-----------------------------------------------------------------------------
 
