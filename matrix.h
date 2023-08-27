@@ -111,10 +111,6 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
       : _Matrix_base<_Tp>(__x, __n1), _M_dims({__n1}) {}
   Matrix(const value_type* __x, uword __n1)
       : _Matrix_base<_Tp>(__x, __n1), _M_dims({__n1}) {}
-  Matrix(const std::valarray<_Tp>& __x, uword __n1)
-      : _Matrix_base<_Tp>(__x), _M_dims({__n1}) {
-    if (__x.size() != __n1) error("1D Cstor error: dimension mismatch");
-  }
   Matrix(const std::valarray<_Tp>& __x, const std::array<uword, 1>& __dims)
       : _Matrix_base<_Tp>(__x), _M_dims(__dims) {
     if (__x.size() != __dims[0]) error("1D Cstor error: dimension mismatch");
@@ -131,10 +127,6 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
     _M_dims[0] = __n1;
   }
   Matrix(const value_type* __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) {
-    _M_dims[0] = __n1;
-  }
-  Matrix(const std::valarray<_Tp>& __x, uword __n1) : _Matrix_base<_Tp>(__x) {
-    if (__x.size() != __n1) error("1D Cstor error: dimension mismatch");
     _M_dims[0] = __n1;
   }
   Matrix(const std::valarray<_Tp>& __x, uword __dims[1])
@@ -181,9 +173,9 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   // clang-format off
  public:
   Matrix operator+() const { return *this; }
-  Matrix operator-() const { return Matrix(-this->_M_elem, _M_dims[0]); }
-  Matrix operator~() const { return Matrix(~this->_M_elem, _M_dims[0]); }
-  Matrix<bool, 1> operator!() const { return Matrix<bool, 1>(!this->_M_elem, _M_dims[0]); }
+  Matrix operator-() const { return Matrix(-this->_M_elem, _M_dims); }
+  Matrix operator~() const { return Matrix(~this->_M_elem, _M_dims); }
+  Matrix<bool, 1> operator!() const { return Matrix<bool, 1>(!this->_M_elem, _M_dims); }
 
  public:
   Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }
@@ -343,9 +335,9 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   // clang-format off
  public:
   Matrix operator+() const { return *this; }
-  Matrix operator-() const { return Matrix(-this->_M_elem, _M_dims[0], _M_dims[1]); }
-  Matrix operator~() const { return Matrix(~this->_M_elem, _M_dims[0], _M_dims[1]); }
-  Matrix<bool, 2> operator!() const { return Matrix<bool, 2>(!this->_M_elem, _M_dims[0], _M_dims[1]); }
+  Matrix operator-() const { return Matrix(-this->_M_elem, _M_dims); }
+  Matrix operator~() const { return Matrix(~this->_M_elem, _M_dims); }
+  Matrix<bool, 2> operator!() const { return Matrix<bool, 2>(!this->_M_elem, _M_dims); }
 
  public:
   Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }
@@ -484,9 +476,9 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   // clang-format off
  public:
   Matrix operator+() const { return *this; }
-  Matrix operator-() const { return Matrix(-this->_M_elem, _M_dims[0], _M_dims[1], _M_dims[2]); }
-  Matrix operator~() const { return Matrix(~this->_M_elem, _M_dims[0], _M_dims[1], _M_dims[2]); }
-  Matrix<bool, 3> operator!() const { return Matrix<bool, 3>(!this->_M_elem, _M_dims[0], _M_dims[1], _M_dims[2]); }
+  Matrix operator-() const { return Matrix(-this->_M_elem, _M_dims); }
+  Matrix operator~() const { return Matrix(~this->_M_elem, _M_dims); }
+  Matrix<bool, 3> operator!() const { return Matrix<bool, 3>(!this->_M_elem, _M_dims); }
 
  public:
   Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }

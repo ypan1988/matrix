@@ -147,7 +147,7 @@ void matrix_test_constructor_05(bool print = false) {
 
   const double a1[] = {1, 2, 3, 4};
   const std::valarray<double> va1(a1, 4);
-  Matrix<double, 1> mat1d(va1, 4);
+  Matrix<double, 1> mat1d(va1);
   if (print) test_print(mat1d, "mat1d =");
   assert(mat1d(0) == 1.0);
   assert(mat1d(1) == 2.0);
@@ -187,7 +187,7 @@ void matrix_test_unary_add_minus_operator(bool print = false) {
 
   const double a1[] = {1, 2, 3, 4};
   const std::valarray<double> va1(a1, 4);
-  Matrix<double, 1> mat1d(va1, 4);
+  Matrix<double, 1> mat1d(va1);
   Matrix<double, 1> mat1d_a = +mat1d;
   Matrix<double, 1> mat1d_b = -mat1d;
 
