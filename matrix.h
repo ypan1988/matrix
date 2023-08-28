@@ -106,11 +106,6 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 
  public:
   Matrix() = default;
-  Matrix(uword __n1) : _Matrix_base<_Tp>(__n1), _M_dims({__n1}) {}
-  Matrix(const value_type& __x, uword __n1)
-      : _Matrix_base<_Tp>(__x, __n1), _M_dims({__n1}) {}
-  Matrix(const value_type* __x, uword __n1)
-      : _Matrix_base<_Tp>(__x, __n1), _M_dims({__n1}) {}
   Matrix(const std::valarray<_Tp>& __x, const std::array<uword, 1>& __dims)
       : _Matrix_base<_Tp>(__x), _M_dims(__dims) {
     if (__x.size() != __dims[0]) error("1D Cstor error: dimension mismatch");
@@ -122,13 +117,6 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 
  public:
   Matrix() : _Matrix_base<_Tp>() { _M_dims[0] = 0; }
-  Matrix(uword __n1) : _Matrix_base<_Tp>(__n1) { _M_dims[0] = __n1; }
-  Matrix(const value_type& __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) {
-    _M_dims[0] = __n1;
-  }
-  Matrix(const value_type* __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) {
-    _M_dims[0] = __n1;
-  }
   Matrix(const std::valarray<_Tp>& __x, uword __dims[1])
       : _Matrix_base<_Tp>(__x) {
     if (__x.size() != __dims[0]) error("1D Cstor error: dimension mismatch");
@@ -138,6 +126,9 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 #endif
 
   // clang-format off
+  Matrix(uword __n1) : _Matrix_base<_Tp>(__n1) { _M_dims[0] = __n1; }
+  Matrix(const value_type& __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_dims[0] = __n1; }
+  Matrix(const value_type* __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_dims[0] = __n1; }
   Matrix(const std::valarray<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = __x.size(); }
   Matrix(const std::slice_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = this->n_elem(); }
   Matrix(const std::gslice_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = this->n_elem(); }
@@ -248,9 +239,6 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix() : _Matrix_base<_Tp>() { _M_dims[0] = 0, _M_dims[1] = 0; }
   Matrix(uword __n1, uword __n2) : _Matrix_base<_Tp>(__n1 * __n2) {
     _M_dims[0] = __n1, _M_dims[1] = __n2;
-  }
-  Matrix(uword __dims[2]) : _Matrix_base<_Tp>(__dims[0] * __dims[1]) {
-    _M_dims[0] = __dims[0], _M_dims[1] = __dims[1];
   }
   Matrix(const value_type& __x, uword __n1, uword __n2)
       : _Matrix_base<_Tp>(__x, __n1 * __n2) {
