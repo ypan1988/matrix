@@ -126,7 +126,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 #endif
 
   // clang-format off
-  Matrix(uword __n1) : _Matrix_base<_Tp>(__n1) { _M_dims[0] = __n1; }
+  explicit Matrix(uword __n1) : _Matrix_base<_Tp>(__n1) { _M_dims[0] = __n1; }
   Matrix(const value_type& __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_dims[0] = __n1; }
   Matrix(const value_type* __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_dims[0] = __n1; }
   Matrix(const std::valarray<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = __x.size(); }

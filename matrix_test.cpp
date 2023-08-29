@@ -69,6 +69,10 @@ void matrix_test_constructor_02(bool print = false) {
   assert(mat1d.n_elem() == 4);
   assert(mat1d.n_rows() == 4);
 
+  // It would not compile because Matrix<T, 1>(uword __n1) is explicit
+  // Matrix<double, 1> mat1d_x = 4;
+  // if (print) test_print(mat1d, "mat1d_x =");
+
   Matrix<double, 2> mat2d(4, 3);
   if (print) test_print(mat2d, "mat2d =");
   assert(mat2d.n_elem() == 12);
