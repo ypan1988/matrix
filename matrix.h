@@ -78,9 +78,14 @@ struct _Matrix_base {
   _Matrix_base(const std::gslice_array<_Tp>& __x) : _M_elem(__x) {}
   _Matrix_base(const std::mask_array<_Tp>& __x) : _M_elem(__x) {}
   _Matrix_base(const std::indirect_array<_Tp>& __x) : _M_elem(__x) {}
-  ~_Matrix_base() {}
+  virtual ~_Matrix_base() {}
 
 #if defined(__MATRIX_LIB_USE_CPP11)
+  _Matrix_base(_Matrix_base&& __x) = default;
+  _Matrix_base& operator=(_Matrix_base&& __x) = default;
+  _Matrix_base(const _Matrix_base& __x) = default;
+  _Matrix_base& operator=(const _Matrix_base& __x) = default;
+
   _Matrix_base(std::initializer_list<_Tp> __x) : _M_elem(__x) {}
 #endif
 
@@ -111,6 +116,11 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 
  public:
   Matrix() = default;
+  Matrix(Matrix&& __x) = default;
+  Matrix& operator=(Matrix&& __x) = default;
+  Matrix(const Matrix& __x) = default;
+  Matrix& operator=(const Matrix& __x) = default;
+
   Matrix(std::initializer_list<_Tp> __x) : _Matrix_base<_Tp>(__x) {
     _M_dims[0] = __x.size();
   }
@@ -215,6 +225,11 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
 
  public:
   Matrix() = default;
+  Matrix(Matrix&& __x) = default;
+  Matrix& operator=(Matrix&& __x) = default;
+  Matrix(const Matrix& __x) = default;
+  Matrix& operator=(const Matrix& __x) = default;
+
   Matrix(std::initializer_list<_Tp> __x, uword __n1, uword __n2)
       : _Matrix_base<_Tp>(__x), _M_dims({__n1, __n2}) {
     if (__x.size() != __n1 * __n2) error("2D Cstor error: dimension mismatch");
@@ -362,6 +377,11 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
 
  public:
   Matrix() = default;
+  Matrix(Matrix&& __x) = default;
+  Matrix& operator=(Matrix&& __x) = default;
+  Matrix(const Matrix& __x) = default;
+  Matrix& operator=(const Matrix& __x) = default;
+
   Matrix(std::initializer_list<_Tp> __x, uword __n1, uword __n2, uword __n3)
       : _Matrix_base<_Tp>(__x),
         _M_dims({__n1, __n2, __n3}),
