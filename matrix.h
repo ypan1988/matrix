@@ -69,24 +69,27 @@ struct _Matrix_base {
   typedef _Tp value_type;
   std::valarray<_Tp> _M_elem;
 
+  // construct/destroy:
   _Matrix_base() : _M_elem() {}
   _Matrix_base(uword __n) : _M_elem(__n) {}
   _Matrix_base(const value_type& __x, uword __n) : _M_elem(__x, __n) {}
   _Matrix_base(const value_type* __x, uword __n) : _M_elem(__x, __n) {}
   _Matrix_base(const std::valarray<_Tp>& __x) : _M_elem(__x) {}
+#if defined(__MATRIX_LIB_USE_CPP11)
+  _Matrix_base(const _Matrix_base& __x) = default;
+  _Matrix_base(_Matrix_base&& __x) = default;
+  _Matrix_base(std::initializer_list<_Tp> __x) : _M_elem(__x) {}
+#endif
   _Matrix_base(const std::slice_array<_Tp>& __x) : _M_elem(__x) {}
   _Matrix_base(const std::gslice_array<_Tp>& __x) : _M_elem(__x) {}
   _Matrix_base(const std::mask_array<_Tp>& __x) : _M_elem(__x) {}
   _Matrix_base(const std::indirect_array<_Tp>& __x) : _M_elem(__x) {}
   virtual ~_Matrix_base() {}
 
+  // assignment
 #if defined(__MATRIX_LIB_USE_CPP11)
-  _Matrix_base(_Matrix_base&& __x) = default;
-  _Matrix_base& operator=(_Matrix_base&& __x) = default;
-  _Matrix_base(const _Matrix_base& __x) = default;
   _Matrix_base& operator=(const _Matrix_base& __x) = default;
-
-  _Matrix_base(std::initializer_list<_Tp> __x) : _M_elem(__x) {}
+  _Matrix_base& operator=(_Matrix_base&& __x) = default;
 #endif
 
   // if necessay, we can get to the raw matrix:
