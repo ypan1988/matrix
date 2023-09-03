@@ -113,40 +113,22 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
  public:
   typedef _Tp value_type;
 
+ private:
 #if defined(__MATRIX_LIB_USE_CPP11)
- private:
   std::array<uword, 1> _M_dims = {0};
-
- public:
-  Matrix() = default;
-  Matrix(Matrix&& __x) = default;
-  Matrix& operator=(Matrix&& __x) = default;
-  Matrix(const Matrix& __x) = default;
-  Matrix& operator=(const Matrix& __x) = default;
-
-  Matrix(std::initializer_list<_Tp> __x) : _Matrix_base<_Tp>(__x) {
-    _M_dims[0] = __x.size();
-  }
-  Matrix(const std::valarray<_Tp>& __x, const std::array<uword, 1>& __dims)
-      : _Matrix_base<_Tp>(__x), _M_dims(__dims) {
-    if (__x.size() != __dims[0]) error("1D Cstor error: dimension mismatch");
-  }
-  std::array<uword, 1> get_dims() const { return _M_dims; }
 #else
- private:
   uword _M_dims[1];
-
- public:
-  Matrix() : _Matrix_base<_Tp>() { _M_dims[0] = 0; }
-  Matrix(const std::valarray<_Tp>& __x, uword __dims[1])
-      : _Matrix_base<_Tp>(__x) {
-    if (__x.size() != __dims[0]) error("1D Cstor error: dimension mismatch");
-    _M_dims[0] = __dims[0];
-  }
-  uword* get_dims() const { return _M_dims; }
 #endif
 
+ public:
   // clang-format off
+  // construct/destroy:
+  Matrix() : _Matrix_base<_Tp>() { _M_dims[0] = 0; }
+  Matrix(const Matrix& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_dims[0] = __x._M_dims[0]; }
+#if defined(__MATRIX_LIB_USE_CPP11)
+  Matrix(Matrix&& __x) = default;
+  Matrix(std::initializer_list<_Tp> __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = __x.size(); }
+#endif
   explicit Matrix(uword __n1) : _Matrix_base<_Tp>(__n1) { _M_dims[0] = __n1; }
   Matrix(const value_type& __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_dims[0] = __n1; }
   Matrix(const value_type* __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_dims[0] = __n1; }
@@ -155,7 +137,29 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix(const std::gslice_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = this->n_elem(); }
   Matrix(const std::mask_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = this->n_elem(); }
   Matrix(const std::indirect_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_dims[0] = this->n_elem(); }
+  ~Matrix() {}
+
+  // assignment
+  Matrix& operator=(const Matrix& __x) { this->_M_elem = __x._M_elem; return *this; }
+#if defined(__MATRIX_LIB_USE_CPP11)
+  Matrix& operator=(Matrix&& __x) = default;
+#endif
   // clang-format on
+
+#if defined(__MATRIX_LIB_USE_CPP11)
+  Matrix(const std::valarray<_Tp>& __x, const std::array<uword, 1>& __dims)
+      : _Matrix_base<_Tp>(__x), _M_dims(__dims) {
+    if (__x.size() != __dims[0]) error("1D Cstor error: dimension mismatch");
+  }
+  std::array<uword, 1> get_dims() const { return _M_dims; }
+#else
+  Matrix(const std::valarray<_Tp>& __x, uword __dims[1])
+      : _Matrix_base<_Tp>(__x) {
+    if (__x.size() != __dims[0]) error("1D Cstor error: dimension mismatch");
+    _M_dims[0] = __dims[0];
+  }
+  uword* get_dims() const { return _M_dims; }
+#endif
 
   uword n_rows() const { return _M_dims[0]; }
 
