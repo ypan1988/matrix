@@ -60,6 +60,9 @@ struct Matrix {
              //	template<class A> Matrix(A);
 };
 
+template <class _Tp = double>
+struct MatrixRef;
+
 //-----------------------------------------------------------------------------
 
 // Matrix_base represents the common part of the Matrix classes:
@@ -298,10 +301,10 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
     range_check(0, __c);
     return this->_M_elem[std::slice(__c * _M_dims[0], _M_dims[0], 1)];
   }
-  std::valarray<_Tp> submat(uword __first_row, uword __first_col,
-                            uword __last_row, uword __last_col) const;
-  std::gslice_array<_Tp> submat(uword __first_row, uword __first_col,
-                                uword __last_row, uword __last_col);
+  Matrix<_Tp, 2> submat(uword __first_row, uword __first_col, uword __last_row,
+                        uword __last_col) const;
+  MatrixRef<_Tp> submat(uword __first_row, uword __first_col, uword __last_row,
+                        uword __last_col);
 
   // clang-format off
  public:
@@ -462,42 +465,6 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
 
 //-----------------------------------------------------------------------------
 
-template <class _Tp>
-inline std::valarray<_Tp> Matrix<_Tp, 2>::submat(uword __first_row,
-                                                 uword __first_col,
-                                                 uword __last_row,
-                                                 uword __last_col) const {
-  uword __nr = __last_row - __first_row + 1;
-  uword __nc = __last_col - __first_col + 1;
-  uword __start = n_rows() * __first_col + __first_row;
-#if defined(__MATRIX_LIB_USE_CPP11)
-  return this->_M_elem[std::gslice(__start, {__nc, __nr}, {n_rows(), 1})];
-#else
-  std::valarray<std::size_t> __size(2), __stride(2);
-  __size[0] = __nc, __size[1] = __nr, __stride[0] = n_rows(), __stride[1] = 1;
-  return this->_M_elem[std::gslice(__start, __size, __stride)];
-#endif
-}
-
-template <class _Tp>
-inline std::gslice_array<_Tp> Matrix<_Tp, 2>::submat(uword __first_row,
-                                                     uword __first_col,
-                                                     uword __last_row,
-                                                     uword __last_col) {
-  uword __nr = __last_row - __first_row + 1;
-  uword __nc = __last_col - __first_col + 1;
-  uword __start = n_rows() * __first_col + __first_row;
-#if defined(__MATRIX_LIB_USE_CPP11)
-  return this->_M_elem[std::gslice(__start, {__nc, __nr}, {n_rows(), 1})];
-#else
-  std::valarray<std::size_t> __size(2), __stride(2);
-  __size[0] = __nc, __size[1] = __nr, __stride[0] = n_rows(), __stride[1] = 1;
-  return this->_M_elem[std::gslice(__start, __size, __stride)];
-#endif
-}
-
-//-----------------------------------------------------------------------------
-
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator+(const Matrix<_Tp, _Size>& __x,
                                     const Matrix<_Tp, _Size>& __y) {
@@ -631,6 +598,58 @@ template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> log10(const Matrix<_Tp, _Size>& __x) {
   Matrix<_Tp, _Size> __tmp(std::log10(__x.get_elem()), __x.get_dims());
   return __tmp;
+}
+
+//-----------------------------------------------------------------------------
+
+template <class _Tp>
+struct MatrixRef {
+  std::gslice_array<_Tp> _M_elem;
+  std::valarray<uword> _M_dims;
+  MatrixRef(std::valarray<_Tp>& __va, uword __start,
+            const std::valarray<std::size_t>& __size,
+            const std::valarray<std::size_t>& __stride)
+      : _M_elem(__va[std::gslice(__start, __size, __stride)]),
+        _M_dims(__size.size()) {
+    uword n = __size.size();
+    for (uword idx = 0; idx < n; ++idx) {
+      _M_dims[idx] = __size[n - idx - 1];
+    }
+  }
+  void operator=(const _Tp& __value) { _M_elem = __value; }
+};
+
+template <class _Tp>
+inline Matrix<_Tp, 2> Matrix<_Tp, 2>::submat(uword __first_row,
+                                             uword __first_col,
+                                             uword __last_row,
+                                             uword __last_col) const {
+  const uword __sz[2] = {__last_col - __first_col + 1,
+                         __last_row - __first_row + 1};
+  const uword __st[2] = {n_rows(), 1};
+
+  const uword __start = n_rows() * __first_col + __first_row;
+  const std::valarray<uword> __size(__sz, 2);
+  const std::valarray<uword> __stride(__st, 2);
+
+  return Matrix<_Tp, 2>(this->_M_elem[std::gslice(__start, __size, __stride)],
+                        __size[1], __size[0]);
+}
+
+template <class _Tp>
+inline MatrixRef<_Tp> Matrix<_Tp, 2>::submat(uword __first_row,
+                                             uword __first_col,
+                                             uword __last_row,
+                                             uword __last_col) {
+  const uword __sz[2] = {__last_col - __first_col + 1,
+                         __last_row - __first_row + 1};
+  const uword __st[2] = {n_rows(), 1};
+
+  const uword __start = n_rows() * __first_col + __first_row;
+  const std::valarray<uword> __size(__sz, 2);
+  const std::valarray<uword> __stride(__st, 2);
+
+  return MatrixRef<_Tp>(this->_M_elem, __start, __size, __stride);
 }
 
 }  // namespace matrix_lib
