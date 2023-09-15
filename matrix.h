@@ -54,7 +54,7 @@ template <class _Tp = double, uword _Size = 1>
 struct Matrix {
   // multidimensional matrix class
   // ( ) does multidimensional subscripting with range check
-  // [ ] does multidimensional subscripting without range check
+  // [ ] retrieves single element or portions of the matrix (like valarray)
  private:
   Matrix();  // this should never be compiled
              //	template<class A> Matrix(A);
