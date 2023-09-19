@@ -155,7 +155,13 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix& operator=(const Matrix& __x) { this->_M_elem = __x._M_elem; _M_init(); return *this; }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
+  Matrix& operator=(std::initializer_list<_Tp> __x) { this->_M_elem = __x._M_elem; _M_init(); return *this; }
 #endif
+  Matrix& operator=(const value_type& __x) { this->_M_elem = __x; return *this; }
+  Matrix& operator=(const std::slice_array<_Tp>& __sa) { this->_M_elem = __sa; return *this; }
+  Matrix& operator=(const std::gslice_array<_Tp>& __ga) { this->_M_elem = __ga; return *this; }
+  Matrix& operator=(const std::mask_array<_Tp>& __ma) { this->_M_elem = __ma; return *this; }
+  Matrix& operator=(const std::indirect_array<_Tp>& __ia) { this->_M_elem = __ia; return *this; }
   // clang-format on
 
   std::valarray<uword> get_dims() const {
@@ -266,6 +272,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
 #endif
+  Matrix& operator=(const value_type& __x) { this->_M_elem = __x; return *this; }
   // clang-format on
 
   std::valarray<uword> get_dims() const {
@@ -399,6 +406,7 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
 #endif
+  Matrix& operator=(const value_type& __x) { this->_M_elem = __x; return *this; }
   // clang-format on
 
   std::valarray<uword> get_dims() const {

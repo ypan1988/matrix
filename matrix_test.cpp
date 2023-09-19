@@ -271,6 +271,49 @@ void matrix_test_constructor_11(bool print = false) {
 #endif
 }
 
+void matrix_test_assignment_1(bool print = false) {
+  std::cout << "[TEST]: Assigns a Matrix with a value\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d(a1, 4);
+  if (print) test_print(mat1d, "mat1d =");
+  mat1d = 1;
+  if (print) test_print(mat1d, "mat1d =");
+  assert(mat1d(0) == 1.0);
+  assert(mat1d(1) == 1.0);
+  assert(mat1d(2) == 1.0);
+  assert(mat1d(3) == 1.0);
+
+  const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d(a2, 4, 3);
+  if (print) test_print(mat2d, "mat2d =");
+  mat2d = 2;
+  if (print) test_print(mat2d, "mat2d =");
+  assert(mat2d(0, 0) == 2.0);
+  assert(mat2d(1, 0) == 2.0);
+  assert(mat2d(2, 0) == 2.0);
+  assert(mat2d(3, 0) == 2.0);
+  assert(mat2d(0, 2) == 2.0);
+  assert(mat2d(1, 2) == 2.0);
+  assert(mat2d(2, 2) == 2.0);
+  assert(mat2d(3, 2) == 2.0);
+
+  const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                       13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  Matrix<double, 3> mat3d(a3, 4, 3, 2);
+  if (print) test_print(mat3d, "mat3d =");
+  mat3d = 3;
+  if (print) test_print(mat3d, "mat3d =");
+  assert(mat3d(0, 0, 0) == 3.0);
+  assert(mat3d(1, 0, 0) == 3.0);
+  assert(mat3d(2, 0, 0) == 3.0);
+  assert(mat3d(3, 0, 0) == 3.0);
+  assert(mat3d(0, 2, 1) == 3.0);
+  assert(mat3d(1, 2, 1) == 3.0);
+  assert(mat3d(2, 2, 1) == 3.0);
+  assert(mat3d(3, 2, 1) == 3.0);
+}
+
 void matrix_test_unary_add_minus_operator(bool print = false) {
   std::cout << "[TEST]: Applies unary add/minus operators to each element\n";
 
@@ -859,6 +902,8 @@ int main() {
   matrix_test_constructor_05(print_flag);
   matrix_test_constructor_06(print_flag);
   matrix_test_constructor_11(print_flag);
+
+  matrix_test_assignment_1(print_flag);
 
   matrix_test_unary_add_minus_operator(print_flag);
   matrix_test_addition_assignment_operator(print_flag);
