@@ -72,13 +72,13 @@ struct _Matrix_base {
   std::valarray<_Tp> _M_elem;
 
  public:
-  typedef _Tp value_type;
+  typedef _Tp elem_type;
 
   // construct/destroy:
   _Matrix_base() : _M_elem() {}
   _Matrix_base(uword __n) : _M_elem(__n) {}
-  _Matrix_base(const value_type& __x, uword __n) : _M_elem(__x, __n) {}
-  _Matrix_base(const value_type* __x, uword __n) : _M_elem(__x, __n) {}
+  _Matrix_base(const elem_type& __x, uword __n) : _M_elem(__x, __n) {}
+  _Matrix_base(const elem_type* __x, uword __n) : _M_elem(__x, __n) {}
   _Matrix_base(const std::valarray<_Tp>& __x) : _M_elem(__x) {}
 #if defined(__MATRIX_LIB_USE_CPP11)
   _Matrix_base(const _Matrix_base& __x) = default;
@@ -98,8 +98,8 @@ struct _Matrix_base {
 #endif
 
   // clang-format off
-  value_type  operator[](uword __n) const { return _M_elem[__n]; }
-  value_type& operator[](uword __n) { return _M_elem[__n]; }
+  elem_type  operator[](uword __n) const { return _M_elem[__n]; }
+  elem_type& operator[](uword __n) { return _M_elem[__n]; }
   std::valarray<_Tp> operator[](std::slice __x) const { return _M_elem[__x]; }
   std::slice_array<_Tp> operator[](std::slice __x) { return _M_elem[__x]; }
   std::valarray<_Tp> operator[](std::gslice __x) const { return _M_elem[__x]; }
@@ -111,17 +111,17 @@ struct _Matrix_base {
   // clang-format on
 
   // if necessay, we can get to the raw matrix:
-  value_type* data() { return &(_M_elem[0]); }
-  const value_type* data() const { return &(_M_elem[0]); }
+  elem_type* data() { return &(_M_elem[0]); }
+  const elem_type* data() const { return &(_M_elem[0]); }
   void set_elem(const std::valarray<_Tp>& __x) { _M_elem = __x; }
   std::valarray<_Tp> get_elem() const { return _M_elem; }
   uword n_elem() const { return _M_elem.size(); }
 
  public:  // Other member functions.
           // The results are undefined for zero-length arrays
-  value_type sum() const { return _M_elem.sum(); }
-  value_type min() const { return _M_elem.min(); }
-  value_type max() const { return _M_elem.max(); }
+  elem_type sum() const { return _M_elem.sum(); }
+  elem_type min() const { return _M_elem.min(); }
+  elem_type max() const { return _M_elem.max(); }
 
   template <typename F>
   void for_each(F f) {
@@ -134,7 +134,7 @@ struct _Matrix_base {
 template <class _Tp>
 struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
  public:
-  typedef _Tp value_type;
+  typedef _Tp elem_type;
 
   // clang-format off
   // construct/destroy:
@@ -145,8 +145,8 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix(std::initializer_list<_Tp> __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
 #endif
   explicit Matrix(uword __n1) : _Matrix_base<_Tp>(__n1) { _M_init(); }
-  Matrix(const value_type& __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_init(); }
-  Matrix(const value_type* __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_init(); }
+  Matrix(const elem_type& __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_init(); }
+  Matrix(const elem_type* __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_init(); }
   Matrix(const std::valarray<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
   Matrix(const std::slice_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
   Matrix(const std::gslice_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
@@ -162,7 +162,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix& operator=(Matrix&& __x) = default;
   Matrix& operator=(std::initializer_list<_Tp> __x) { this->_M_elem = __x._M_elem; _M_init(); return *this; }
 #endif
-  Matrix& operator=(const value_type& __x) { this->_M_elem = __x; return *this; }
+  Matrix& operator=(const elem_type& __x) { this->_M_elem = __x; return *this; }
   Matrix& operator=(const std::slice_array<_Tp>& __sa) { this->_M_elem = __sa; _M_init(); return *this; }
   Matrix& operator=(const std::gslice_array<_Tp>& __ga) { this->_M_elem = __ga; _M_init(); return *this; }
   Matrix& operator=(const std::mask_array<_Tp>& __ma) { this->_M_elem = __ma; _M_init(); return *this; }
@@ -179,11 +179,11 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   }
 
   // subscripting:
-  value_type& operator()(uword __n1) {
+  elem_type& operator()(uword __n1) {
     range_check(__n1);
     return this->_M_elem[__n1];
   }
-  const value_type& operator()(uword __n1) const {
+  const elem_type& operator()(uword __n1) const {
     range_check(__n1);
     return this->_M_elem[__n1];
   }
@@ -205,16 +205,16 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix<bool, 1> operator!() const { return Matrix<bool, 1>(!this->_M_elem, _M_dims); }
 
  public:
-  Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }
-  Matrix& operator-=(const value_type& __x) { this->_M_elem -= __x; return *this; }
-  Matrix& operator*=(const value_type& __x) { this->_M_elem *= __x; return *this; }
-  Matrix& operator/=(const value_type& __x) { this->_M_elem /= __x; return *this; }
-  Matrix& operator%=(const value_type& __x) { this->_M_elem %= __x; return *this; }
-  Matrix& operator&=(const value_type& __x) { this->_M_elem &= __x; return *this; }
-  Matrix& operator|=(const value_type& __x) { this->_M_elem |= __x; return *this; }
-  Matrix& operator^=(const value_type& __x) { this->_M_elem ^= __x; return *this; }
-  Matrix& operator<<=(const value_type& __x) { this->_M_elem <<= __x; return *this; }
-  Matrix& operator>>=(const value_type& __x) { this->_M_elem >>= __x; return *this; }
+  Matrix& operator+=(const elem_type& __x) { this->_M_elem += __x; return *this; }
+  Matrix& operator-=(const elem_type& __x) { this->_M_elem -= __x; return *this; }
+  Matrix& operator*=(const elem_type& __x) { this->_M_elem *= __x; return *this; }
+  Matrix& operator/=(const elem_type& __x) { this->_M_elem /= __x; return *this; }
+  Matrix& operator%=(const elem_type& __x) { this->_M_elem %= __x; return *this; }
+  Matrix& operator&=(const elem_type& __x) { this->_M_elem &= __x; return *this; }
+  Matrix& operator|=(const elem_type& __x) { this->_M_elem |= __x; return *this; }
+  Matrix& operator^=(const elem_type& __x) { this->_M_elem ^= __x; return *this; }
+  Matrix& operator<<=(const elem_type& __x) { this->_M_elem <<= __x; return *this; }
+  Matrix& operator>>=(const elem_type& __x) { this->_M_elem >>= __x; return *this; }
 
  public:
   Matrix& operator+=(const Matrix& __x) { this->_M_elem += __x._M_elem; return *this; }
@@ -250,7 +250,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 template <class _Tp>
 struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
  public:
-  typedef _Tp value_type;
+  typedef _Tp elem_type;
 
   // clang-format off
   // construct/destroy:
@@ -261,8 +261,8 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix(std::initializer_list<_Tp> __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
 #endif
   Matrix(uword __n1, uword __n2) : _Matrix_base<_Tp>(__n1 * __n2) { _M_init(__n1, __n2); }
-  Matrix(const value_type& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x, __n1 * __n2) { _M_init(__n1, __n2); }
-  Matrix(const value_type* __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x, __n1 * __n2) { _M_init(__n1, __n2); }
+  Matrix(const elem_type& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x, __n1 * __n2) { _M_init(__n1, __n2); }
+  Matrix(const elem_type* __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x, __n1 * __n2) { _M_init(__n1, __n2); }
   Matrix(const std::valarray<_Tp>& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
   Matrix(const std::slice_array<_Tp>& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
   Matrix(const std::gslice_array<_Tp>& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
@@ -277,7 +277,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
 #endif
-  Matrix& operator=(const value_type& __x) { this->_M_elem = __x; return *this; }
+  Matrix& operator=(const elem_type& __x) { this->_M_elem = __x; return *this; }
   // clang-format on
 
   std::valarray<uword> get_dims() const {
@@ -293,11 +293,11 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   }
 
   // subscripting:
-  value_type& operator()(uword __n1, uword __n2) {
+  elem_type& operator()(uword __n1, uword __n2) {
     range_check(__n1, __n2);
     return this->_M_elem[__n1 + __n2 * _M_dims[0]];
   }
-  const value_type& operator()(uword __n1, uword __n2) const {
+  const elem_type& operator()(uword __n1, uword __n2) const {
     range_check(__n1, __n2);
     return this->_M_elem[__n1 + __n2 * _M_dims[0]];
   }
@@ -339,16 +339,16 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix<bool, 2> operator!() const { return Matrix<bool, 2>(!this->_M_elem, _M_dims); }
 
  public:
-  Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }
-  Matrix& operator-=(const value_type& __x) { this->_M_elem -= __x; return *this; }
-  Matrix& operator*=(const value_type& __x) { this->_M_elem *= __x; return *this; }
-  Matrix& operator/=(const value_type& __x) { this->_M_elem /= __x; return *this; }
-  Matrix& operator%=(const value_type& __x) { this->_M_elem %= __x; return *this; }
-  Matrix& operator&=(const value_type& __x) { this->_M_elem &= __x; return *this; }
-  Matrix& operator|=(const value_type& __x) { this->_M_elem |= __x; return *this; }
-  Matrix& operator^=(const value_type& __x) { this->_M_elem ^= __x; return *this; }
-  Matrix& operator<<=(const value_type& __x) { this->_M_elem <<= __x; return *this; }
-  Matrix& operator>>=(const value_type& __x) { this->_M_elem >>= __x; return *this; }
+  Matrix& operator+=(const elem_type& __x) { this->_M_elem += __x; return *this; }
+  Matrix& operator-=(const elem_type& __x) { this->_M_elem -= __x; return *this; }
+  Matrix& operator*=(const elem_type& __x) { this->_M_elem *= __x; return *this; }
+  Matrix& operator/=(const elem_type& __x) { this->_M_elem /= __x; return *this; }
+  Matrix& operator%=(const elem_type& __x) { this->_M_elem %= __x; return *this; }
+  Matrix& operator&=(const elem_type& __x) { this->_M_elem &= __x; return *this; }
+  Matrix& operator|=(const elem_type& __x) { this->_M_elem |= __x; return *this; }
+  Matrix& operator^=(const elem_type& __x) { this->_M_elem ^= __x; return *this; }
+  Matrix& operator<<=(const elem_type& __x) { this->_M_elem <<= __x; return *this; }
+  Matrix& operator>>=(const elem_type& __x) { this->_M_elem >>= __x; return *this; }
 
  public:
   Matrix& operator+=(const Matrix& __x) { this->_M_elem += __x._M_elem; return *this; }
@@ -384,7 +384,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
 template <class _Tp>
 struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
  public:
-  typedef _Tp value_type;
+  typedef _Tp elem_type;
 
   // clang-format off
   // construct/destroy:
@@ -395,8 +395,8 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   Matrix(std::initializer_list<_Tp> __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
 #endif
   Matrix(uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__n1 * __n2 * __n3) { _M_init(__n1, __n2, __n3); }
-  Matrix(const value_type& __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x, __n1 * __n2 * __n3) { _M_init(__n1, __n2, __n3); }
-  Matrix(const value_type* __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x, __n1 * __n2 * __n3) { _M_init(__n1, __n2, __n3); }
+  Matrix(const elem_type& __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x, __n1 * __n2 * __n3) { _M_init(__n1, __n2, __n3); }
+  Matrix(const elem_type* __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x, __n1 * __n2 * __n3) { _M_init(__n1, __n2, __n3); }
   Matrix(const std::valarray<_Tp>& __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
   Matrix(const std::slice_array<_Tp>& __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
   Matrix(const std::gslice_array<_Tp>& __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
@@ -411,7 +411,7 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
 #endif
-  Matrix& operator=(const value_type& __x) { this->_M_elem = __x; return *this; }
+  Matrix& operator=(const elem_type& __x) { this->_M_elem = __x; return *this; }
   // clang-format on
 
   std::valarray<uword> get_dims() const {
@@ -429,11 +429,11 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   }
 
   // subscripting:
-  value_type& operator()(uword __n1, uword __n2, uword __n3) {
+  elem_type& operator()(uword __n1, uword __n2, uword __n3) {
     range_check(__n1, __n2, __n3);
     return this->_M_elem[__n1 + __n2 * _M_dims[0] + __n3 * _M_d1xd2];
   }
-  const value_type& operator()(uword __n1, uword __n2, uword __n3) const {
+  const elem_type& operator()(uword __n1, uword __n2, uword __n3) const {
     range_check(__n1, __n2, __n3);
     return this->_M_elem[__n1 + __n2 * _M_dims[0] + __n3 * _M_d1xd2];
   }
@@ -446,16 +446,16 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   Matrix<bool, 3> operator!() const { return Matrix<bool, 3>(!this->_M_elem, _M_dims); }
 
  public:
-  Matrix& operator+=(const value_type& __x) { this->_M_elem += __x; return *this; }
-  Matrix& operator-=(const value_type& __x) { this->_M_elem -= __x; return *this; }
-  Matrix& operator*=(const value_type& __x) { this->_M_elem *= __x; return *this; }
-  Matrix& operator/=(const value_type& __x) { this->_M_elem /= __x; return *this; }
-  Matrix& operator%=(const value_type& __x) { this->_M_elem %= __x; return *this; }
-  Matrix& operator&=(const value_type& __x) { this->_M_elem &= __x; return *this; }
-  Matrix& operator|=(const value_type& __x) { this->_M_elem |= __x; return *this; }
-  Matrix& operator^=(const value_type& __x) { this->_M_elem ^= __x; return *this; }
-  Matrix& operator<<=(const value_type& __x) { this->_M_elem <<= __x; return *this; }
-  Matrix& operator>>=(const value_type& __x) { this->_M_elem >>= __x; return *this; }
+  Matrix& operator+=(const elem_type& __x) { this->_M_elem += __x; return *this; }
+  Matrix& operator-=(const elem_type& __x) { this->_M_elem -= __x; return *this; }
+  Matrix& operator*=(const elem_type& __x) { this->_M_elem *= __x; return *this; }
+  Matrix& operator/=(const elem_type& __x) { this->_M_elem /= __x; return *this; }
+  Matrix& operator%=(const elem_type& __x) { this->_M_elem %= __x; return *this; }
+  Matrix& operator&=(const elem_type& __x) { this->_M_elem &= __x; return *this; }
+  Matrix& operator|=(const elem_type& __x) { this->_M_elem |= __x; return *this; }
+  Matrix& operator^=(const elem_type& __x) { this->_M_elem ^= __x; return *this; }
+  Matrix& operator<<=(const elem_type& __x) { this->_M_elem <<= __x; return *this; }
+  Matrix& operator>>=(const elem_type& __x) { this->_M_elem >>= __x; return *this; }
 
  public:
   Matrix& operator+=(const Matrix& __x) { this->_M_elem += __x._M_elem; return *this; }
