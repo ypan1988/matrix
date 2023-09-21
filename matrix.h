@@ -122,6 +122,11 @@ struct _Matrix_base {
   value_type sum() const { return _M_elem.sum(); }
   value_type min() const { return _M_elem.min(); }
   value_type max() const { return _M_elem.max(); }
+
+  template <typename F>
+  void for_each(F f) {
+    for (uword i = 0; i < n_elem(); ++i) f(_M_elem[i]);
+  }
 };
 
 //-----------------------------------------------------------------------------
