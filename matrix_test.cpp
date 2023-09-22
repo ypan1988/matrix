@@ -942,6 +942,22 @@ void matrix_test_exp(bool print = false) {
   assert(std::abs(mat3d_exp(3, 2, 1) - std::exp(24.0)) < 1e-5);
 }
 
+void matrix_test_dot(bool print = false) {
+  std::cout << "[TEST]: Applies the function dot to two vectors\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a1, 4);
+  Matrix<double, 1> mat1d_b = mat1d_a;
+  double res = dot(mat1d_a, mat1d_b);
+
+  if (print) {
+    test_print(mat1d_a, "mat1d_a =");
+    test_print(mat1d_b, "mat1d_b =");
+    std::cout << "dot(mat1d_a, mat1d_b) = " << res << std::endl;
+  }
+  assert(res == 30);
+}
+
 int main() {
   bool print_flag = false;
   matrix_test_constructor_01(print_flag);
@@ -976,6 +992,7 @@ int main() {
 
   matrix_test_abs(print_flag);
   matrix_test_exp(print_flag);
+  matrix_test_dot(print_flag);
 
   return 0;
 }

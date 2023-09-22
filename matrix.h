@@ -114,7 +114,7 @@ struct _Matrix_base {
   elem_type* data() { return &(_M_elem[0]); }
   const elem_type* data() const { return &(_M_elem[0]); }
   void set_elem(const std::valarray<_Tp>& __x) { _M_elem = __x; }
-  std::valarray<_Tp> get_elem() const { return _M_elem; }
+  const std::valarray<_Tp>& get_elem() const { return _M_elem; }
   uword n_elem() const { return _M_elem.size(); }
 
  public:  // Other member functions.
@@ -624,6 +624,11 @@ template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> log10(const Matrix<_Tp, _Size>& __x) {
   Matrix<_Tp, _Size> __tmp(std::log10(__x.get_elem()), __x.get_dims());
   return __tmp;
+}
+
+template <class _Tp>
+_Tp dot(const Matrix<_Tp, 1>& __x, const Matrix<_Tp, 1>& __y) {
+  return (__x.get_elem() * __y.get_elem()).sum();
 }
 
 //-----------------------------------------------------------------------------
