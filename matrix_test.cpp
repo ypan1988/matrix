@@ -959,7 +959,12 @@ void matrix_test_dot(bool print = false) {
 }
 
 int main() {
+  vec a;
+  mat b;
+  cube c;
+
   bool print_flag = false;
+
   matrix_test_constructor_01(print_flag);
   matrix_test_constructor_02(print_flag);
   matrix_test_constructor_03(print_flag);

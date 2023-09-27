@@ -683,6 +683,18 @@ inline MatrixRef<_Tp> Matrix<_Tp, 2>::submat(uword __first_row,
   return MatrixRef<_Tp>(this->_M_elem, __start, __size, __stride);
 }
 
+typedef Matrix<double, 1> vec;
+typedef Matrix<double, 2> mat;
+typedef Matrix<double, 3> cube;
+
+typedef Matrix<double, 1> dvec;
+typedef Matrix<double, 2> dmat;
+typedef Matrix<double, 3> dcube;
+
+typedef Matrix<float, 1> fvec;
+typedef Matrix<float, 2> fmat;
+typedef Matrix<float, 3> fcube;
+
 }  // namespace matrix_lib
 
 #endif
