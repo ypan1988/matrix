@@ -113,7 +113,10 @@ struct _Matrix_base {
   // if necessay, we can get to the raw matrix:
   elem_type* data() { return &(_M_elem[0]); }
   const elem_type* data() const { return &(_M_elem[0]); }
-  void set_elem(const std::valarray<_Tp>& __x) { _M_elem = __x; }
+  void set_elem(const std::valarray<_Tp>& __x) {
+    _M_elem.resize(__x.size());
+    _M_elem = __x;
+  }
   const std::valarray<_Tp>& get_elem() const { return _M_elem; }
   uword n_elem() const { return _M_elem.size(); }
 
@@ -157,10 +160,10 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   ~Matrix() {}
 
   // assignment
-  Matrix& operator=(const Matrix& __x) { this->_M_elem = __x._M_elem; _M_init(); return *this; }
+  Matrix& operator=(const Matrix& __x) { this->set_elem(__x._M_elem); _M_init(); return *this; }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
-  Matrix& operator=(std::initializer_list<_Tp> __x) { this->_M_elem = __x._M_elem; _M_init(); return *this; }
+  Matrix& operator=(std::initializer_list<_Tp> __x) { this->_M_elem = __x; _M_init(); return *this; }
 #endif
   Matrix& operator=(const elem_type& __x) { this->_M_elem = __x; return *this; }
   Matrix& operator=(const std::slice_array<_Tp>& __sa) { this->_M_elem = __sa; _M_init(); return *this; }
@@ -273,7 +276,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   ~Matrix() {}
 
   // assignment
-  Matrix& operator=(const Matrix& __x) { this->_M_elem = __x._M_elem; _M_init(__x._M_dims); return *this; }
+  Matrix& operator=(const Matrix& __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
 #endif
@@ -407,7 +410,7 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   ~Matrix() {}
 
   // assignment
-  Matrix& operator=(const Matrix& __x) { this->_M_elem = __x._M_elem; _M_init(__x._M_dims); return *this; }
+  Matrix& operator=(const Matrix& __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
 #endif

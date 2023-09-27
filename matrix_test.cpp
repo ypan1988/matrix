@@ -146,44 +146,44 @@ void matrix_test_constructor_04(bool print = false) {
 }
 
 void matrix_test_constructor_05(bool print = false) {
-  std::cout << "[TEST]: Constructs a Matrix with valarray, n_rows, n_cols and "
-               "n_slices\n";
+  std::cout << "[TEST]: Constructs a Matrix with the contents of an"
+               "other matrix using copy semantics\n";
 
   const double a1[] = {1, 2, 3, 4};
-  const std::valarray<double> va1(a1, 4);
-  Matrix<double, 1> mat1d(va1);
-  if (print) test_print(mat1d, "mat1d =");
-  assert(mat1d(0) == 1.0);
-  assert(mat1d(1) == 2.0);
-  assert(mat1d(2) == 3.0);
-  assert(mat1d(3) == 4.0);
+  Matrix<double, 1> mat1d_a(a1, 4);
+  Matrix<double, 1> mat1d_b(mat1d_a);
+  if (print) test_print(mat1d_b, "mat1d_b =");
+  assert(mat1d_b(0) == 1.0);
+  assert(mat1d_b(1) == 2.0);
+  assert(mat1d_b(2) == 3.0);
+  assert(mat1d_b(3) == 4.0);
 
   const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-  const std::valarray<double> va2(a2, 12);
-  Matrix<double, 2> mat2d(va2, 4, 3);
-  if (print) test_print(mat2d, "mat2d =");
-  assert(mat2d(0, 0) == 1.0);
-  assert(mat2d(1, 0) == 2.0);
-  assert(mat2d(2, 0) == 3.0);
-  assert(mat2d(3, 0) == 4.0);
-  assert(mat2d(0, 2) == 9.0);
-  assert(mat2d(1, 2) == 10.0);
-  assert(mat2d(2, 2) == 11.0);
-  assert(mat2d(3, 2) == 12.0);
+  Matrix<double, 2> mat2d_a(a2, 4, 3);
+  Matrix<double, 2> mat2d_b = mat2d_a;
+  if (print) test_print(mat2d_b, "mat2d_b =");
+  assert(mat2d_b(0, 0) == 1.0);
+  assert(mat2d_b(1, 0) == 2.0);
+  assert(mat2d_b(2, 0) == 3.0);
+  assert(mat2d_b(3, 0) == 4.0);
+  assert(mat2d_b(0, 2) == 9.0);
+  assert(mat2d_b(1, 2) == 10.0);
+  assert(mat2d_b(2, 2) == 11.0);
+  assert(mat2d_b(3, 2) == 12.0);
 
   const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
                        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-  const std::valarray<double> va3(a3, 24);
-  Matrix<double, 3> mat3d(va3, 4, 3, 2);
-  if (print) test_print(mat3d, "mat3d =");
-  assert(mat3d(0, 0, 0) == 1.0);
-  assert(mat3d(1, 0, 0) == 2.0);
-  assert(mat3d(2, 0, 0) == 3.0);
-  assert(mat3d(3, 0, 0) == 4.0);
-  assert(mat3d(0, 2, 1) == 21.0);
-  assert(mat3d(1, 2, 1) == 22.0);
-  assert(mat3d(2, 2, 1) == 23.0);
-  assert(mat3d(3, 2, 1) == 24.0);
+  Matrix<double, 3> mat3d_a(a3, 4, 3, 2), mat3d_b;
+  mat3d_b = mat3d_a;
+  if (print) test_print(mat3d_b, "mat3d_b =");
+  assert(mat3d_b(0, 0, 0) == 1.0);
+  assert(mat3d_b(1, 0, 0) == 2.0);
+  assert(mat3d_b(2, 0, 0) == 3.0);
+  assert(mat3d_b(3, 0, 0) == 4.0);
+  assert(mat3d_b(0, 2, 1) == 21.0);
+  assert(mat3d_b(1, 2, 1) == 22.0);
+  assert(mat3d_b(2, 2, 1) == 23.0);
+  assert(mat3d_b(3, 2, 1) == 24.0);
 }
 
 void matrix_test_constructor_06(bool print = false) {
@@ -231,7 +231,48 @@ void matrix_test_constructor_06(bool print = false) {
 #endif
 }
 
-void matrix_test_constructor_11(bool print = false) {
+void matrix_test_constructor_07(bool print = false) {
+  std::cout << "[TEST]: Constructs a Matrix with valarray, n_rows, n_cols and "
+               "n_slices\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  const std::valarray<double> va1(a1, 4);
+  Matrix<double, 1> mat1d(va1);
+  if (print) test_print(mat1d, "mat1d =");
+  assert(mat1d(0) == 1.0);
+  assert(mat1d(1) == 2.0);
+  assert(mat1d(2) == 3.0);
+  assert(mat1d(3) == 4.0);
+
+  const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  const std::valarray<double> va2(a2, 12);
+  Matrix<double, 2> mat2d(va2, 4, 3);
+  if (print) test_print(mat2d, "mat2d =");
+  assert(mat2d(0, 0) == 1.0);
+  assert(mat2d(1, 0) == 2.0);
+  assert(mat2d(2, 0) == 3.0);
+  assert(mat2d(3, 0) == 4.0);
+  assert(mat2d(0, 2) == 9.0);
+  assert(mat2d(1, 2) == 10.0);
+  assert(mat2d(2, 2) == 11.0);
+  assert(mat2d(3, 2) == 12.0);
+
+  const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                       13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  const std::valarray<double> va3(a3, 24);
+  Matrix<double, 3> mat3d(va3, 4, 3, 2);
+  if (print) test_print(mat3d, "mat3d =");
+  assert(mat3d(0, 0, 0) == 1.0);
+  assert(mat3d(1, 0, 0) == 2.0);
+  assert(mat3d(2, 0, 0) == 3.0);
+  assert(mat3d(3, 0, 0) == 4.0);
+  assert(mat3d(0, 2, 1) == 21.0);
+  assert(mat3d(1, 2, 1) == 22.0);
+  assert(mat3d(2, 2, 1) == 23.0);
+  assert(mat3d(3, 2, 1) == 24.0);
+}
+
+void matrix_test_constructor_12(bool print = false) {
   std::cout << "[TEST]: Constructs a Matrix with initializer_list, n_rows,"
                " n_cols and n_slices\n";
 
@@ -971,7 +1012,8 @@ int main() {
   matrix_test_constructor_04(print_flag);
   matrix_test_constructor_05(print_flag);
   matrix_test_constructor_06(print_flag);
-  matrix_test_constructor_11(print_flag);
+  matrix_test_constructor_07(print_flag);
+  matrix_test_constructor_12(print_flag);
 
   matrix_test_assignment_1(print_flag);
 
