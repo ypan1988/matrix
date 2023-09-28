@@ -157,6 +157,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix(const std::indirect_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
   Matrix(const std::valarray<_Tp>& __x, const uword __dims[1]) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
   Matrix(const std::valarray<_Tp>& __x, const std::valarray<uword>& __dims) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
+  Matrix(const Matrix<_Tp, 2>& __x);
   ~Matrix() {}
 
   // assignment
@@ -273,6 +274,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix(const std::indirect_array<_Tp>& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
   Matrix(const std::valarray<_Tp>& __x, const uword __dims[2]) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
   Matrix(const std::valarray<_Tp>& __x, const std::valarray<uword>& __dims) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
+  Matrix(const Matrix<_Tp, 1>& __x);
   ~Matrix() {}
 
   // assignment
@@ -493,6 +495,18 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
 };
 
 //-----------------------------------------------------------------------------
+
+template <class _Tp>
+Matrix<_Tp, 1>::Matrix(const Matrix<_Tp, 2>& __x)
+    : _Matrix_base<_Tp>(__x.get_elem()) {
+  _M_init();
+}
+
+template <class _Tp>
+Matrix<_Tp, 2>::Matrix(const Matrix<_Tp, 1>& __x)
+    : _Matrix_base<_Tp>(__x.get_elem()) {
+  _M_init(__x.n_elem(), 1);
+}
 
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator+(const Matrix<_Tp, _Size>& __x,

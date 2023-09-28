@@ -312,6 +312,30 @@ void matrix_test_constructor_12(bool print = false) {
 #endif
 }
 
+void matrix_test_constructor_13(bool print = false) {
+  std::cout << "[TEST]: Constructs a Matrix <- from -> a Vector\n";
+
+  const double a[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a, 4);
+  Matrix<double, 2> mat2d_a(a, 4, 1);
+
+  Matrix<double, 1> mat1d_b(mat2d_a);
+  Matrix<double, 2> mat2d_b(mat1d_a);
+
+  if (print) test_print(mat1d_b, "mat1d_b =");
+  if (print) test_print(mat2d_b, "mat2d_b =");
+
+  assert(mat1d_b(0) == 1.0);
+  assert(mat1d_b(1) == 2.0);
+  assert(mat1d_b(2) == 3.0);
+  assert(mat1d_b(3) == 4.0);
+
+  assert(mat2d_b(0, 0) == 1.0);
+  assert(mat2d_b(1, 0) == 2.0);
+  assert(mat2d_b(2, 0) == 3.0);
+  assert(mat2d_b(3, 0) == 4.0);
+}
+
 void matrix_test_assignment_1(bool print = false) {
   std::cout << "[TEST]: Assigns a Matrix with a value\n";
 
@@ -1014,6 +1038,7 @@ int main() {
   matrix_test_constructor_06(print_flag);
   matrix_test_constructor_07(print_flag);
   matrix_test_constructor_12(print_flag);
+  matrix_test_constructor_13(print_flag);
 
   matrix_test_assignment_1(print_flag);
 
