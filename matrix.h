@@ -74,6 +74,7 @@ struct _Matrix_base {
  public:
   typedef _Tp elem_type;
 
+  // clang-format off
   // construct/destroy:
   _Matrix_base() : _M_elem() {}
   _Matrix_base(uword __n) : _M_elem(__n) {}
@@ -91,13 +92,25 @@ struct _Matrix_base {
   _Matrix_base(const std::indirect_array<_Tp>& __x) : _M_elem(__x) {}
   virtual ~_Matrix_base() {}
 
-  // assignment
+  // 'assignments' from valarray
 #if defined(__MATRIX_LIB_USE_CPP11)
   _Matrix_base& operator=(const _Matrix_base& __x) = default;
   _Matrix_base& operator=(_Matrix_base&& __x) = default;
+  void set_elem(std::initializer_list<_Tp>& __x) { _M_elem = __x; }
 #endif
+  void set_elem(const std::valarray<_Tp>& __x) {
+    _M_elem.resize(__x.size());
+    _M_elem = __x;
+  }
+  void set_elem(const std::slice_array<_Tp>& __x) { _M_elem = __x; }
+  void set_elem(const std::gslice_array<_Tp>& __x) { _M_elem = __x; }
+  void set_elem(const std::mask_array<_Tp>& __x) { _M_elem = __x; }
+  void set_elem(const std::indirect_array<_Tp>& __x) { _M_elem = __x; }
 
-  // clang-format off
+  const std::valarray<_Tp>& get_elem() const { return _M_elem; }
+  uword n_elem() const { return _M_elem.size(); }
+
+  // operator[]
   elem_type  operator[](uword __n) const { return _M_elem[__n]; }
   elem_type& operator[](uword __n) { return _M_elem[__n]; }
   std::valarray<_Tp> operator[](std::slice __x) const { return _M_elem[__x]; }
@@ -113,12 +126,6 @@ struct _Matrix_base {
   // if necessay, we can get to the raw matrix:
   elem_type* data() { return &(_M_elem[0]); }
   const elem_type* data() const { return &(_M_elem[0]); }
-  void set_elem(const std::valarray<_Tp>& __x) {
-    _M_elem.resize(__x.size());
-    _M_elem = __x;
-  }
-  const std::valarray<_Tp>& get_elem() const { return _M_elem; }
-  uword n_elem() const { return _M_elem.size(); }
 
  public:  // Other member functions.
           // The results are undefined for zero-length arrays
