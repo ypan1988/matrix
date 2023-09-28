@@ -337,6 +337,94 @@ void matrix_test_constructor_13(bool print = false) {
 }
 
 void matrix_test_assignment_1(bool print = false) {
+  std::cout << "[TEST]: Assigns a Matrix with other matrix\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a1, 4);
+  Matrix<double, 1> mat1d_b;
+  mat1d_b = mat1d_a;
+  if (print) test_print(mat1d_b, "mat1d_b =");
+  assert(mat1d_b(0) == 1.0);
+  assert(mat1d_b(1) == 2.0);
+  assert(mat1d_b(2) == 3.0);
+  assert(mat1d_b(3) == 4.0);
+
+  const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d_a(a2, 4, 3);
+  Matrix<double, 2> mat2d_b;
+  mat2d_b = mat2d_a;
+  if (print) test_print(mat2d_b, "mat2d_b =");
+  assert(mat2d_b(0, 0) == 1.0);
+  assert(mat2d_b(1, 0) == 2.0);
+  assert(mat2d_b(2, 0) == 3.0);
+  assert(mat2d_b(3, 0) == 4.0);
+  assert(mat2d_b(0, 2) == 9.0);
+  assert(mat2d_b(1, 2) == 10.0);
+  assert(mat2d_b(2, 2) == 11.0);
+  assert(mat2d_b(3, 2) == 12.0);
+
+  const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                       13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  Matrix<double, 3> mat3d_a(a3, 4, 3, 2), mat3d_b;
+  mat3d_b = mat3d_a;
+  if (print) test_print(mat3d_b, "mat3d_b =");
+  assert(mat3d_b(0, 0, 0) == 1.0);
+  assert(mat3d_b(1, 0, 0) == 2.0);
+  assert(mat3d_b(2, 0, 0) == 3.0);
+  assert(mat3d_b(3, 0, 0) == 4.0);
+  assert(mat3d_b(0, 2, 1) == 21.0);
+  assert(mat3d_b(1, 2, 1) == 22.0);
+  assert(mat3d_b(2, 2, 1) == 23.0);
+  assert(mat3d_b(3, 2, 1) == 24.0);
+}
+
+void matrix_test_assignment_2(bool print = false) {
+  std::cout << "[TEST]: Assigns a Matrix with other matrix (move assign)\n";
+
+#if defined __MATRIX_LIB_USE_CPP11
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a1, 4);
+  Matrix<double, 1> mat1d_b;
+  mat1d_b = std::move(mat1d_a);
+  if (print) test_print(mat1d_b, "mat1d_b =");
+  assert(mat1d_b(0) == 1.0);
+  assert(mat1d_b(1) == 2.0);
+  assert(mat1d_b(2) == 3.0);
+  assert(mat1d_b(3) == 4.0);
+
+  const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d_a(a2, 4, 3);
+  Matrix<double, 2> mat2d_b;
+  mat2d_b = std::move(mat2d_a);
+  if (print) test_print(mat2d_b, "mat2d_b =");
+  assert(mat2d_b(0, 0) == 1.0);
+  assert(mat2d_b(1, 0) == 2.0);
+  assert(mat2d_b(2, 0) == 3.0);
+  assert(mat2d_b(3, 0) == 4.0);
+  assert(mat2d_b(0, 2) == 9.0);
+  assert(mat2d_b(1, 2) == 10.0);
+  assert(mat2d_b(2, 2) == 11.0);
+  assert(mat2d_b(3, 2) == 12.0);
+
+  const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                       13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  Matrix<double, 3> mat3d_a(a3, 4, 3, 2), mat3d_b;
+  mat3d_b = std::move(mat3d_a);
+  if (print) test_print(mat3d_b, "mat3d_b =");
+  assert(mat3d_b(0, 0, 0) == 1.0);
+  assert(mat3d_b(1, 0, 0) == 2.0);
+  assert(mat3d_b(2, 0, 0) == 3.0);
+  assert(mat3d_b(3, 0, 0) == 4.0);
+  assert(mat3d_b(0, 2, 1) == 21.0);
+  assert(mat3d_b(1, 2, 1) == 22.0);
+  assert(mat3d_b(2, 2, 1) == 23.0);
+  assert(mat3d_b(3, 2, 1) == 24.0);
+#else
+  std::cout << "... TEST SKIPPED (C++11 NOT SUPPORTED)\n";
+#endif
+}
+
+void matrix_test_assignment_3(bool print = false) {
   std::cout << "[TEST]: Assigns a Matrix with a value\n";
 
   const double a1[] = {1, 2, 3, 4};
@@ -1041,6 +1129,8 @@ int main() {
   matrix_test_constructor_13(print_flag);
 
   matrix_test_assignment_1(print_flag);
+  matrix_test_assignment_2(print_flag);
+  matrix_test_assignment_3(print_flag);
 
   matrix_test_unary_add_minus_operator(print_flag);
   matrix_test_addition_assignment_operator(print_flag);
