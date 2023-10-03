@@ -467,6 +467,32 @@ void matrix_test_assignment_3(bool print = false) {
   assert(mat3d(3, 2, 1) == 3.0);
 }
 
+void matrix_test_assignment_4(bool print = false) {
+  std::cout << "[TEST]: Assigns a Matrix <- with -> a Vector\n";
+
+  const double a[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a, 4), mat1d_b;
+  Matrix<double, 2> mat2d_a(a, 4, 1), mat2d_b;
+
+  mat2d_b = mat1d_a;
+  mat1d_b = mat2d_a;
+
+  assert(mat1d_b.n_elem() == 4);
+  assert(mat1d_b.n_rows() == 4);
+  assert(mat1d_b(0) == 1.0);
+  assert(mat1d_b(1) == 2.0);
+  assert(mat1d_b(2) == 3.0);
+  assert(mat1d_b(3) == 4.0);
+
+  assert(mat2d_b.n_elem() == 4);
+  assert(mat2d_b.n_rows() == 4);
+  assert(mat2d_b.n_cols() == 1);
+  assert(mat2d_b(0, 0) == 1.0);
+  assert(mat2d_b(1, 0) == 2.0);
+  assert(mat2d_b(2, 0) == 3.0);
+  assert(mat2d_b(3, 0) == 4.0);
+}
+
 void matrix_test_unary_add_minus_operator(bool print = false) {
   std::cout << "[TEST]: Applies unary add/minus operators to each element\n";
 
@@ -1131,6 +1157,7 @@ int main() {
   matrix_test_assignment_1(print_flag);
   matrix_test_assignment_2(print_flag);
   matrix_test_assignment_3(print_flag);
+  matrix_test_assignment_4(print_flag);
 
   matrix_test_unary_add_minus_operator(print_flag);
   matrix_test_addition_assignment_operator(print_flag);

@@ -178,6 +178,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix& operator=(const std::gslice_array<_Tp>& __ga) { this->_M_elem = __ga; _M_init(); return *this; }
   Matrix& operator=(const std::mask_array<_Tp>& __ma) { this->_M_elem = __ma; _M_init(); return *this; }
   Matrix& operator=(const std::indirect_array<_Tp>& __ia) { this->_M_elem = __ia; _M_init(); return *this; }
+  Matrix& operator=(const Matrix<_Tp, 2>& __x);
   // clang-format on
 
   std::valarray<uword> get_dims() const {
@@ -290,6 +291,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix& operator=(Matrix&& __x) = default;
 #endif
   Matrix& operator=(const elem_type& __x) { this->_M_elem = __x; return *this; }
+  Matrix& operator=(const Matrix<_Tp, 1>& __x);
   // clang-format on
 
   std::valarray<uword> get_dims() const {
@@ -513,6 +515,22 @@ template <class _Tp>
 Matrix<_Tp, 2>::Matrix(const Matrix<_Tp, 1>& __x)
     : _Matrix_base<_Tp>(__x.get_elem()) {
   _M_init(__x.n_elem(), 1);
+}
+
+template <class _Tp>
+Matrix<_Tp, 1>& Matrix<_Tp, 1>::operator=(const Matrix<_Tp, 2>& __x) {
+  if (__x.n_rows() != n_rows()) this->_M_elem.resize(__x.n_rows());
+  this->_M_elem = __x.get_elem();
+  _M_init();
+  return *this;
+}
+
+template <class _Tp>
+Matrix<_Tp, 2>& Matrix<_Tp, 2>::operator=(const Matrix<_Tp, 1>& __x) {
+  if (__x.n_rows() != n_rows()) this->_M_elem.resize(__x.n_rows());
+  this->_M_elem = __x.get_elem();
+  _M_init(__x.n_elem(), 1);
+  return *this;
 }
 
 template <class _Tp, uword _Size>
