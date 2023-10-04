@@ -174,6 +174,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
   Matrix& operator=(std::initializer_list<_Tp> __x) { this->_M_elem = __x; _M_init(); return *this; }
+  Matrix& operator=(Matrix<_Tp, 2>&& __x);
 #endif
   Matrix& operator=(const elem_type& __x) { this->_M_elem = __x; return *this; }
   Matrix& operator=(const std::slice_array<_Tp>& __sa) { this->_M_elem = __sa; _M_init(); return *this; }
@@ -293,6 +294,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix& operator=(const Matrix& __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
+  Matrix& operator=(Matrix<_Tp, 1>&& __x);
 #endif
   Matrix& operator=(const elem_type& __x) { this->_M_elem = __x; return *this; }
   Matrix& operator=(const Matrix<_Tp, 1>& __x);
@@ -548,6 +550,20 @@ template <class _Tp>
 Matrix<_Tp, 2>::Matrix(Matrix<_Tp, 1>&& __x)
     : _Matrix_base<_Tp>(std::move(__x._M_elem)) {
   _M_init(__x.n_rows(), 1);
+}
+
+template <class _Tp>
+Matrix<_Tp, 1>& Matrix<_Tp, 1>::operator=(Matrix<_Tp, 2>&& __x) {
+  this->_M_elem = std::move(__x._M_elem);
+  _M_init();
+  return *this;
+}
+
+template <class _Tp>
+Matrix<_Tp, 2>& Matrix<_Tp, 2>::operator=(Matrix<_Tp, 1>&& __x) {
+  this->_M_elem = std::move(__x._M_elem);
+  _M_init(this->n_elem(), 1);
+  return *this;
 }
 #endif
 

@@ -346,7 +346,7 @@ void matrix_test_constructor_14(bool print = false) {
   Matrix<double, 2> mat2d_a(a, 4, 1);
 
   Matrix<double, 1> mat1d_b(std::move(mat2d_a));
-  Matrix<double, 2> mat2d_b(std::move(mat1d_a));
+  Matrix<double, 2> mat2d_b = std::move(mat1d_a);
 
   if (print) test_print(mat1d_b, "mat1d_b =");
   if (print) test_print(mat2d_b, "mat2d_b =");
@@ -525,6 +525,40 @@ void matrix_test_assignment_4(bool print = false) {
   assert(mat2d_b(1, 0) == 2.0);
   assert(mat2d_b(2, 0) == 3.0);
   assert(mat2d_b(3, 0) == 4.0);
+}
+
+void matrix_test_assignment_5(bool print = false) {
+  std::cout << "[TEST]: Assigns a Matrix <- with -> a Vector using move "
+               "semantics\n";
+
+#if defined(__MATRIX_LIB_USE_CPP11)
+  const double a[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a, 4), mat1d_b;
+  Matrix<double, 2> mat2d_a(a, 4, 1), mat2d_b;
+
+  mat1d_b = std::move(mat2d_a);
+  mat2d_b = std::move(mat1d_a);
+
+  if (print) test_print(mat1d_b, "mat1d_b =");
+  if (print) test_print(mat2d_b, "mat2d_b =");
+
+  assert(mat1d_b.n_elem() == 4);
+  assert(mat1d_b.n_rows() == 4);
+  assert(mat1d_b(0) == 1.0);
+  assert(mat1d_b(1) == 2.0);
+  assert(mat1d_b(2) == 3.0);
+  assert(mat1d_b(3) == 4.0);
+
+  assert(mat2d_b.n_elem() == 4);
+  assert(mat2d_b.n_rows() == 4);
+  assert(mat2d_b.n_cols() == 1);
+  assert(mat2d_b(0, 0) == 1.0);
+  assert(mat2d_b(1, 0) == 2.0);
+  assert(mat2d_b(2, 0) == 3.0);
+  assert(mat2d_b(3, 0) == 4.0);
+#else
+  std::cout << "... TEST SKIPPED (C++11 NOT SUPPORTED)\n";
+#endif
 }
 
 void matrix_test_unary_add_minus_operator(bool print = false) {
@@ -1193,6 +1227,7 @@ int main() {
   matrix_test_assignment_2(print_flag);
   matrix_test_assignment_3(print_flag);
   matrix_test_assignment_4(print_flag);
+  matrix_test_assignment_5(print_flag);
 
   matrix_test_unary_add_minus_operator(print_flag);
   matrix_test_addition_assignment_operator(print_flag);
