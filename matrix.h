@@ -145,6 +145,7 @@ template <class _Tp>
 struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
  public:
   typedef _Tp elem_type;
+  friend struct Matrix<_Tp, 2>;
 
   // clang-format off
   // construct/destroy:
@@ -153,6 +154,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
+  Matrix(Matrix<_Tp, 2>&& __x);
 #endif
   explicit Matrix(uword __n1) : _Matrix_base<_Tp>(__n1) { _M_init(); }
   Matrix(const elem_type& __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_init(); }
@@ -263,6 +265,7 @@ template <class _Tp>
 struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
  public:
   typedef _Tp elem_type;
+  friend struct Matrix<_Tp, 1>;
 
   // clang-format off
   // construct/destroy:
@@ -271,6 +274,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
+  Matrix(Matrix<_Tp, 1>&& __x);
 #endif
   Matrix(uword __n1, uword __n2) : _Matrix_base<_Tp>(__n1 * __n2) { _M_init(__n1, __n2); }
   Matrix(const elem_type& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x, __n1 * __n2) { _M_init(__n1, __n2); }
@@ -532,6 +536,20 @@ Matrix<_Tp, 2>& Matrix<_Tp, 2>::operator=(const Matrix<_Tp, 1>& __x) {
   _M_init(__x.n_elem(), 1);
   return *this;
 }
+
+#if defined(__MATRIX_LIB_USE_CPP11)
+template <class _Tp>
+Matrix<_Tp, 1>::Matrix(Matrix<_Tp, 2>&& __x)
+    : _Matrix_base<_Tp>(std::move(__x._M_elem)) {
+  _M_init();
+}
+
+template <class _Tp>
+Matrix<_Tp, 2>::Matrix(Matrix<_Tp, 1>&& __x)
+    : _Matrix_base<_Tp>(std::move(__x._M_elem)) {
+  _M_init(__x.n_rows(), 1);
+}
+#endif
 
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator+(const Matrix<_Tp, _Size>& __x,
