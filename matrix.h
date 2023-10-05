@@ -212,6 +212,8 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
     return this->_M_elem[std::slice(__i, __j - __i + 1, 1)];
   }
 
+  Matrix<_Tp, 2> t() const;
+
   // clang-format off
  public:
   Matrix operator+() const { return *this; }
@@ -350,6 +352,8 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
                         uword __last_col) const;
   MatrixRef<_Tp> submat(uword __first_row, uword __first_col, uword __last_row,
                         uword __last_col);
+
+  Matrix<_Tp, 2> t() const;
 
   // clang-format off
  public:
@@ -757,6 +761,24 @@ inline MatrixRef<_Tp> Matrix<_Tp, 2>::submat(uword __first_row,
   const std::valarray<uword> __stride(__st, 2);
 
   return MatrixRef<_Tp>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 2> Matrix<_Tp, 1>::t() const {
+  return Matrix<_Tp, 2>(this->_M_elem, 1, n_rows());
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 2> Matrix<_Tp, 2>::t() const {
+  uword n = n_rows(), m = n_cols();
+  Matrix<_Tp, 2> __res(m, n);
+  for (uword idx = 0; idx < this->n_elem(); ++idx) {
+    uword i = idx / m;
+    uword j = idx % m;
+    __res._M_elem[idx] = (*this)[n * j + i];
+  }
+
+  return __res;
 }
 
 typedef Matrix<double, 1> vec;

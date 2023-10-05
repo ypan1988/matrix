@@ -1050,6 +1050,46 @@ void matrix_2d_test_submat(bool print = false) {
   assert(mat2d_c(2, 1) == 12);
 }
 
+void matrix_1d_test_transpose(bool print = false) {
+  std::cout << "[TEST]: 1D Matrix's member functions transpose\n";
+
+  const double arr[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d(arr, 4);
+  Matrix<double, 2> mat2d = mat1d.t();
+
+  if (print) test_print(mat1d, "mat1d = ");
+  if (print) test_print(mat2d, "mat2d = ");
+
+  assert(mat2d.n_elem() == 4);
+  assert(mat2d.n_rows() == 1);
+  assert(mat2d.n_cols() == 4);
+  assert(mat2d(0, 0) == 1);
+  assert(mat2d(0, 1) == 2);
+  assert(mat2d(0, 2) == 3);
+  assert(mat2d(0, 3) == 4);
+}
+
+void matrix_2d_test_transpose(bool print = false) {
+  std::cout << "[TEST]: 2D Matrix's member functions transpose\n";
+
+  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d_a(arr, 4, 3);
+  Matrix<double, 2> mat2d_b = mat2d_a.t();
+
+  if (print) test_print(mat2d_a, "mat2d_a = ");
+  if (print) test_print(mat2d_b, "mat2d_b = ");
+
+  assert(mat2d_b.n_elem() == 12);
+  assert(mat2d_b.n_rows() == 3);
+  assert(mat2d_b.n_cols() == 4);
+  assert(mat2d_b(0, 0) == 1);
+  assert(mat2d_b(1, 0) == 5);
+  assert(mat2d_b(2, 0) == 9);
+  assert(mat2d_b(0, 3) == 4);
+  assert(mat2d_b(1, 3) == 8);
+  assert(mat2d_b(2, 3) == 12);
+}
+
 void matrix_test_binary_addition_operator(bool print = false) {
   std::cout << "[TEST]: Applies binary addition operators to each element\n";
 
@@ -1245,6 +1285,8 @@ int main() {
   matrix_2d_test_slice_array(print_flag);
   matrix_2d_test_gslice_array(print_flag);
   matrix_2d_test_submat(print_flag);
+  matrix_1d_test_transpose(print_flag);
+  matrix_2d_test_transpose(print_flag);
 
   matrix_test_binary_addition_operator(print_flag);
   matrix_test_binary_subtraction_operator(print_flag);
