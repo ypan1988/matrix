@@ -163,10 +163,10 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   explicit Matrix(uword __n1) : _Matrix_base<_Tp>(__n1) { _M_init(); }
   Matrix(const elem_type& __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_init(); }
   Matrix(const elem_type* __x, uword __n1) : _Matrix_base<_Tp>(__x, __n1) { _M_init(); }
-  Matrix(const std::valarray<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
-  Matrix(const std::slice_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
-  Matrix(const std::gslice_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
-  Matrix(const std::mask_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
+  Matrix(const std::valarray<_Tp>      & __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
+  Matrix(const std::slice_array<_Tp>   & __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
+  Matrix(const std::gslice_array<_Tp>  & __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
+  Matrix(const std::mask_array<_Tp>    & __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
   Matrix(const std::indirect_array<_Tp>& __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
   Matrix(const std::valarray<_Tp>& __x, const uword __dims[1]) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
   Matrix(const std::valarray<_Tp>& __x, const std::valarray<uword>& __dims) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
@@ -180,10 +180,10 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix& operator=(std::initializer_list<_Tp> __x) { this->_M_elem = __x; _M_init(); return *this; }
   Matrix& operator=(Matrix<_Tp, 2>&& __x);
 #endif
-  Matrix& operator=(const elem_type& __x) { this->_M_elem = __x; return *this; }
-  Matrix& operator=(const std::slice_array<_Tp>& __sa) { this->_M_elem = __sa; _M_init(); return *this; }
-  Matrix& operator=(const std::gslice_array<_Tp>& __ga) { this->_M_elem = __ga; _M_init(); return *this; }
-  Matrix& operator=(const std::mask_array<_Tp>& __ma) { this->_M_elem = __ma; _M_init(); return *this; }
+  Matrix& operator=(const elem_type               & __x ) { this->_M_elem = __x; return *this; }
+  Matrix& operator=(const std::slice_array<_Tp>   & __sa) { this->_M_elem = __sa; _M_init(); return *this; }
+  Matrix& operator=(const std::gslice_array<_Tp>  & __ga) { this->_M_elem = __ga; _M_init(); return *this; }
+  Matrix& operator=(const std::mask_array<_Tp>    & __ma) { this->_M_elem = __ma; _M_init(); return *this; }
   Matrix& operator=(const std::indirect_array<_Tp>& __ia) { this->_M_elem = __ia; _M_init(); return *this; }
   Matrix& operator=(const Matrix<_Tp, 2>& __x);
   // clang-format on
@@ -286,10 +286,10 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix(uword __n1, uword __n2) : _Matrix_base<_Tp>(__n1 * __n2) { _M_init(__n1, __n2); }
   Matrix(const elem_type& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x, __n1 * __n2) { _M_init(__n1, __n2); }
   Matrix(const elem_type* __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x, __n1 * __n2) { _M_init(__n1, __n2); }
-  Matrix(const std::valarray<_Tp>& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
-  Matrix(const std::slice_array<_Tp>& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
-  Matrix(const std::gslice_array<_Tp>& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
-  Matrix(const std::mask_array<_Tp>& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
+  Matrix(const std::valarray<_Tp>      & __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
+  Matrix(const std::slice_array<_Tp>   & __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
+  Matrix(const std::gslice_array<_Tp>  & __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
+  Matrix(const std::mask_array<_Tp>    & __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
   Matrix(const std::indirect_array<_Tp>& __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
   Matrix(const std::valarray<_Tp>& __x, const uword __dims[2]) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
   Matrix(const std::valarray<_Tp>& __x, const std::valarray<uword>& __dims) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
@@ -425,10 +425,10 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   Matrix(uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__n1 * __n2 * __n3) { _M_init(__n1, __n2, __n3); }
   Matrix(const elem_type& __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x, __n1 * __n2 * __n3) { _M_init(__n1, __n2, __n3); }
   Matrix(const elem_type* __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x, __n1 * __n2 * __n3) { _M_init(__n1, __n2, __n3); }
-  Matrix(const std::valarray<_Tp>& __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
-  Matrix(const std::slice_array<_Tp>& __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
-  Matrix(const std::gslice_array<_Tp>& __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
-  Matrix(const std::mask_array<_Tp>& __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
+  Matrix(const std::valarray<_Tp>      & __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
+  Matrix(const std::slice_array<_Tp>   & __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
+  Matrix(const std::gslice_array<_Tp>  & __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
+  Matrix(const std::mask_array<_Tp>    & __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
   Matrix(const std::indirect_array<_Tp>& __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
   Matrix(const std::valarray<_Tp>& __x, const uword __dims[3]) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
   Matrix(const std::valarray<_Tp>& __x, const std::valarray<uword>& __dims) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
