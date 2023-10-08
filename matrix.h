@@ -102,9 +102,9 @@ struct _Matrix_base {
     _M_elem.resize(__x.size());
     _M_elem = __x;
   }
-  void set_elem(const std::slice_array<_Tp>&    __x) { _M_elem = __x; }
-  void set_elem(const std::gslice_array<_Tp>&   __x) { _M_elem = __x; }
-  void set_elem(const std::mask_array<_Tp>&     __x) { _M_elem = __x; }
+  void set_elem(const std::slice_array<_Tp>   & __x) { _M_elem = __x; }
+  void set_elem(const std::gslice_array<_Tp>  & __x) { _M_elem = __x; }
+  void set_elem(const std::mask_array<_Tp>    & __x) { _M_elem = __x; }
   void set_elem(const std::indirect_array<_Tp>& __x) { _M_elem = __x; }
 
   const std::valarray<_Tp>& get_elem() const { return _M_elem; }
@@ -113,19 +113,23 @@ struct _Matrix_base {
   // operator[]
   elem_type                operator[](uword __n)       const { return _M_elem[__n]; }
   elem_type&               operator[](uword __n)             { return _M_elem[__n]; }
+
   std::valarray<_Tp>       operator[](std::slice  __x) const { return _M_elem[__x]; }
   std::slice_array<_Tp>    operator[](std::slice  __x)       { return _M_elem[__x]; }
+
   std::valarray<_Tp>       operator[](std::gslice __x) const { return _M_elem[__x]; }
   std::gslice_array<_Tp>   operator[](std::gslice __x)       { return _M_elem[__x]; }
+
   std::valarray<_Tp>       operator[](const std::valarray<bool>  &__x) const { return _M_elem[__x]; }
   std::mask_array<_Tp>     operator[](const std::valarray<bool>  &__x)       { return _M_elem[__x]; }
+
   std::valarray<_Tp>       operator[](const std::valarray<uword> &__x) const { return _M_elem[__x]; }
   std::indirect_array<_Tp> operator[](const std::valarray<uword> &__x)       { return _M_elem[__x]; }
-  // clang-format on
 
   // if necessay, we can get to the raw matrix:
-  elem_type* data() { return &(_M_elem[0]); }
+        elem_type* data()       { return &(_M_elem[0]); }
   const elem_type* data() const { return &(_M_elem[0]); }
+  // clang-format on
 
  public:  // Other member functions.
           // The results are undefined for zero-length arrays
