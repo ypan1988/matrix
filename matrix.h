@@ -86,9 +86,9 @@ struct _Matrix_base {
   _Matrix_base(_Matrix_base&& __x) = default;
   _Matrix_base(std::initializer_list<_Tp> __x) : _M_elem(__x) {}
 #endif
-  _Matrix_base(const std::slice_array<_Tp>& __x) : _M_elem(__x) {}
-  _Matrix_base(const std::gslice_array<_Tp>& __x) : _M_elem(__x) {}
-  _Matrix_base(const std::mask_array<_Tp>& __x) : _M_elem(__x) {}
+  _Matrix_base(const std::slice_array<_Tp>&    __x) : _M_elem(__x) {}
+  _Matrix_base(const std::gslice_array<_Tp>&   __x) : _M_elem(__x) {}
+  _Matrix_base(const std::mask_array<_Tp>&     __x) : _M_elem(__x) {}
   _Matrix_base(const std::indirect_array<_Tp>& __x) : _M_elem(__x) {}
   virtual ~_Matrix_base() {}
 
@@ -102,25 +102,25 @@ struct _Matrix_base {
     _M_elem.resize(__x.size());
     _M_elem = __x;
   }
-  void set_elem(const std::slice_array<_Tp>& __x) { _M_elem = __x; }
-  void set_elem(const std::gslice_array<_Tp>& __x) { _M_elem = __x; }
-  void set_elem(const std::mask_array<_Tp>& __x) { _M_elem = __x; }
+  void set_elem(const std::slice_array<_Tp>&    __x) { _M_elem = __x; }
+  void set_elem(const std::gslice_array<_Tp>&   __x) { _M_elem = __x; }
+  void set_elem(const std::mask_array<_Tp>&     __x) { _M_elem = __x; }
   void set_elem(const std::indirect_array<_Tp>& __x) { _M_elem = __x; }
 
   const std::valarray<_Tp>& get_elem() const { return _M_elem; }
   uword n_elem() const { return _M_elem.size(); }
 
   // operator[]
-  elem_type  operator[](uword __n) const { return _M_elem[__n]; }
-  elem_type& operator[](uword __n) { return _M_elem[__n]; }
-  std::valarray<_Tp> operator[](std::slice __x) const { return _M_elem[__x]; }
-  std::slice_array<_Tp> operator[](std::slice __x) { return _M_elem[__x]; }
-  std::valarray<_Tp> operator[](std::gslice __x) const { return _M_elem[__x]; }
-  std::gslice_array<_Tp> operator[](std::gslice __x) { return _M_elem[__x]; }
-  std::valarray<_Tp> operator[](const std::valarray<bool> &__x) const { return _M_elem[__x]; }
-  std::mask_array<_Tp> operator[](const std::valarray<bool> &__x) { return _M_elem[__x]; }
-  std::valarray<_Tp> operator[](const std::valarray<uword> &__x) const { return _M_elem[__x]; }
-  std::indirect_array<_Tp> operator[](const std::valarray<uword> &__x) { return _M_elem[__x]; }
+  elem_type                operator[](uword __n)       const { return _M_elem[__n]; }
+  elem_type&               operator[](uword __n)             { return _M_elem[__n]; }
+  std::valarray<_Tp>       operator[](std::slice  __x) const { return _M_elem[__x]; }
+  std::slice_array<_Tp>    operator[](std::slice  __x)       { return _M_elem[__x]; }
+  std::valarray<_Tp>       operator[](std::gslice __x) const { return _M_elem[__x]; }
+  std::gslice_array<_Tp>   operator[](std::gslice __x)       { return _M_elem[__x]; }
+  std::valarray<_Tp>       operator[](const std::valarray<bool>  &__x) const { return _M_elem[__x]; }
+  std::mask_array<_Tp>     operator[](const std::valarray<bool>  &__x)       { return _M_elem[__x]; }
+  std::valarray<_Tp>       operator[](const std::valarray<uword> &__x) const { return _M_elem[__x]; }
+  std::indirect_array<_Tp> operator[](const std::valarray<uword> &__x)       { return _M_elem[__x]; }
   // clang-format on
 
   // if necessay, we can get to the raw matrix:
