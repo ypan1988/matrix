@@ -647,35 +647,35 @@ inline Matrix<_Tp, _Size> operator%(const Matrix<_Tp, _Size>& __x,
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator+(const _Tp& __c,
                                     const Matrix<_Tp, _Size>& __x) {
-  Matrix<_Tp, _Size> __tmp(__c + __x.get_elem(), __x.get_elem());
+  Matrix<_Tp, _Size> __tmp(__c + __x.get_elem(), __x.get_dims());
   return __tmp;
 }
 
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator-(const _Tp& __c,
                                     const Matrix<_Tp, _Size>& __x) {
-  Matrix<_Tp, _Size> __tmp(__c - __x.get_elem(), __x.get_elem());
+  Matrix<_Tp, _Size> __tmp(__c - __x.get_elem(), __x.get_dims());
   return __tmp;
 }
 
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator*(const _Tp& __c,
                                     const Matrix<_Tp, _Size>& __x) {
-  Matrix<_Tp, _Size> __tmp(__c * __x.get_elem(), __x.get_elem());
+  Matrix<_Tp, _Size> __tmp(__c * __x.get_elem(), __x.get_dims());
   return __tmp;
 }
 
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator/(const _Tp& __c,
                                     const Matrix<_Tp, _Size>& __x) {
-  Matrix<_Tp, _Size> __tmp(__c / __x.get_elem(), __x.get_elem());
+  Matrix<_Tp, _Size> __tmp(__c / __x.get_elem(), __x.get_dims());
   return __tmp;
 }
 
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator%(const _Tp& __c,
                                     const Matrix<_Tp, _Size>& __x) {
-  Matrix<_Tp, _Size> __tmp(__c % __x.get_elem(), __x.get_elem());
+  Matrix<_Tp, _Size> __tmp(__c % __x.get_elem(), __x.get_dims());
   return __tmp;
 }
 

@@ -640,6 +640,7 @@ void matrix_test_addition_assignment_operator(bool print = false) {
   const double a1[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d_a(a1, 4);
   Matrix<double, 1> mat1d_b(a1, 4);
+  Matrix<double, 1> mat1d_c(a1, 4);
 
   if (print) test_print(mat1d_a, "mat1d_a = ");
   if (print) std::cout << "Apply mat1d_a += 1\n";
@@ -658,6 +659,15 @@ void matrix_test_addition_assignment_operator(bool print = false) {
   assert(mat1d_b(1) == 5.0);
   assert(mat1d_b(2) == 7.0);
   assert(mat1d_b(3) == 9.0);
+
+  if (print) test_print(mat1d_c, "mat1d_c = ");
+  if (print) std::cout << "Apply mat1d_c = 1 + mat1d_c\n";
+  mat1d_c = 1.0 + mat1d_c;
+  if (print) test_print(mat1d_c, "mat1d_c = ");
+  assert(mat1d_c(0) == 2.0);
+  assert(mat1d_c(1) == 3.0);
+  assert(mat1d_c(2) == 4.0);
+  assert(mat1d_c(3) == 5.0);
 }
 
 void matrix_test_subtraction_assignment_operator(bool print = false) {
@@ -667,6 +677,7 @@ void matrix_test_subtraction_assignment_operator(bool print = false) {
   const double a1[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d_a(a1, 4);
   Matrix<double, 1> mat1d_b(a1, 4);
+  Matrix<double, 1> mat1d_c(a1, 4);
 
   if (print) test_print(mat1d_a, "mat1d_a = ");
   if (print) std::cout << "Apply mat1d_a -= 1\n";
@@ -685,6 +696,15 @@ void matrix_test_subtraction_assignment_operator(bool print = false) {
   assert(mat1d_b(1) == 1.0);
   assert(mat1d_b(2) == 1.0);
   assert(mat1d_b(3) == 1.0);
+
+  if (print) test_print(mat1d_c, "mat1d_c = ");
+  if (print) std::cout << "Apply mat1d_c = 1-mat1d_c\n";
+  mat1d_c = 1.0 - mat1d_c;
+  if (print) test_print(mat1d_c, "mat1d_c = ");
+  assert(mat1d_c(0) == 0.0);
+  assert(mat1d_c(1) == -1.0);
+  assert(mat1d_c(2) == -2.0);
+  assert(mat1d_c(3) == -3.0);
 }
 
 void matrix_test_multiplication_assignment_operator(bool print = false) {
@@ -694,6 +714,7 @@ void matrix_test_multiplication_assignment_operator(bool print = false) {
   const double a1[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d_a(a1, 4);
   Matrix<double, 1> mat1d_b(a1, 4);
+  Matrix<double, 1> mat1d_c(a1, 4);
 
   if (print) test_print(mat1d_a, "mat1d_a = ");
   if (print) std::cout << "Apply mat1d_a *= 2\n";
@@ -712,6 +733,15 @@ void matrix_test_multiplication_assignment_operator(bool print = false) {
   assert(mat1d_b(1) == 8.0);
   assert(mat1d_b(2) == 18.0);
   assert(mat1d_b(3) == 32.0);
+
+  if (print) test_print(mat1d_c, "mat1d_c = ");
+  if (print) std::cout << "Apply mat1d_c = 2.0 * mat1d_c\n";
+  mat1d_c = 2.0 * mat1d_c;
+  if (print) test_print(mat1d_c, "mat1d_c = ");
+  assert(mat1d_c(0) == 2.0);
+  assert(mat1d_c(1) == 4.0);
+  assert(mat1d_c(2) == 6.0);
+  assert(mat1d_c(3) == 8.0);
 }
 
 void matrix_test_division_assignment_operator(bool print = false) {
@@ -721,6 +751,7 @@ void matrix_test_division_assignment_operator(bool print = false) {
   const double a1[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d_a(a1, 4);
   Matrix<double, 1> mat1d_b(a1, 4);
+  Matrix<double, 1> mat1d_c(a1, 4);
 
   if (print) test_print(mat1d_a, "mat1d_a = ");
   if (print) std::cout << "Apply mat1d_a /= 2\n";
@@ -739,6 +770,15 @@ void matrix_test_division_assignment_operator(bool print = false) {
   assert(mat1d_b(1) == 2.0);
   assert(mat1d_b(2) == 2.0);
   assert(mat1d_b(3) == 2.0);
+
+  if (print) test_print(mat1d_c, "mat1d_c = ");
+  if (print) std::cout << "Apply mat1d_c = 2 / mat1d_c\n";
+  mat1d_c = 2.0 / mat1d_c;
+  if (print) test_print(mat1d_c, "mat1d_c = ");
+  assert(mat1d_c(0) == 2.0);
+  assert(mat1d_c(1) == 1.0);
+  assert(std::abs(mat1d_c(2) - 2.0 / 3) < 1e-5);
+  assert(mat1d_c(3) == 0.5);
 }
 
 void matrix_test_member_function_sum(bool print = false) {
