@@ -1082,12 +1082,27 @@ void matrix_2d_test_submat(bool print = false) {
   const Matrix<double, 2> mat2d_b(arr, 4, 3);
   Matrix<double, 2> mat2d_c(mat2d_b.submat(1, 1, 3, 2));
   if (print) test_print(mat2d_c, "mat2d_c = ");
+  assert(mat2d_c.n_elem() == 6);
+  assert(mat2d_c.n_rows() == 3);
+  assert(mat2d_c.n_cols() == 2);
   assert(mat2d_c(0, 0) == 6);
   assert(mat2d_c(1, 0) == 7);
   assert(mat2d_c(2, 0) == 8);
   assert(mat2d_c(0, 1) == 10);
   assert(mat2d_c(1, 1) == 11);
   assert(mat2d_c(2, 1) == 12);
+
+  const Matrix<double, 2> mat2d_d = mat2d_b.submat(0, 0, 2, 1);
+  if (print) test_print(mat2d_d, "mat2d_d = ");
+  assert(mat2d_d.n_elem() == 6);
+  assert(mat2d_d.n_rows() == 3);
+  assert(mat2d_d.n_cols() == 2);
+  assert(mat2d_d(0, 0) == 1);
+  assert(mat2d_d(1, 0) == 2);
+  assert(mat2d_d(2, 0) == 3);
+  assert(mat2d_d(0, 1) == 5);
+  assert(mat2d_d(1, 1) == 6);
+  assert(mat2d_d(2, 1) == 7);
 }
 
 void matrix_1d_test_transpose(bool print = false) {

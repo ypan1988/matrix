@@ -152,7 +152,8 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   // clang-format off
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(); }
-  Matrix(const Matrix& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
+  Matrix(const Matrix           & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
+  Matrix(const MatrixRef<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
@@ -172,7 +173,8 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   ~Matrix() {}
 
   // assignment
-  Matrix& operator=(const Matrix& __x) { this->set_elem(__x._M_elem); _M_init(); return *this; }
+  Matrix& operator=(const Matrix           & __x) { this->set_elem(__x._M_elem); _M_init(); return *this; }
+  Matrix& operator=(const MatrixRef<_Tp, 1>& __x) { this->set_elem(__x._M_elem); _M_init(); return *this; }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
   Matrix& operator=(std::initializer_list<_Tp> __x) { this->_M_elem = __x; _M_init(); return *this; }
@@ -275,7 +277,8 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   // clang-format off
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(0, 0); }
-  Matrix(const Matrix& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const Matrix           & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const MatrixRef<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
@@ -295,7 +298,8 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   ~Matrix() {}
 
   // assignment
-  Matrix& operator=(const Matrix& __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
+  Matrix& operator=(const Matrix           & __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
+  Matrix& operator=(const MatrixRef<_Tp, 2>& __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
   Matrix& operator=(Matrix<_Tp, 1>&& __x);
@@ -350,10 +354,8 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
     range_check(0, __c);
     return this->_M_elem[std::slice(__c * _M_dims[0], _M_dims[0], 1)];
   }
-  Matrix<_Tp, 2> submat(uword __first_row, uword __first_col, uword __last_row,
-                        uword __last_col) const;
-  MatrixRef<_Tp, 2> submat(uword __first_row, uword __first_col,
-                           uword __last_row, uword __last_col);
+  Matrix<_Tp, 2> submat(uword, uword, uword, uword) const;
+  MatrixRef<_Tp, 2> submat(uword, uword, uword, uword);
 
   Matrix<_Tp, 2> t() const;
 
@@ -415,7 +417,8 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   // clang-format off
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(0, 0, 0); }
-  Matrix(const Matrix& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const Matrix           & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const MatrixRef<_Tp, 3>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
@@ -433,7 +436,8 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   ~Matrix() {}
 
   // assignment
-  Matrix& operator=(const Matrix& __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
+  Matrix& operator=(const Matrix           & __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
+  Matrix& operator=(const MatrixRef<_Tp, 3>& __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
 #endif
