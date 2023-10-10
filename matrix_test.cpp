@@ -1335,5 +1335,7 @@ int main() {
   matrix_test_exp(print_flag);
   matrix_test_dot(print_flag);
 
+  std::cout << "All tests are done..." << std::endl;
+
   return 0;
 }

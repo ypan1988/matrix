@@ -92,26 +92,29 @@ struct _Matrix_base {
   _Matrix_base(const std::indirect_array<_Tp>& __x) : _M_elem(__x) {}
   virtual ~_Matrix_base() {}
 
-  // 'assignments' from valarray
+  // assignments
 #if defined(__MATRIX_LIB_USE_CPP11)
   _Matrix_base& operator=(const _Matrix_base& __x) = default;
   _Matrix_base& operator=(_Matrix_base&& __x) = default;
-  void set_elem(std::initializer_list<_Tp>& __x) { _M_elem = __x; }
 #endif
+
+  // elements accessor and mutator functions
+  const std::valarray<_Tp>& get_elem() const { return _M_elem; }
   void set_elem(const std::valarray<_Tp>      & __x) { _M_elem.resize(__x.size()); _M_elem = __x; }
   void set_elem(const std::slice_array<_Tp>   & __x) { _M_elem = __x; }
   void set_elem(const std::gslice_array<_Tp>  & __x) { _M_elem = __x; }
   void set_elem(const std::mask_array<_Tp>    & __x) { _M_elem = __x; }
   void set_elem(const std::indirect_array<_Tp>& __x) { _M_elem = __x; }
-
-  const std::valarray<_Tp>& get_elem() const { return _M_elem; }
+#if defined(__MATRIX_LIB_USE_CPP11)
+  void set_elem(std::initializer_list<_Tp>    & __x) { _M_elem = __x; }
+#endif
   uword n_elem() const { return _M_elem.size(); }
 
- public:                   // Element access
+  // element access
   elem_type                operator[](uword __n)       const { return _M_elem[__n]; }
   elem_type&               operator[](uword __n)             { return _M_elem[__n]; }
 
- public:                   // Subsetting operations with auxiliary type
+  // subsetting operations with auxiliary type
   std::valarray<_Tp>       operator[](std::slice  __x) const { return _M_elem[__x]; }
   std::slice_array<_Tp>    operator[](std::slice  __x)       { return _M_elem[__x]; }
   std::valarray<_Tp>       operator[](std::gslice __x) const { return _M_elem[__x]; }
