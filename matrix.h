@@ -264,6 +264,12 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
       error("1D Cstor error: dimension mismatch");
     _M_dims[0] = __dims[0];
   }
+  Matrix(const std::valarray<_Tp>& __va, uword __start, const uword __size[1],
+         const uword __stride[1])
+      : _Matrix_base<_Tp>(__va[std::gslice(__start, uarray(__size, 1),
+                                           uarray(__stride, 1))]) {
+    _M_init();
+  }
 };
 
 //-----------------------------------------------------------------------------
@@ -403,6 +409,12 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   void _M_init(const uarray& __dims) {
     _M_dims[0] = __dims[0], _M_dims[1] = __dims[1];
   }
+  Matrix(const std::valarray<_Tp>& __va, uword __start, const uword __size[2],
+         const uword __stride[2])
+      : _Matrix_base<_Tp>(__va[std::gslice(__start, uarray(__size, 2),
+                                           uarray(__stride, 2))]) {
+    _M_init(__size[1], __size[0]);
+  }
 };
 
 //-----------------------------------------------------------------------------
@@ -512,6 +524,12 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   void _M_init(const uarray& __dims) {
     _M_dims[0] = __dims[0], _M_dims[1] = __dims[1], _M_dims[2] = __dims[2];
     _M_d1xd2 = __dims[0] * __dims[1];
+  }
+  Matrix(const std::valarray<_Tp>& __va, uword __start, const uword __size[3],
+         const uword __stride[3])
+      : _Matrix_base<_Tp>(__va[std::gslice(__start, uarray(__size, 3),
+                                           uarray(__stride, 3))]) {
+    _M_init(__size[2], __size[1], __size[0]);
   }
 };
 
@@ -744,16 +762,15 @@ inline Matrix<_Tp, 2> Matrix<_Tp, 2>::submat(uword __first_row,
                                              uword __first_col,
                                              uword __last_row,
                                              uword __last_col) const {
-  const uword __sz[2] = {__last_col - __first_col + 1,
-                         __last_row - __first_row + 1};
-  const uword __st[2] = {n_rows(), 1};
-
   const uword __start = n_rows() * __first_col + __first_row;
-  const uarray __size(__sz, 2);
-  const uarray __stride(__st, 2);
+  const uword __size[2] = {__last_col - __first_col + 1,
+                           __last_row - __first_row + 1};
+  const uword __stride[2] = {n_rows(), 1};
 
-  return Matrix<_Tp, 2>(this->_M_elem[std::gslice(__start, __size, __stride)],
-                        __size[1], __size[0]);
+  // const uarray __size(__sz, 2);
+  // const uarray __stride(__st, 2);
+
+  return Matrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
 }
 
 template <class _Tp>
