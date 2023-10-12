@@ -766,10 +766,6 @@ inline Matrix<_Tp, 2> Matrix<_Tp, 2>::submat(uword __first_row,
   const uword __size[2] = {__last_col - __first_col + 1,
                            __last_row - __first_row + 1};
   const uword __stride[2] = {n_rows(), 1};
-
-  // const uarray __size(__sz, 2);
-  // const uarray __stride(__st, 2);
-
   return Matrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
 }
 
@@ -782,7 +778,6 @@ inline MatrixRef<_Tp, 2> Matrix<_Tp, 2>::submat(uword __first_row,
   const uword __size[2] = {__last_col - __first_col + 1,
                            __last_row - __first_row + 1};
   const uword __stride[2] = {n_rows(), 1};
-
   return MatrixRef<_Tp, 2>(this->_M_elem, __start, __size, __stride);
 }
 
