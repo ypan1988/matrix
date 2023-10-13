@@ -342,22 +342,11 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
     return this->_M_elem[std::slice(0, std::min(_M_dims[0], _M_dims[1]),
                                     _M_dims[0] + 1)];
   }
-  std::valarray<_Tp> row(uword __r) const {
-    range_check(__r, 0);
-    return this->_M_elem[std::slice(__r, _M_dims[1], _M_dims[0])];
-  }
-  std::slice_array<_Tp> row(uword __r) {
-    range_check(__r, 0);
-    return this->_M_elem[std::slice(__r, _M_dims[1], _M_dims[0])];
-  }
-  std::valarray<_Tp> col(uword __c) const {
-    range_check(0, __c);
-    return this->_M_elem[std::slice(__c * _M_dims[0], _M_dims[0], 1)];
-  }
-  std::slice_array<_Tp> col(uword __c) {
-    range_check(0, __c);
-    return this->_M_elem[std::slice(__c * _M_dims[0], _M_dims[0], 1)];
-  }
+
+  Matrix<_Tp, 1> row(uword) const;
+  MatrixRef<_Tp, 1> row(uword);
+  Matrix<_Tp, 1> col(uword) const;
+  MatrixRef<_Tp, 1> col(uword);
   Matrix<_Tp, 2> submat(uword, uword, uword, uword) const;
   MatrixRef<_Tp, 2> submat(uword, uword, uword, uword);
 
@@ -758,25 +747,55 @@ struct MatrixRef {
 };
 
 template <class _Tp>
-inline Matrix<_Tp, 2> Matrix<_Tp, 2>::submat(uword __first_row,
-                                             uword __first_col,
-                                             uword __last_row,
-                                             uword __last_col) const {
-  const uword __start = n_rows() * __first_col + __first_row;
-  const uword __size[2] = {__last_col - __first_col + 1,
-                           __last_row - __first_row + 1};
+inline Matrix<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) const {
+  range_check(__r, 0);
+  const uword __start = __r;
+  const uword __size[1] = {_M_dims[1]};
+  const uword __stride[1] = {_M_dims[0]};
+  return Matrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline MatrixRef<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) {
+  range_check(__r, 0);
+  const uword __start = __r;
+  const uword __size[1] = {_M_dims[1]};
+  const uword __stride[1] = {_M_dims[0]};
+  return MatrixRef<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 1> Matrix<_Tp, 2>::col(uword __c) const {
+  range_check(0, __c);
+  const uword __start = __c * _M_dims[0];
+  const uword __size[1] = {_M_dims[0]};
+  const uword __stride[1] = {1};
+  return Matrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline MatrixRef<_Tp, 1> Matrix<_Tp, 2>::col(uword __c) {
+  range_check(0, __c);
+  const uword __start = __c * _M_dims[0];
+  const uword __size[1] = {_M_dims[0]};
+  const uword __stride[1] = {1};
+  return MatrixRef<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 2> Matrix<_Tp, 2>::submat(uword __fr, uword __fc, uword __lr,
+                                             uword __lc) const {
+  const uword __start = n_rows() * __fc + __fr;
+  const uword __size[2] = {__lc - __fc + 1, __lr - __fr + 1};
   const uword __stride[2] = {n_rows(), 1};
   return Matrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
 }
 
 template <class _Tp>
-inline MatrixRef<_Tp, 2> Matrix<_Tp, 2>::submat(uword __first_row,
-                                                uword __first_col,
-                                                uword __last_row,
-                                                uword __last_col) {
-  const uword __start = n_rows() * __first_col + __first_row;
-  const uword __size[2] = {__last_col - __first_col + 1,
-                           __last_row - __first_row + 1};
+inline MatrixRef<_Tp, 2> Matrix<_Tp, 2>::submat(uword __fr, uword __fc,
+                                                uword __lr, uword __lc) {
+  const uword __start = n_rows() * __fc + __fr;
+  const uword __size[2] = {__lc - __fc + 1, __lr - __fr + 1};
   const uword __stride[2] = {n_rows(), 1};
   return MatrixRef<_Tp, 2>(this->_M_elem, __start, __size, __stride);
 }
