@@ -113,8 +113,8 @@ struct _Matrix_base {
   uword n_elem() const { return _M_elem.size(); }
 
   // element access
-  elem_type                operator[](uword __n)         const { return _M_elem[__n]; }
-  elem_type&               operator[](uword __n)               { return _M_elem[__n]; }
+  elem_type                operator[](uword         __n) const { return _M_elem[__n]; }
+  elem_type&               operator[](uword         __n)       { return _M_elem[__n]; }
 
   // subsetting operations with auxiliary type
   std::valarray<_Tp>       operator[](std::slice    __x) const { return _M_elem[__x]; }
@@ -347,6 +347,10 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   MatrixRef<_Tp, 1> row(uword);
   Matrix<_Tp, 1> col(uword) const;
   MatrixRef<_Tp, 1> col(uword);
+  Matrix<_Tp, 2> rows(uword, uword) const;
+  MatrixRef<_Tp, 2> rows(uword, uword);
+  Matrix<_Tp, 2> cols(uword, uword) const;
+  MatrixRef<_Tp, 2> cols(uword, uword);
   Matrix<_Tp, 2> submat(uword, uword, uword, uword) const;
   MatrixRef<_Tp, 2> submat(uword, uword, uword, uword);
 
@@ -780,6 +784,26 @@ inline MatrixRef<_Tp, 1> Matrix<_Tp, 2>::col(uword __c) {
   const uword __size[1] = {_M_dims[0]};
   const uword __stride[1] = {1};
   return MatrixRef<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 2> Matrix<_Tp, 2>::rows(uword __fr, uword __lr) const {
+  return submat(__fr, 0, __lr, n_cols() - 1);
+}
+
+template <class _Tp>
+inline MatrixRef<_Tp, 2> Matrix<_Tp, 2>::rows(uword __fr, uword __lr) {
+  return submat(__fr, 0, __lr, n_cols() - 1);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 2> Matrix<_Tp, 2>::cols(uword __fc, uword __lc) const {
+  return submat(0, __fc, n_rows() - 1, __lc);
+}
+
+template <class _Tp>
+inline MatrixRef<_Tp, 2> Matrix<_Tp, 2>::cols(uword __fc, uword __lc) {
+  return submat(0, __fc, n_rows() - 1, __lc);
 }
 
 template <class _Tp>
