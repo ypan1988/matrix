@@ -1062,6 +1062,36 @@ void matrix_2d_test_gslice_array(bool print = false) {
   assert(mat2d_a(3, 2) == 0);
 }
 
+void matrix_1d_test_subvec(bool print = false) {
+  std::cout << "[TEST]: 1D Matrix's member functions subvec\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d(a1, 4);
+  if (print) test_print(mat1d, "mat1d =");
+  mat1d.subvec(2, 3) = 5.0;
+  if (print) std::cout << "Apply mat1d.subvec(2, 3) = 5\n";
+  if (print) test_print(mat1d, "mat1d =");
+  assert(mat1d(0) == 1.0);
+  assert(mat1d(1) == 2.0);
+  assert(mat1d(2) == 5.0);
+  assert(mat1d(3) == 5.0);
+
+  // mat1d.subvec(0, 2) is a MatrixRef<T, 1>
+  const Matrix<double, 1> mat1d_a(mat1d.subvec(0, 2));
+  if (print) test_print(mat1d_a, "mat1d_a =");
+  assert(mat1d_a.n_elem() == 3);
+  assert(mat1d_a(0) == 1.0);
+  assert(mat1d_a(1) == 2.0);
+  assert(mat1d_a(2) == 5.0);
+
+  // mat1d_a.subvec(0, 2) is a Matrix<T, 1>
+  Matrix<double, 1> mat1d_b(mat1d_a.subvec(0, 1));
+  if (print) test_print(mat1d_a, "mat1d_b =");
+  assert(mat1d_b.n_elem() == 2);
+  assert(mat1d_b(0) == 1.0);
+  assert(mat1d_b(1) == 2.0);
+}
+
 void matrix_2d_test_rows(bool print = false) {
   std::cout << "[TEST]: 2D Matrix's member functions row()/rows()\n";
 

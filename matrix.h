@@ -207,14 +207,8 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
     return this->_M_elem[__n1];
   }
 
-  std::valarray<_Tp> subvec(std::size_t __i, std::size_t __j) const {
-    if (__i > __j || __j >= _M_dims[0]) error("1D subscription error");
-    return this->_M_elem[std::slice(__i, __j - __i + 1, 1)];
-  }
-  std::slice_array<_Tp> subvec(std::size_t __i, std::size_t __j) {
-    if (__i > __j || __j >= _M_dims[0]) error("1D subscription error");
-    return this->_M_elem[std::slice(__i, __j - __i + 1, 1)];
-  }
+  Matrix<_Tp, 1> subvec(uword, uword) const;
+  MatrixRef<_Tp, 1> subvec(uword, uword);
 
   Matrix<_Tp, 2> t() const;
 
@@ -749,6 +743,24 @@ struct MatrixRef {
   }
   void operator=(const _Tp& __value) { _M_elem = __value; }
 };
+
+template <class _Tp>
+inline Matrix<_Tp, 1> Matrix<_Tp, 1>::subvec(uword __i, uword __j) const {
+  if (__i > __j || __j >= _M_dims[0]) error("1D subscription error");
+  const uword __start = __i;
+  const uword __size[1] = {__j - __i + 1};
+  const uword __stride[1] = {1};
+  return Matrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline MatrixRef<_Tp, 1> Matrix<_Tp, 1>::subvec(uword __i, uword __j) {
+  if (__i > __j || __j >= _M_dims[0]) error("1D subscription error");
+  const uword __start = __i;
+  const uword __size[1] = {__j - __i + 1};
+  const uword __stride[1] = {1};
+  return MatrixRef<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+}
 
 template <class _Tp>
 inline Matrix<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) const {
