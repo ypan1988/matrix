@@ -722,6 +722,8 @@ _Tp dot(const Matrix<_Tp, 1>& __x, const Matrix<_Tp, 1>& __y) {
 
 template <class _Tp, uword _Size>
 struct MatrixRef {
+ public:
+  typedef _Tp elem_type;
   std::gslice_array<_Tp> _M_elem;
   uword _M_dims[_Size];
   MatrixRef(std::valarray<_Tp>& __va, uword __start, const uarray& __size,
@@ -742,6 +744,12 @@ struct MatrixRef {
     }
   }
   void operator=(const _Tp& __value) { _M_elem = __value; }
+
+  std::valarray<_Tp> get_elem() const { return std::valarray<_Tp>(_M_elem); }
+
+  elem_type sum() const { return get_elem().sum(); }
+  elem_type min() const { return get_elem().min(); }
+  elem_type max() const { return get_elem().max(); }
 };
 
 template <class _Tp>

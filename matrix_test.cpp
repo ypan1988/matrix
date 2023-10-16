@@ -791,6 +791,7 @@ void matrix_test_member_function_sum(bool print = false) {
     std::cout << "mat1d.sum() = " << mat1d.sum() << std::endl;
   }
   assert(mat1d.sum() == 10.0);
+  assert(mat1d.subvec(1, 2).sum() == 5.0);
 
   const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
   Matrix<double, 2> mat2d(a2, 4, 3);
@@ -799,6 +800,8 @@ void matrix_test_member_function_sum(bool print = false) {
     std::cout << "mat2d.sum() = " << mat2d.sum() << std::endl;
   }
   assert(mat2d.sum() == 78.0);
+  assert(mat2d.col(0).sum() == 10.0);
+  assert(mat2d.row(0).sum() == 15.0);
 
   const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
                        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
@@ -820,6 +823,7 @@ void matrix_test_member_function_min(bool print = false) {
     std::cout << "mat1d.min() = " << mat1d.min() << std::endl;
   }
   assert(mat1d.min() == 1.0);
+  assert(mat1d.subvec(1, 3).min() == 2.0);
 
   const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
   Matrix<double, 2> mat2d(a2, 4, 3);
@@ -828,6 +832,7 @@ void matrix_test_member_function_min(bool print = false) {
     std::cout << "mat2d.min() = " << mat2d.min() << std::endl;
   }
   assert(mat2d.min() == 1.0);
+  assert(mat2d.col(1).min() == 5.0);
 
   const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
                        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
@@ -849,6 +854,7 @@ void matrix_test_member_function_max(bool print = false) {
     std::cout << "mat1d.max() = " << mat1d.max() << std::endl;
   }
   assert(mat1d.max() == 4.0);
+  assert(mat1d.subvec(0, 2).max() == 3.0);
 
   const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
   Matrix<double, 2> mat2d(a2, 4, 3);
@@ -857,6 +863,7 @@ void matrix_test_member_function_max(bool print = false) {
     std::cout << "mat2d.max() = " << mat2d.max() << std::endl;
   }
   assert(mat2d.max() == 12.0);
+  assert(mat2d.col(1).max() == 8.0);
 
   const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
                        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
