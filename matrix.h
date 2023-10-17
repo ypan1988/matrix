@@ -273,6 +273,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
  public:
   typedef _Tp elem_type;
   friend struct Matrix<_Tp, 1>;
+  friend struct Matrix<_Tp, 3>;
 
   // clang-format off
   // construct/destroy:
@@ -462,6 +463,13 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
     range_check(__n1, __n2, __n3);
     return this->_M_elem[__n1 + __n2 * _M_dims[0] + __n3 * _M_d1xd2];
   }
+
+  Matrix<_Tp, 2> slice(uword) const;
+  MatrixRef<_Tp, 2> slice(uword);
+  Matrix<_Tp, 3> slices(uword, uword) const;
+  MatrixRef<_Tp, 3> slices(uword, uword);
+  Matrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword) const;
+  MatrixRef<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword);
 
   // clang-format off
  public:
@@ -842,6 +850,52 @@ inline MatrixRef<_Tp, 2> Matrix<_Tp, 2>::submat(uword __fr, uword __fc,
   const uword __size[2] = {__lc - __fc + 1, __lr - __fr + 1};
   const uword __stride[2] = {n_rows(), 1};
   return MatrixRef<_Tp, 2>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 2> Matrix<_Tp, 3>::slice(uword __s) const {
+  const uword __start = __s * _M_d1xd2;
+  const uword __size[2] = {n_cols(), n_rows()};
+  const uword __stride[2] = {n_rows(), 1};
+  return Matrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline MatrixRef<_Tp, 2> Matrix<_Tp, 3>::slice(uword __s) {
+  const uword __start = __s * _M_d1xd2;
+  const uword __size[2] = {n_cols(), n_rows()};
+  const uword __stride[2] = {n_rows(), 1};
+  return MatrixRef<_Tp, 2>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 3> Matrix<_Tp, 3>::slices(uword __fs, uword __ls) const {
+  return subcube(0, 0, __fs, n_rows() - 1, n_cols() - 1, __ls);
+}
+
+template <class _Tp>
+inline MatrixRef<_Tp, 3> Matrix<_Tp, 3>::slices(uword __fs, uword __ls) {
+  return subcube(0, 0, __fs, n_rows() - 1, n_cols() - 1, __ls);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 3> Matrix<_Tp, 3>::subcube(uword __fr, uword __fc,
+                                              uword __fs, uword __lr,
+                                              uword __lc, uword __ls) const {
+  const uword __start = __fs * _M_d1xd2 + n_rows() * __fc + __fr;
+  const uword __size[3] = {__ls - __fs + 1, __lc - __fc + 1, __lr - __fr + 1};
+  const uword __stride[3] = {_M_d1xd2, n_rows(), 1};
+  return Matrix<_Tp, 3>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline MatrixRef<_Tp, 3> Matrix<_Tp, 3>::subcube(uword __fr, uword __fc,
+                                                 uword __fs, uword __lr,
+                                                 uword __lc, uword __ls) {
+  const uword __start = __fs * _M_d1xd2 + n_rows() * __fc + __fr;
+  const uword __size[3] = {__ls - __fs + 1, __lc - __fc + 1, __lr - __fr + 1};
+  const uword __stride[3] = {_M_d1xd2, n_rows(), 1};
+  return MatrixRef<_Tp, 3>(this->_M_elem, __start, __size, __stride);
 }
 
 template <class _Tp>
