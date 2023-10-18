@@ -7,7 +7,8 @@
 
 using namespace matrix_lib;
 
-void test_print(const Matrix<double, 1>& m, std::string msg = "") {
+template <typename T>
+void test_print(const Matrix<T, 1>& m, std::string msg = "") {
   if (!msg.empty()) std::cout << msg << std::endl;
   for (uword r = 0; r != m.n_rows(); ++r) {
     std::cout << m(r);
@@ -15,7 +16,8 @@ void test_print(const Matrix<double, 1>& m, std::string msg = "") {
   }
 }
 
-void test_print(const Matrix<double, 2>& m, std::string msg = "") {
+template <typename T>
+void test_print(const Matrix<T, 2>& m, std::string msg = "") {
   if (!msg.empty()) std::cout << msg << std::endl;
   for (uword r = 0; r != m.n_rows(); ++r) {
     for (uword c = 0; c != m.n_cols(); ++c) {
@@ -25,7 +27,8 @@ void test_print(const Matrix<double, 2>& m, std::string msg = "") {
   }
 }
 
-void test_print(const Matrix<double, 3>& m, std::string msg = "") {
+template <typename T>
+void test_print(const Matrix<T, 3>& m, std::string msg = "") {
   if (!msg.empty()) std::cout << msg << std::endl;
   for (uword s = 0; s != m.n_slices(); ++s) {
     std::cout << "slice " << s << ":" << std::endl;
@@ -1314,6 +1317,43 @@ void matrix_3d_test_subcube(bool print = false) {
   assert(mat3d_d(1, 2, 2) == 36);
 }
 
+void matrix_nd_test_elem(bool print = false) {
+  std::cout << "[TEST]: 1/2/3D Matrix's member functions elem()\n";
+
+  const uword a[] = {0, 2, 4, 6};
+  Matrix<std::size_t, 1> idx(a, 4);
+  if (print) test_print(idx, "idx =");
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d(a1, 4);
+  if (print) test_print(mat1d, "mat1d =");
+  Matrix<double, 1> mat1d_a(mat1d.elem());
+  assert(mat1d_a(0) == 1);
+  assert(mat1d_a(1) == 2);
+  assert(mat1d_a(2) == 3);
+  assert(mat1d_a(3) == 4);
+
+  const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d(a2, 4, 3);
+  if (print) test_print(mat2d, "mat2d =");
+  Matrix<double, 1> mat1d_b = mat2d.elem(idx);
+  assert(mat1d_b(0) == 1);
+  assert(mat1d_b(1) == 3);
+  assert(mat1d_b(2) == 5);
+  assert(mat1d_b(3) == 7);
+
+  const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                       13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  Matrix<double, 3> mat3d(a3, 4, 3, 2);
+  if (print) test_print(mat3d, "mat3d =");
+  Matrix<double, 1> mat1d_c;
+  mat1d_c = mat3d.elem(idx);
+  assert(mat1d_c(0) == 1);
+  assert(mat1d_c(1) == 3);
+  assert(mat1d_c(2) == 5);
+  assert(mat1d_c(3) == 7);
+}
+
 void matrix_1d_test_transpose(bool print = false) {
   std::cout << "[TEST]: 1D Matrix's member functions transpose\n";
 
@@ -1553,6 +1593,7 @@ int main() {
   matrix_2d_test_submat(print_flag);
   matrix_3d_test_slices(print_flag);
   matrix_3d_test_subcube(print_flag);
+  matrix_nd_test_elem(print_flag);
   matrix_1d_test_transpose(print_flag);
   matrix_2d_test_transpose(print_flag);
 

@@ -102,6 +102,11 @@ struct _Matrix_base {
 
   // elements accessor and mutator functions
   const std::valarray<_Tp>& get_elem() const { return _M_elem; }
+  std::valarray<_Tp> get_elem(const std::slice                & __x) const { return _M_elem[__x]; }
+  std::valarray<_Tp> get_elem(const std::gslice               & __x) const { return _M_elem[__x]; }
+  std::valarray<_Tp> get_elem(const std::valarray<bool>       & __x) const { return _M_elem[__x]; }
+  std::valarray<_Tp> get_elem(const std::valarray<std::size_t>& __x) const { return _M_elem[__x]; }
+
   void set_elem(const std::valarray<_Tp>      & __x) { _M_elem.resize(__x.size()); _M_elem = __x; }
   void set_elem(const std::slice_array<_Tp>   & __x) { _M_elem = __x; }
   void set_elem(const std::gslice_array<_Tp>  & __x) { _M_elem = __x; }
@@ -149,6 +154,7 @@ template <class _Tp>
 struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
  public:
   typedef _Tp elem_type;
+  friend struct Matrix<_Tp, 1>;
   friend struct Matrix<_Tp, 2>;
 
   // clang-format off
@@ -209,6 +215,11 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 
   Matrix<_Tp, 1> subvec(uword, uword) const;
   MatrixRef<_Tp, 1> subvec(uword, uword);
+
+  Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
+  Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
+    return Matrix<_Tp, 1>(this->get_elem(__x.get_elem()));
+  }
 
   Matrix<_Tp, 2> t() const;
 
@@ -349,6 +360,11 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix<_Tp, 2> submat(uword, uword, uword, uword) const;
   MatrixRef<_Tp, 2> submat(uword, uword, uword, uword);
 
+  Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
+  Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
+    return Matrix<_Tp, 1>(this->get_elem(__x.get_elem()));
+  }
+
   Matrix<_Tp, 2> t() const;
 
   // clang-format off
@@ -470,6 +486,11 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   MatrixRef<_Tp, 3> slices(uword, uword);
   Matrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword) const;
   MatrixRef<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword);
+
+  Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
+  Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
+    return Matrix<_Tp, 1>(this->get_elem(__x.get_elem()));
+  }
 
   // clang-format off
  public:
