@@ -215,6 +215,13 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix& operator=(const Matrix<_Tp, 2>& __x);
   // clang-format on
 
+#if defined(__MATRIX_LIB_USE_R)
+  // this operator enables implicit Rcpp::wrap
+  operator SEXP() { return __export_matrix_to_sexp(); }
+  operator SEXP() const { return __export_matrix_to_sexp(); }
+  SEXP __export_matrix_to_sexp() const;
+#endif
+
   uarray get_dims() const { return uarray(_M_dims, 1); }
   uword n_rows() const { return _M_dims[0]; }
 
@@ -345,6 +352,13 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix& operator=(const elem_type& __x) { this->_M_elem = __x; return *this; }
   Matrix& operator=(const Matrix<_Tp, 1>& __x);
   // clang-format on
+
+#if defined(__MATRIX_LIB_USE_R)
+  // this operator enables implicit Rcpp::wrap
+  operator SEXP() { return __export_matrix_to_sexp(); }
+  operator SEXP() const { return __export_matrix_to_sexp(); }
+  SEXP __export_matrix_to_sexp() const;
+#endif
 
   uarray get_dims() const { return uarray(_M_dims, 2); }
 
@@ -490,6 +504,13 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
 #endif
   Matrix& operator=(const elem_type& __x) { this->_M_elem = __x; return *this; }
   // clang-format on
+
+#if defined(__MATRIX_LIB_USE_R)
+  // this operator enables implicit Rcpp::wrap
+  operator SEXP() { return __export_matrix_to_sexp(); }
+  operator SEXP() const { return __export_matrix_to_sexp(); }
+  SEXP __export_matrix_to_sexp() const;
+#endif
 
   uarray get_dims() const { return uarray(_M_dims, 3); }
 
@@ -637,6 +658,41 @@ Matrix<_Tp, 2>& Matrix<_Tp, 2>::operator=(Matrix<_Tp, 1>&& __x) {
   this->_M_elem = std::move(__x._M_elem);
   _M_init(this->n_elem(), 1);
   return *this;
+}
+#endif
+
+#if defined(__MATRIX_LIB_USE_R)
+template <class _Tp>
+SEXP Matrix<_Tp, 1>::__export_matrix_to_sexp() const {
+  SEXP __x = PROTECT(Rcpp::wrap(this->data(), this->data() + this->n_elem()));
+  SEXP __dims = PROTECT(Rf_allocVector(INTSXP, 1));
+  INTEGER(__dims)[0] = n_rows();
+  Rf_setAttrib(__x, R_DimSymbol, __dims);
+  UNPROTECT(2);
+  return __x;
+}
+
+template <class _Tp>
+SEXP Matrix<_Tp, 2>::__export_matrix_to_sexp() const {
+  SEXP __x = PROTECT(Rcpp::wrap(this->data(), this->data() + this->n_elem()));
+  SEXP __dims = PROTECT(Rf_allocVector(INTSXP, 2));
+  INTEGER(__dims)[0] = n_rows();
+  INTEGER(__dims)[1] = n_cols();
+  Rf_setAttrib(__x, R_DimSymbol, __dims);
+  UNPROTECT(2);
+  return __x;
+}
+
+template <class _Tp>
+SEXP Matrix<_Tp, 3>::__export_matrix_to_sexp() const {
+  SEXP __x = PROTECT(Rcpp::wrap(this->data(), this->data() + this->n_elem()));
+  SEXP __dims = PROTECT(Rf_allocVector(INTSXP, 3));
+  INTEGER(__dims)[0] = n_rows();
+  INTEGER(__dims)[1] = n_cols();
+  INTEGER(__dims)[2] = n_slices();
+  Rf_setAttrib(__x, R_DimSymbol, __dims);
+  UNPROTECT(2);
+  return __x;
 }
 #endif
 
