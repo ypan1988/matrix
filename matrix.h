@@ -29,6 +29,11 @@
 #include <initializer_list>
 #endif
 
+#if defined(__MATRIX_LIB_USE_R)
+#include <R_ext/BLAS.h>
+#include <RcppCommon.h>
+#endif
+
 namespace matrix_lib {
 
 //-----------------------------------------------------------------------------
@@ -41,7 +46,11 @@ struct _Matrix_error {
 
 //-----------------------------------------------------------------------------
 
+#if defined(__MATRIX_LIB_USE_R)
+inline void error(const char* __p) { Rcpp::stop(__p); }
+#else
 inline void error(const char* __p) { throw _Matrix_error(__p); }
+#endif
 
 //-----------------------------------------------------------------------------
 
@@ -92,6 +101,12 @@ struct _Matrix_base {
   _Matrix_base(const std::gslice_array<_Tp>  & __x) : _M_elem(__x) {}
   _Matrix_base(const std::mask_array<_Tp>    & __x) : _M_elem(__x) {}
   _Matrix_base(const std::indirect_array<_Tp>& __x) : _M_elem(__x) {}
+#if defined(__MATRIX_LIB_USE_R)
+  template <typename _U = _Tp,
+  typename std::enable_if<std::is_same<_U, double>::value, int>::type=0>
+    _Matrix_base(SEXP __x) : _M_elem(REAL(__x), Rf_length(__x)) {}
+#endif
+
   virtual ~_Matrix_base() {}
 
   // assignments
@@ -154,8 +169,8 @@ template <class _Tp>
 struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
  public:
   typedef _Tp elem_type;
-  friend struct Matrix<_Tp, 1>;
   friend struct Matrix<_Tp, 2>;
+  friend struct Matrix<_Tp, 3>;
 
   // clang-format off
   // construct/destroy:
@@ -178,6 +193,10 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix(const std::valarray<_Tp>& __x, const uword __dims[1]) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
   Matrix(const std::valarray<_Tp>& __x, const uarray& __dims ) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
   Matrix(const Matrix<_Tp, 2>& __x);
+#if defined(__MATRIX_LIB_USE_R)
+  Matrix(SEXP __x) : _Matrix_base<_Tp>(__x) { _M_init();  }
+#endif
+
   ~Matrix() {}
 
   // assignment
@@ -307,6 +326,13 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix(const std::valarray<_Tp>& __x, const uword __dims[2]) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
   Matrix(const std::valarray<_Tp>& __x, const uarray& __dims ) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
   Matrix(const Matrix<_Tp, 1>& __x);
+#if defined(__MATRIX_LIB_USE_R)
+  Matrix(SEXP __x) : _Matrix_base<_Tp>(__x) {
+    SEXP __dims = Rf_getAttrib(__x, R_DimSymbol);
+    _M_init(INTEGER(__dims)[0], INTEGER(__dims)[1]);
+  }
+#endif
+
   ~Matrix() {}
 
   // assignment
@@ -447,6 +473,13 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   Matrix(const std::indirect_array<_Tp>& __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
   Matrix(const std::valarray<_Tp>& __x, const uword __dims[3]) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
   Matrix(const std::valarray<_Tp>& __x, const uarray& __dims ) : _Matrix_base<_Tp>(__x) { _M_init(__dims); }
+#if defined(__MATRIX_LIB_USE_R)
+  Matrix(SEXP __x) : _Matrix_base<_Tp>(__x) {
+    SEXP __dims = Rf_getAttrib(__x, R_DimSymbol);
+    _M_init(INTEGER(__dims)[0], INTEGER(__dims)[1], INTEGER(__dims)[2]);
+  }
+#endif
+
   ~Matrix() {}
 
   // assignment
