@@ -61,18 +61,18 @@ For convenience the following typedefs have been provided for 1D/2D/3D matrix:
 
 ### Constructors and Destructors
 
-| `Matrix<double, 1>` | `Matrix<double, 2>` | `Matrix<double, 3>` | |
-| :------------  | :------------  | :------------  |-|
-| `vec()`                      | `mat()`                                 | `cube()`                                           |(1)|
-| `explicit vec(n_rows)`       | `mat(n_rows, n_cols)`                   | `cube(n_rows, n_cols, n_slices)`                   |(2)|
-| `vec(const elem_type& val, n_rows)`  | `mat(const elem_type& val, n_rows, n_cols)`  | `cube(const elem_type& val, n_rows, n_cols, n_slides)`  |(3)|
-| `vec(const elem_type* vals, n_rows)` | `mat(const elem_type* vals, n_rows, n_cols)` | `cube(const elem_type* vals, n_rows, n_cols, n_slides)` |(4)|
-| `vec(const vec& other)`      | `mat(const mat& other)`                 | `cube(const cube& other)`                          |(5)|
-| `vec(vec&& other) noexcept`  | `mat(mat&& other) noexcept`             | `cube(cube&& other) noexcept`                      |(6) C++11|
-| `vec(valarray)`              | `mat(valarray, n_rows, n_cols)`         | `cube(valarray, n_rows, n_cols, n_slides)`         |(7)|
-| `vec(initializer_list)`      | `mat(initializer_list, n_rows, n_cols)` | `cube(initializer_list, n_rows, n_cols, n_slices)` |(8) C++11|
-| `vec(mat)`                   | `mat(vec)`                              | NA                                                 |(9)|
-| `~vec()`                     | `~mat()`                                | `~cube()`                                          |(10)|
+| `Matrix<T, N>::Matrix` &  `Matrix<T, N>::~Matrix` <br> (with T = double, N = 1/2/3)                                                                 |   |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------  |---|
+| `vec()`                              <br> `mat()`                                      <br> `cube()`                                                |(1)|
+| `explicit vec(n_rows)`               <br> `mat(n_rows, n_cols)`                        <br> `cube(n_rows, n_cols, n_slices)`                        |(2)|
+| `vec(const elem_type& val, n_rows)`  <br> `mat(const elem_type& val, n_rows, n_cols)`  <br> `cube(const elem_type& val, n_rows, n_cols, n_slides)`  |(3)|
+| `vec(const elem_type* vals, n_rows)` <br> `mat(const elem_type* vals, n_rows, n_cols)` <br> `cube(const elem_type* vals, n_rows, n_cols, n_slides)` |(4)|
+| `vec(const vec& other)`              <br> `mat(const mat& other)`                      <br> `cube(const cube& other)`                               |(5)|
+| `vec(vec&& other) noexcept`          <br> `mat(mat&& other) noexcept`                  <br> `cube(cube&& other) noexcept`                           |(6) C++11|
+| `vec(valarray)`                      <br> `mat(valarray, n_rows, n_cols)`              <br> `cube(valarray, n_rows, n_cols, n_slides)`              |(7)|
+| `vec(initializer_list)`              <br> `mat(initializer_list, n_rows, n_cols)`      <br> `cube(initializer_list, n_rows, n_cols, n_slices)`      |(8) C++11|
+| `vec(mat)`                           <br> `mat(vec)`                                   <br>                                                         |(9)|
+| `~vec()`                             <br> `~mat()`                                     <br> `~cube()`                                               |(10)|
 
 The table above provides ways to construct new matrix from various sources:
   1) Default constructor. Constructs an empty `vec/mat/cube`.
@@ -87,13 +87,13 @@ The table above provides ways to construct new matrix from various sources:
   10) Destructs the `vec/mat/cube`. The destructors of the elements (if **T** is a class) are called and the used storage is deallocated.
 
 ### Assignments
-| `Matrix<T, 1>` | `Matrix<T, 2>` | `Matrix<T, 3>` | |
-| :------------  | :------------  | :------------  |-|
-| `vec& operator=(const vec& other)` | `mat& operator=(const mat& other)` | `cube& operator=(const cube& other)` |(1)|
-| `vec& operator=(vec&& other)`      | `mat& operator=(mat&& other)`      | `cube& operator=(cube&& other)`      |(2) C++11|
-| `vec& operator=(const mat& other)` | `mat& operator=(const vec& other)` | NA                                   |(3)|
-| `vec& operator=(mat&& other)`      | `mat& operator=(vec&& other)`      | NA                                   |(4) C++11|
-| `vec& operator=(const elem_type& val)` | `mat& operator=(const elem_type& val)` | `cube& operator=(const elem_type& val)` |(5)|
+| `Matrix<T, N>::operator=` <br> (with T = double, N = 1/2/3)                                                                     |          |
+| :-----------------------------------------------------------------------------------------------------------------------------  |----------|
+| `vec& operator=(const vec& other)`     <br> `mat& operator=(const mat& other)`     <br> `cube& operator=(const cube& other)`    |(1)       |
+| `vec& operator=(vec&& other)`          <br> `mat& operator=(mat&& other)`          <br> `cube& operator=(cube&& other)`         |(2) C++11 |
+| `vec& operator=(const mat& other)`     <br> `mat& operator=(const vec& other)`     <br>                                         |(3)       |
+| `vec& operator=(mat&& other)`          <br> `mat& operator=(vec&& other)`          <br>                                         |(4) C++11 |
+| `vec& operator=(const elem_type& val)` <br> `mat& operator=(const elem_type& val)` <br> `cube& operator=(const elem_type& val)` |(5)|
 
 The table above provides ways to replace the contents of the matrix:
   1) Copy assignment operator.
