@@ -608,6 +608,7 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
 template <class _Tp>
 Matrix<_Tp, 1>::Matrix(const Matrix<_Tp, 2>& __x)
     : _Matrix_base<_Tp>(__x.get_elem()) {
+  if (__x.n_cols() != 1) error("__x is not a n x 1 matrix");
   _M_init();
 }
 
@@ -619,6 +620,7 @@ Matrix<_Tp, 2>::Matrix(const Matrix<_Tp, 1>& __x)
 
 template <class _Tp>
 Matrix<_Tp, 1>& Matrix<_Tp, 1>::operator=(const Matrix<_Tp, 2>& __x) {
+  if (__x.n_cols() != 1) error("__x is not a n x 1 matrix");
   if (__x.n_rows() != n_rows()) this->_M_elem.resize(__x.n_rows());
   this->_M_elem = __x.get_elem();
   _M_init();
@@ -637,6 +639,7 @@ Matrix<_Tp, 2>& Matrix<_Tp, 2>::operator=(const Matrix<_Tp, 1>& __x) {
 template <class _Tp>
 Matrix<_Tp, 1>::Matrix(Matrix<_Tp, 2>&& __x)
     : _Matrix_base<_Tp>(std::move(__x._M_elem)) {
+  if (__x.n_cols() != 1) error("__x is not a n x 1 matrix");
   _M_init();
 }
 
@@ -648,6 +651,7 @@ Matrix<_Tp, 2>::Matrix(Matrix<_Tp, 1>&& __x)
 
 template <class _Tp>
 Matrix<_Tp, 1>& Matrix<_Tp, 1>::operator=(Matrix<_Tp, 2>&& __x) {
+  if (__x.n_cols() != 1) error("__x is not a n x 1 matrix");
   this->_M_elem = std::move(__x._M_elem);
   _M_init();
   return *this;
