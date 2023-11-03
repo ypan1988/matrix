@@ -72,7 +72,7 @@ struct Matrix {
 };
 
 template <class _Tp = double, uword _Size = 1>
-struct MatrixRef;
+struct GsliceMatrix;
 
 //-----------------------------------------------------------------------------
 
@@ -176,7 +176,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(); }
   Matrix(const Matrix           & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
-  Matrix(const MatrixRef<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
+  Matrix(const GsliceMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
@@ -201,7 +201,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 
   // assignment
   Matrix& operator=(const Matrix           & __x) { this->set_elem(__x._M_elem); _M_init(); return *this; }
-  Matrix& operator=(const MatrixRef<_Tp, 1>& __x) { this->set_elem(__x._M_elem); _M_init(); return *this; }
+  Matrix& operator=(const GsliceMatrix<_Tp, 1>& __x) { this->set_elem(__x._M_elem); _M_init(); return *this; }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
   Matrix& operator=(std::initializer_list<_Tp> __x) { this->_M_elem = __x; _M_init(); return *this; }
@@ -240,7 +240,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   }
 
   Matrix<_Tp, 1> subvec(uword, uword) const;
-  MatrixRef<_Tp, 1> subvec(uword, uword);
+  GsliceMatrix<_Tp, 1> subvec(uword, uword);
 
   Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
   Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
@@ -316,7 +316,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(0, 0); }
   Matrix(const Matrix           & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
-  Matrix(const MatrixRef<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const GsliceMatrix<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
@@ -344,7 +344,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
 
   // assignment
   Matrix& operator=(const Matrix           & __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
-  Matrix& operator=(const MatrixRef<_Tp, 2>& __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
+  Matrix& operator=(const GsliceMatrix<_Tp, 2>& __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
   Matrix& operator=(Matrix<_Tp, 1>&& __x);
@@ -390,15 +390,15 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   }
 
   Matrix<_Tp, 1> row(uword) const;
-  MatrixRef<_Tp, 1> row(uword);
+  GsliceMatrix<_Tp, 1> row(uword);
   Matrix<_Tp, 1> col(uword) const;
-  MatrixRef<_Tp, 1> col(uword);
+  GsliceMatrix<_Tp, 1> col(uword);
   Matrix<_Tp, 2> rows(uword, uword) const;
-  MatrixRef<_Tp, 2> rows(uword, uword);
+  GsliceMatrix<_Tp, 2> rows(uword, uword);
   Matrix<_Tp, 2> cols(uword, uword) const;
-  MatrixRef<_Tp, 2> cols(uword, uword);
+  GsliceMatrix<_Tp, 2> cols(uword, uword);
   Matrix<_Tp, 2> submat(uword, uword, uword, uword) const;
-  MatrixRef<_Tp, 2> submat(uword, uword, uword, uword);
+  GsliceMatrix<_Tp, 2> submat(uword, uword, uword, uword);
 
   Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
   Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
@@ -472,7 +472,7 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(0, 0, 0); }
   Matrix(const Matrix           & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
-  Matrix(const MatrixRef<_Tp, 3>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const GsliceMatrix<_Tp, 3>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
@@ -498,7 +498,7 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
 
   // assignment
   Matrix& operator=(const Matrix           & __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
-  Matrix& operator=(const MatrixRef<_Tp, 3>& __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
+  Matrix& operator=(const GsliceMatrix<_Tp, 3>& __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
 #endif
@@ -535,11 +535,11 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   }
 
   Matrix<_Tp, 2> slice(uword) const;
-  MatrixRef<_Tp, 2> slice(uword);
+  GsliceMatrix<_Tp, 2> slice(uword);
   Matrix<_Tp, 3> slices(uword, uword) const;
-  MatrixRef<_Tp, 3> slices(uword, uword);
+  GsliceMatrix<_Tp, 3> slices(uword, uword);
   Matrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword) const;
-  MatrixRef<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword);
+  GsliceMatrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword);
 
   Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
   Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
@@ -843,21 +843,21 @@ _Tp dot(const Matrix<_Tp, 1>& __x, const Matrix<_Tp, 1>& __y) {
 //-----------------------------------------------------------------------------
 
 template <class _Tp, uword _Size>
-struct MatrixRef {
+struct GsliceMatrix {
  public:
   typedef _Tp elem_type;
   std::gslice_array<_Tp> _M_elem;
   uword _M_dims[_Size];
-  MatrixRef(std::valarray<_Tp>& __va, uword __start, const uarray& __size,
-            const uarray& __stride)
+  GsliceMatrix(std::valarray<_Tp>& __va, uword __start, const uarray& __size,
+               const uarray& __stride)
       : _M_elem(__va[std::gslice(__start, __size, __stride)]) {
     uword n = __size.size();
     for (uword idx = 0; idx < n; ++idx) {
       _M_dims[idx] = __size[n - idx - 1];
     }
   }
-  MatrixRef(std::valarray<_Tp>& __va, uword __start, const uword __size[_Size],
-            const uword __stride[_Size])
+  GsliceMatrix(std::valarray<_Tp>& __va, uword __start,
+               const uword __size[_Size], const uword __stride[_Size])
       : _M_elem(__va[std::gslice(__start, uarray(__size, _Size),
                                  uarray(__stride, _Size))]) {
     uword n = _Size;
@@ -884,12 +884,12 @@ inline Matrix<_Tp, 1> Matrix<_Tp, 1>::subvec(uword __i, uword __j) const {
 }
 
 template <class _Tp>
-inline MatrixRef<_Tp, 1> Matrix<_Tp, 1>::subvec(uword __i, uword __j) {
+inline GsliceMatrix<_Tp, 1> Matrix<_Tp, 1>::subvec(uword __i, uword __j) {
   if (__i > __j || __j >= _M_dims[0]) error("1D subscription error");
   const uword __start = __i;
   const uword __size[1] = {__j - __i + 1};
   const uword __stride[1] = {1};
-  return MatrixRef<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+  return GsliceMatrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
 }
 
 template <class _Tp>
@@ -902,12 +902,12 @@ inline Matrix<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) const {
 }
 
 template <class _Tp>
-inline MatrixRef<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) {
+inline GsliceMatrix<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) {
   range_check(__r, 0);
   const uword __start = __r;
   const uword __size[1] = {_M_dims[1]};
   const uword __stride[1] = {_M_dims[0]};
-  return MatrixRef<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+  return GsliceMatrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
 }
 
 template <class _Tp>
@@ -920,12 +920,12 @@ inline Matrix<_Tp, 1> Matrix<_Tp, 2>::col(uword __c) const {
 }
 
 template <class _Tp>
-inline MatrixRef<_Tp, 1> Matrix<_Tp, 2>::col(uword __c) {
+inline GsliceMatrix<_Tp, 1> Matrix<_Tp, 2>::col(uword __c) {
   range_check(0, __c);
   const uword __start = __c * _M_dims[0];
   const uword __size[1] = {_M_dims[0]};
   const uword __stride[1] = {1};
-  return MatrixRef<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+  return GsliceMatrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
 }
 
 template <class _Tp>
@@ -934,7 +934,7 @@ inline Matrix<_Tp, 2> Matrix<_Tp, 2>::rows(uword __fr, uword __lr) const {
 }
 
 template <class _Tp>
-inline MatrixRef<_Tp, 2> Matrix<_Tp, 2>::rows(uword __fr, uword __lr) {
+inline GsliceMatrix<_Tp, 2> Matrix<_Tp, 2>::rows(uword __fr, uword __lr) {
   return submat(__fr, 0, __lr, n_cols() - 1);
 }
 
@@ -944,7 +944,7 @@ inline Matrix<_Tp, 2> Matrix<_Tp, 2>::cols(uword __fc, uword __lc) const {
 }
 
 template <class _Tp>
-inline MatrixRef<_Tp, 2> Matrix<_Tp, 2>::cols(uword __fc, uword __lc) {
+inline GsliceMatrix<_Tp, 2> Matrix<_Tp, 2>::cols(uword __fc, uword __lc) {
   return submat(0, __fc, n_rows() - 1, __lc);
 }
 
@@ -958,12 +958,12 @@ inline Matrix<_Tp, 2> Matrix<_Tp, 2>::submat(uword __fr, uword __fc, uword __lr,
 }
 
 template <class _Tp>
-inline MatrixRef<_Tp, 2> Matrix<_Tp, 2>::submat(uword __fr, uword __fc,
-                                                uword __lr, uword __lc) {
+inline GsliceMatrix<_Tp, 2> Matrix<_Tp, 2>::submat(uword __fr, uword __fc,
+                                                   uword __lr, uword __lc) {
   const uword __start = n_rows() * __fc + __fr;
   const uword __size[2] = {__lc - __fc + 1, __lr - __fr + 1};
   const uword __stride[2] = {n_rows(), 1};
-  return MatrixRef<_Tp, 2>(this->_M_elem, __start, __size, __stride);
+  return GsliceMatrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
 }
 
 template <class _Tp>
@@ -975,11 +975,11 @@ inline Matrix<_Tp, 2> Matrix<_Tp, 3>::slice(uword __s) const {
 }
 
 template <class _Tp>
-inline MatrixRef<_Tp, 2> Matrix<_Tp, 3>::slice(uword __s) {
+inline GsliceMatrix<_Tp, 2> Matrix<_Tp, 3>::slice(uword __s) {
   const uword __start = __s * _M_d1xd2;
   const uword __size[2] = {n_cols(), n_rows()};
   const uword __stride[2] = {n_rows(), 1};
-  return MatrixRef<_Tp, 2>(this->_M_elem, __start, __size, __stride);
+  return GsliceMatrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
 }
 
 template <class _Tp>
@@ -988,7 +988,7 @@ inline Matrix<_Tp, 3> Matrix<_Tp, 3>::slices(uword __fs, uword __ls) const {
 }
 
 template <class _Tp>
-inline MatrixRef<_Tp, 3> Matrix<_Tp, 3>::slices(uword __fs, uword __ls) {
+inline GsliceMatrix<_Tp, 3> Matrix<_Tp, 3>::slices(uword __fs, uword __ls) {
   return subcube(0, 0, __fs, n_rows() - 1, n_cols() - 1, __ls);
 }
 
@@ -1003,13 +1003,13 @@ inline Matrix<_Tp, 3> Matrix<_Tp, 3>::subcube(uword __fr, uword __fc,
 }
 
 template <class _Tp>
-inline MatrixRef<_Tp, 3> Matrix<_Tp, 3>::subcube(uword __fr, uword __fc,
-                                                 uword __fs, uword __lr,
-                                                 uword __lc, uword __ls) {
+inline GsliceMatrix<_Tp, 3> Matrix<_Tp, 3>::subcube(uword __fr, uword __fc,
+                                                    uword __fs, uword __lr,
+                                                    uword __lc, uword __ls) {
   const uword __start = __fs * _M_d1xd2 + n_rows() * __fc + __fr;
   const uword __size[3] = {__ls - __fs + 1, __lc - __fc + 1, __lr - __fr + 1};
   const uword __stride[3] = {_M_d1xd2, n_rows(), 1};
-  return MatrixRef<_Tp, 3>(this->_M_elem, __start, __size, __stride);
+  return GsliceMatrix<_Tp, 3>(this->_M_elem, __start, __size, __stride);
 }
 
 template <class _Tp>
@@ -1041,6 +1041,18 @@ typedef Matrix<double, 3> dcube;
 typedef Matrix<float, 1> fvec;
 typedef Matrix<float, 2> fmat;
 typedef Matrix<float, 3> fcube;
+
+typedef GsliceMatrix<double, 1> gslice_vec;
+typedef GsliceMatrix<double, 2> gslice_mat;
+typedef GsliceMatrix<double, 3> gslice_cube;
+
+typedef GsliceMatrix<double, 1> gslice_dvec;
+typedef GsliceMatrix<double, 2> gslice_dmat;
+typedef GsliceMatrix<double, 3> gslice_dcube;
+
+typedef GsliceMatrix<float, 1> gslice_fvec;
+typedef GsliceMatrix<float, 2> gslice_fmat;
+typedef GsliceMatrix<float, 3> gslice_fcube;
 
 }  // namespace matrix_lib
 
