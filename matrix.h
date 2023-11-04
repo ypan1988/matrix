@@ -20,7 +20,6 @@
 #endif
 
 #include <algorithm>
-#include <cassert>
 #include <cstddef>
 #include <iostream>
 #include <string>
@@ -741,7 +740,7 @@ inline Matrix<_Tp, 2> matmul(const Matrix<_Tp, 2>& __x,
                              const Matrix<_Tp, 2>& __y) {
   const uword nr = __x.n_rows();
   const uword nc = __x.n_cols();
-  assert(nc == __y.n_rows() && "matmul(x, y) : non-conformable arguments");
+  if (nc != __y.n_rows()) error("matmul(x, y) : non-conformable arguments");
 
   const uword p = __y.n_cols();
   Matrix<_Tp, 2> __res(nr, p);
