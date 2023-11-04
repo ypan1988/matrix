@@ -1446,6 +1446,20 @@ void matrix_test_binary_subtraction_operator(bool print = false) {
   assert(mat1d_b(3) == 1.0);
 }
 
+void matrix_test_matmul(bool print = false) {
+  std::cout << "[TEST]: Applies matrix multiplication\n";
+  const double a1[] = {1, 4, 2, 5, 3, 6};
+  const double a2[] = {7, 9, 11, 8, 10, 12};
+  Matrix<double, 2> m1(a1, 2, 3);
+  Matrix<double, 2> m2(a2, 3, 2);
+  Matrix<double, 2> res = matmul(m1, m2);
+
+  assert(res(0, 0) == 58.0);
+  assert(res(0, 1) == 64.0);
+  assert(res(1, 0) == 139.0);
+  assert(res(1, 1) == 154.0);
+}
+
 void matrix_test_abs(bool print = false) {
   std::cout << "[TEST]: Applies the function abs to each element\n";
 
@@ -1599,6 +1613,7 @@ int main() {
 
   matrix_test_binary_addition_operator(print_flag);
   matrix_test_binary_subtraction_operator(print_flag);
+  matrix_test_matmul(print_flag);
 
   matrix_test_abs(print_flag);
   matrix_test_exp(print_flag);
