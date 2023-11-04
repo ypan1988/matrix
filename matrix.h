@@ -177,7 +177,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   // clang-format off
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(); }
-  Matrix(const                 Matrix& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
+  Matrix(const         Matrix        & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
   Matrix(const   GsliceMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
   Matrix(const IndirectMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
 #if defined(__MATRIX_LIB_USE_CPP11)
@@ -245,14 +245,8 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix<_Tp, 1> subvec(uword, uword) const;
   GsliceMatrix<_Tp, 1> subvec(uword, uword);
 
-  IndirectMatrix<_Tp, 1> operator()(const uarray& __idx_arr) {
-    uword __dims[1] = {__idx_arr.size()};
-    return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, __dims);
-  }
-  Matrix<_Tp, 1> operator()(const uarray& __idx_arr) const {
-    uword __dims[1] = {__idx_arr.size()};
-    return Matrix(this->_M_elem, __idx_arr, __dims);
-  }
+  IndirectMatrix<_Tp, 1> operator()(const uarray& __idx_arr);
+  Matrix<_Tp, 1> operator()(const uarray& __idx_arr) const;
 
   Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
   Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
@@ -419,6 +413,11 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix<_Tp, 2> submat(uword, uword, uword, uword) const;
   GsliceMatrix<_Tp, 2> submat(uword, uword, uword, uword);
 
+  IndirectMatrix<_Tp, 2> operator()(const uarray& __idx_arr1,
+                                    const uarray& __idx_arr2);
+  Matrix<_Tp, 2> operator()(const uarray& __idx_arr1,
+                            const uarray& __idx_arr2) const;
+
   Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
   Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
     return Matrix<_Tp, 1>(this->get_elem(__x.get_elem()));
@@ -478,6 +477,11 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
                                            uarray(__stride, 2))]) {
     _M_init(__size[1], __size[0]);
   }
+  Matrix(const std::valarray<_Tp>& __va, const uarray& __idx_arr,
+         const uword __dims[2])
+      : _Matrix_base<_Tp>(__va[__idx_arr]) {
+    _M_init(__dims[0], __dims[1]);
+  }
 };
 
 //-----------------------------------------------------------------------------
@@ -490,8 +494,10 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   // clang-format off
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(0, 0, 0); }
-  Matrix(const Matrix           & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
-  Matrix(const GsliceMatrix<_Tp, 3>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const         Matrix        & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const   GsliceMatrix<_Tp, 3>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const IndirectMatrix<_Tp, 3>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x, uword __n1, uword __n2, uword __n3) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2, __n3); }
@@ -560,6 +566,10 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   Matrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword) const;
   GsliceMatrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword);
 
+  IndirectMatrix<_Tp, 3> operator()(const uarray&, const uarray&,
+                                    const uarray&);
+  Matrix<_Tp, 3> operator()(const uarray&, const uarray&, const uarray&) const;
+
   Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
   Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
     return Matrix<_Tp, 1>(this->get_elem(__x.get_elem()));
@@ -619,6 +629,11 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
       : _Matrix_base<_Tp>(__va[std::gslice(__start, uarray(__size, 3),
                                            uarray(__stride, 3))]) {
     _M_init(__size[2], __size[1], __size[0]);
+  }
+  Matrix(const std::valarray<_Tp>& __va, const uarray& __idx_arr,
+         const uword __dims[3])
+      : _Matrix_base<_Tp>(__va[__idx_arr]) {
+    _M_init(__dims[0], __dims[1], __dims[2]);
   }
 };
 
@@ -1067,6 +1082,84 @@ inline GsliceMatrix<_Tp, 3> Matrix<_Tp, 3>::subcube(uword __fr, uword __fc,
   const uword __size[3] = {__ls - __fs + 1, __lc - __fc + 1, __lr - __fr + 1};
   const uword __stride[3] = {_M_d1xd2, n_rows(), 1};
   return GsliceMatrix<_Tp, 3>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline IndirectMatrix<_Tp, 1> Matrix<_Tp, 1>::operator()(
+    const uarray& __idx_arr) {
+  uword __dims[1] = {__idx_arr.size()};
+  return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, __dims);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 1> Matrix<_Tp, 1>::operator()(
+    const uarray& __idx_arr) const {
+  uword __dims[1] = {__idx_arr.size()};
+  return Matrix(this->_M_elem, __idx_arr, __dims);
+}
+
+template <class _Tp>
+inline IndirectMatrix<_Tp, 2> Matrix<_Tp, 2>::operator()(
+    const uarray& __idx_arr1, const uarray& __idx_arr2) {
+  uword __dims[2] = {__idx_arr1.size(), __idx_arr2.size()};
+  uarray __idx_arr(__dims[0] * __dims[1]);
+  uword __idx = 0;
+  for (uword __j = 0; __j < __idx_arr2.size(); ++__j) {
+    for (uword __i = 0; __i < __idx_arr1.size(); ++__i) {
+      __idx_arr[__idx++] = __idx_arr1[__i] + __idx_arr2[__j] * _M_dims[0];
+    }
+  }
+  return IndirectMatrix<_Tp, 2>(this->_M_elem, __idx_arr, __dims);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 2> Matrix<_Tp, 2>::operator()(
+    const uarray& __idx_arr1, const uarray& __idx_arr2) const {
+  uword __dims[2] = {__idx_arr1.size(), __idx_arr2.size()};
+  uarray __idx_arr(__dims[0] * __dims[1]);
+  uword __idx = 0;
+  for (uword __j = 0; __j < __idx_arr2.size(); ++__j) {
+    for (uword __i = 0; __i < __idx_arr1.size(); ++__i) {
+      __idx_arr[__idx++] = __idx_arr1[__i] + __idx_arr2[__j] * _M_dims[0];
+    }
+  }
+  return Matrix<_Tp, 2>(this->_M_elem, __idx_arr, __dims);
+}
+
+template <class _Tp>
+inline IndirectMatrix<_Tp, 3> Matrix<_Tp, 3>::operator()(
+    const uarray& __idx_arr1, const uarray& __idx_arr2,
+    const uarray& __idx_arr3) {
+  uword __dims[3] = {__idx_arr1.size(), __idx_arr2.size(), __idx_arr3.size()};
+  uarray __idx_arr(__dims[0] * __dims[1] * __dims[2]);
+  uword __idx = 0;
+  for (uword __k = 0; __k < __idx_arr3.size(); ++__k) {
+    for (uword __j = 0; __j < __idx_arr2.size(); ++__j) {
+      for (uword __i = 0; __i < __idx_arr1.size(); ++__i) {
+        __idx_arr[__idx++] = __idx_arr1[__i] + __idx_arr2[__j] * _M_dims[0] +
+                             __idx_arr3[__k] * _M_d1xd2;
+      }
+    }
+  }
+  return IndirectMatrix<_Tp, 3>(this->_M_elem, __idx_arr, __dims);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 3> Matrix<_Tp, 3>::operator()(
+    const uarray& __idx_arr1, const uarray& __idx_arr2,
+    const uarray& __idx_arr3) const {
+  uword __dims[3] = {__idx_arr1.size(), __idx_arr2.size(), __idx_arr3.size()};
+  uarray __idx_arr(__dims[0] * __dims[1] * __dims[2]);
+  uword __idx = 0;
+  for (uword __k = 0; __k < __idx_arr3.size(); ++__k) {
+    for (uword __j = 0; __j < __idx_arr2.size(); ++__j) {
+      for (uword __i = 0; __i < __idx_arr1.size(); ++__i) {
+        __idx_arr[__idx++] = __idx_arr1[__i] + __idx_arr2[__j] * _M_dims[0] +
+                             __idx_arr3[__k] * _M_d1xd2;
+      }
+    }
+  }
+  return Matrix<_Tp, 3>(this->_M_elem, __idx_arr, __dims);
 }
 
 template <class _Tp>

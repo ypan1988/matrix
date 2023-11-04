@@ -1417,6 +1417,67 @@ void matrix_1d_test_ind_elem(bool print = false) {
   assert(mat1d_c(1) == 4);
 }
 
+void matrix_2d_test_ind_elem(bool print = false) {
+  std::cout << "[TEST]: 2D Matrix access incontinuous elements\n";
+
+  const std::size_t idx1[2] = {1, 3};
+  std::valarray<std::size_t> idx_arr1(idx1, 2);
+  const std::size_t idx2[2] = {0, 2};
+  std::valarray<std::size_t> idx_arr2(idx2, 2);
+
+  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d_a(arr, 4, 3);
+  const Matrix<double, 2> mat2d_b(arr, 4, 3);
+
+  mat2d_a(idx_arr1, idx_arr2) = 0;
+  if (print) test_print(mat2d_a, "mat2d_a = ");
+  assert(mat2d_a(0, 0) == 1);
+  assert(mat2d_a(0, 1) == 5);
+  assert(mat2d_a(0, 2) == 9);
+  assert(mat2d_a(3, 0) == 0);
+  assert(mat2d_a(3, 1) == 8);
+  assert(mat2d_a(3, 2) == 0);
+
+  Matrix<double, 2> mat2d_c = mat2d_b(idx_arr1, idx_arr2);
+  if (print) test_print(mat2d_c, "mat2d_c = ");
+  assert(mat2d_c(0, 0) == 2);
+  assert(mat2d_c(0, 1) == 10);
+  assert(mat2d_c(1, 0) == 4);
+  assert(mat2d_c(1, 1) == 12);
+}
+
+void matrix_3d_test_ind_elem(bool print = false) {
+  std::cout << "[TEST]: 3D Matrix access incontinuous elements\n";
+
+  const std::size_t idx1[2] = {1, 3};
+  std::valarray<std::size_t> idx_arr1(idx1, 2);
+  const std::size_t idx2[2] = {0, 2};
+  std::valarray<std::size_t> idx_arr2(idx2, 2);
+  const std::size_t idx3[3] = {1};
+  std::valarray<std::size_t> idx_arr3(idx3, 1);
+
+  const double arr[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  Matrix<double, 3> mat3d_a(arr, 4, 3, 2);
+  const Matrix<double, 3> mat3d_b(arr, 4, 3, 2);
+
+  mat3d_a(idx_arr1, idx_arr2, idx_arr3) = 0;
+  if (print) test_print(mat3d_a, "mat3d_a = ");
+  assert(mat3d_a(0, 0, 0) == 1);
+  assert(mat3d_a(0, 1, 0) == 5);
+  assert(mat3d_a(0, 2, 0) == 9);
+  assert(mat3d_a(3, 0, 1) == 0);
+  assert(mat3d_a(3, 1, 1) == 20);
+  assert(mat3d_a(3, 2, 1) == 0);
+
+  Matrix<double, 3> mat3d_c = mat3d_b(idx_arr1, idx_arr2, idx_arr3);
+  if (print) test_print(mat3d_c, "mat3d_c = ");
+  assert(mat3d_c(0, 0, 0) == 14);
+  assert(mat3d_c(0, 1, 0) == 22);
+  assert(mat3d_c(1, 0, 0) == 16);
+  assert(mat3d_c(1, 1, 0) == 24);
+}
+
 void matrix_test_binary_addition_operator(bool print = false) {
   std::cout << "[TEST]: Applies binary addition operators to each element\n";
 
@@ -1635,6 +1696,8 @@ int main() {
   matrix_2d_test_transpose(print_flag);
 
   matrix_1d_test_ind_elem(print_flag);
+  matrix_2d_test_ind_elem(print_flag);
+  matrix_3d_test_ind_elem(print_flag);
 
   matrix_test_binary_addition_operator(print_flag);
   matrix_test_binary_subtraction_operator(print_flag);
