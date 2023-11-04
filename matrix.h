@@ -20,6 +20,7 @@
 #endif
 
 #include <algorithm>
+#include <cassert>
 #include <cstddef>
 #include <iostream>
 #include <string>
@@ -733,6 +734,21 @@ inline Matrix<_Tp, _Size> operator%(const Matrix<_Tp, _Size>& __x,
                                     const Matrix<_Tp, _Size>& __y) {
   Matrix<_Tp, _Size> __tmp(__x);
   return __tmp %= __y;
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 2> matmul(const Matrix<_Tp, 2>& __x,
+                             const Matrix<_Tp, 2>& __y) {
+  const uword nr = __x.n_rows();
+  const uword nc = __x.n_cols();
+  assert(nc == __y.n_rows() && "matmul(x, y) : non-conformable arguments");
+
+  const uword p = __y.n_cols();
+  Matrix<_Tp, 2> __res(nr, p);
+  for (uword i = 0; i != nr; ++i)
+    for (uword j = 0; j != p; ++j)
+      for (uword k = 0; k != nc; ++k) __res(i, j) += __x(i, k) * __y(k, j);
+  return __res;
 }
 
 //-----------------------------------------------------------------------------
