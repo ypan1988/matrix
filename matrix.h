@@ -73,6 +73,8 @@ struct Matrix {
 
 template <class _Tp = double, uword _Size = 1>
 struct GsliceMatrix;
+template <class _Tp = double, uword _Size = 1>
+struct IndirectMatrix;
 
 //-----------------------------------------------------------------------------
 
@@ -175,8 +177,9 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   // clang-format off
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(); }
-  Matrix(const Matrix           & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
-  Matrix(const GsliceMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
+  Matrix(const                 Matrix& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
+  Matrix(const   GsliceMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
+  Matrix(const IndirectMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
@@ -242,6 +245,15 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix<_Tp, 1> subvec(uword, uword) const;
   GsliceMatrix<_Tp, 1> subvec(uword, uword);
 
+  IndirectMatrix<_Tp, 1> operator()(const uarray& __idx_arr) {
+    uword __dims[1] = {__idx_arr.size()};
+    return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, __dims);
+  }
+  Matrix<_Tp, 1> operator()(const uarray& __idx_arr) const {
+    uword __dims[1] = {__idx_arr.size()};
+    return Matrix(this->_M_elem, __idx_arr, __dims);
+  }
+
   Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
   Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
     return Matrix<_Tp, 1>(this->get_elem(__x.get_elem()));
@@ -301,6 +313,11 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
                                            uarray(__stride, 1))]) {
     _M_init();
   }
+  Matrix(const std::valarray<_Tp>& __va, const uarray& __idx_arr,
+         const uword __dims[1])
+      : _Matrix_base<_Tp>(__va[__idx_arr]) {
+    _M_init();
+  }
 };
 
 //-----------------------------------------------------------------------------
@@ -315,8 +332,10 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   // clang-format off
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(0, 0); }
-  Matrix(const Matrix           & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
-  Matrix(const GsliceMatrix<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const         Matrix        & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const   GsliceMatrix<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const IndirectMatrix<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x, uword __n1, uword __n2) : _Matrix_base<_Tp>(__x) { _M_init(__n1, __n2); }
@@ -878,6 +897,29 @@ struct GsliceMatrix {
     uword n = _Size;
     for (uword idx = 0; idx < n; ++idx) {
       _M_dims[idx] = __size[n - idx - 1];
+    }
+  }
+  void operator=(const _Tp& __value) { _M_elem = __value; }
+
+  std::valarray<_Tp> get_elem() const { return std::valarray<_Tp>(_M_elem); }
+
+  elem_type sum() const { return get_elem().sum(); }
+  elem_type min() const { return get_elem().min(); }
+  elem_type max() const { return get_elem().max(); }
+};
+
+template <class _Tp, uword _Size>
+struct IndirectMatrix {
+ public:
+  typedef _Tp elem_type;
+  std::indirect_array<_Tp> _M_elem;
+  uword _M_dims[_Size];
+  IndirectMatrix(std::valarray<_Tp>& __va,
+                 const std::valarray<std::size_t>& __ind_arr,
+                 const uword __dims[_Size])
+      : _M_elem(__va[__ind_arr]) {
+    for (uword idx = 0; idx < _Size; ++idx) {
+      _M_dims[idx] = __dims[idx];
     }
   }
   void operator=(const _Tp& __value) { _M_elem = __value; }

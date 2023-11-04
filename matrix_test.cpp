@@ -1394,6 +1394,29 @@ void matrix_2d_test_transpose(bool print = false) {
   assert(mat2d_b(2, 3) == 12);
 }
 
+void matrix_1d_test_ind_elem(bool print = false) {
+  std::cout << "[TEST]: 1D Matrix access incontinuous elements\n";
+
+  const std::size_t idx[2] = {1, 3};
+  std::valarray<std::size_t> idx_arr(idx, 2);
+
+  const double a[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a, 4);
+  const Matrix<double, 1> mat1d_b(a, 4);
+
+  mat1d_a(idx_arr) = 0;
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a(0) == 1);
+  assert(mat1d_a(1) == 0);
+  assert(mat1d_a(2) == 3);
+  assert(mat1d_a(3) == 0);
+
+  Matrix<double, 1> mat1d_c = mat1d_b(idx_arr);
+  if (print) test_print(mat1d_c, "mat1d_c = ");
+  assert(mat1d_c(0) == 2);
+  assert(mat1d_c(1) == 4);
+}
+
 void matrix_test_binary_addition_operator(bool print = false) {
   std::cout << "[TEST]: Applies binary addition operators to each element\n";
 
@@ -1610,6 +1633,8 @@ int main() {
   matrix_nd_test_elem(print_flag);
   matrix_1d_test_transpose(print_flag);
   matrix_2d_test_transpose(print_flag);
+
+  matrix_1d_test_ind_elem(print_flag);
 
   matrix_test_binary_addition_operator(print_flag);
   matrix_test_binary_subtraction_operator(print_flag);
