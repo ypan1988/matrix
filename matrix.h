@@ -251,9 +251,13 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   IndirectMatrix<_Tp, 1> operator()(const index_array& __idx_arr);
   Matrix<_Tp, 1> operator()(const index_array& __idx_arr) const;
 
-  Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
-  Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
-    return Matrix<_Tp, 1>(this->get_elem(__x.get_elem()));
+  IndirectMatrix<_Tp, 1> elem(const index_array& __idx_arr) {
+    uword dims[1] = {__idx_arr.size()};
+    return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
+  }
+  Matrix<_Tp, 1> elem(const index_array& __idx_arr) const {
+    uword dims[1] = {__idx_arr.size()};
+    return Matrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
   }
 
   MaskMatrix<_Tp> operator()(const bool_array& __bool_arr);
@@ -428,9 +432,13 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix<_Tp, 2> operator()(const index_array& __idx_arr1,
                             const index_array& __idx_arr2) const;
 
-  Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
-  Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
-    return Matrix<_Tp, 1>(this->get_elem(__x.get_elem()));
+  IndirectMatrix<_Tp, 1> elem(const index_array& __idx_arr) {
+    uword dims[1] = {__idx_arr.size()};
+    return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
+  }
+  Matrix<_Tp, 1> elem(const index_array& __idx_arr) const {
+    uword dims[1] = {__idx_arr.size()};
+    return Matrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
   }
 
   MaskMatrix<_Tp> operator()(const bool_array& __bool_arr);
@@ -584,9 +592,13 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   Matrix<_Tp, 3> operator()(const index_array&, const index_array&,
                             const index_array&) const;
 
-  Matrix<_Tp, 1> elem() const { return Matrix<_Tp, 1>(this->_M_elem); }
-  Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
-    return Matrix<_Tp, 1>(this->get_elem(__x.get_elem()));
+  IndirectMatrix<_Tp, 1> elem(const index_array& __idx_arr) {
+    uword dims[1] = {__idx_arr.size()};
+    return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
+  }
+  Matrix<_Tp, 1> elem(const index_array& __idx_arr) const {
+    uword dims[1] = {__idx_arr.size()};
+    return Matrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
   }
 
   MaskMatrix<_Tp> operator()(const bool_array& __bool_arr);

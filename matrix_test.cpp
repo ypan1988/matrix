@@ -1321,13 +1321,12 @@ void matrix_nd_test_elem(bool print = false) {
   std::cout << "[TEST]: 1/2/3D Matrix's member functions elem()\n";
 
   const uword a[] = {0, 2, 4, 6};
-  Matrix<std::size_t, 1> idx(a, 4);
-  if (print) test_print(idx, "idx =");
+  std::valarray<std::size_t> idx(a, 4);
 
   const double a1[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d(a1, 4);
   if (print) test_print(mat1d, "mat1d =");
-  Matrix<double, 1> mat1d_a(mat1d.elem());
+  Matrix<double, 1> mat1d_a(mat1d.get_elem());
   assert(mat1d_a(0) == 1);
   assert(mat1d_a(1) == 2);
   assert(mat1d_a(2) == 3);
@@ -1336,11 +1335,14 @@ void matrix_nd_test_elem(bool print = false) {
   const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
   Matrix<double, 2> mat2d(a2, 4, 3);
   if (print) test_print(mat2d, "mat2d =");
-  Matrix<double, 1> mat1d_b = mat2d.elem(idx);
-  assert(mat1d_b(0) == 1);
-  assert(mat1d_b(1) == 3);
-  assert(mat1d_b(2) == 5);
-  assert(mat1d_b(3) == 7);
+  mat2d.elem(idx) = 0;
+  if (print) test_print(mat2d, "mat2d =");
+  assert(mat2d(0, 0) == 0);
+  assert(mat2d(0, 1) == 0);
+  assert(mat2d(0, 2) == 9);
+  assert(mat2d(3, 0) == 4);
+  assert(mat2d(3, 1) == 8);
+  assert(mat2d(3, 2) == 12);
 
   const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
                        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
