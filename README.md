@@ -3,11 +3,13 @@ matrix.h: A small multidimensional matrix library
 
 ## Backgroud
 
-**C++** does not come with its own matrix library. This is partially true -- the **Standard Template Library (STL)** has introduced `std::valarray` for fast mathematical computations since **C++98**. The `std::valarray` by itself only acts like a 1D array, but it can be used to simulate a **N**-dimensional matrix quite easily with its helper classes (i.e., `std::slice_array`, `std::gslice_array`, `std::mask_array` and `std::indirect_array`) which have the reference semantics to a subset of the array.
+**C++** does not come with its own matrix library. This is partially true -- the **Standard Template Library (STL)** has introduced [`std::valarray`](https://en.cppreference.com/w/cpp/numeric/valarray) for fast mathematical computations since **C++98**. The `std::valarray` by itself only acts like a 1D array, but it can be used to simulate a **N**-dimensional matrix quite easily with its helper classes (i.e., `std::slice_array`, `std::gslice_array`, `std::mask_array` and `std::indirect_array`) which have the reference semantics to a subset of the array.
 
-This single header matrix library can be viewed as a wrapper of `std::valarray` and an extension of Bjarne Stroustrup's [matrix](https://www.stroustrup.com/Programming/Matrix/Matrix.h) implementation. It provides standard building blocks for performing basic vector, matrix and cube operations. Most of the APIs are coming from **Armadillo** (another **C++** library for linear algebra with syntax similar to **MATLAB**), but note that it will not be compatible for sure. While other APIs have their origins in a few different programming languages (e.g., **Fortran**/**Python**/**R**).
+This single header matrix library can be viewed as a wrapper of `std::valarray` and its its helper classes, and an extension of Bjarne Stroustrup's [matrix](https://www.stroustrup.com/Programming/Matrix/Matrix.h) implementation. It provides standard building blocks for performing basic vector, matrix and cube operations. Most of the APIs are coming from **Armadillo** (a popular **C++** library for linear algebra with syntax similar to **MATLAB**), but note that it will not be compatible for sure. While other APIs have their origins in a few different programming languages (e.g., **Fortran**/**Python**/**R**).
 
-## Classes
+## A Matrix Template
+
+### Matrix<T, N>
 
 `Matrix<T, N>` is an **N**-dimensional dense matrix of some value type **T** (**YP**: currently only 1D/2D/3D matrix are implemented). Internally it consists of a `std::valarray<T>` for storing its elements in [column-major ordering](https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order) (like **Fortran**) and a `std::size_t` array of size **N** to record its sizes on each dimension:
 
@@ -21,7 +23,6 @@ This single header matrix library can be viewed as a wrapper of `std::valarray` 
   // extract a read-only array of elements
   const std::valarray<double> &va1 = x.get_elem();
   ```
-  See also the section **Element Access and Matrix Slicing**
 
 + **Dimemsions** of `Matrix<T, N>` can be accessed similarly by `get_dims()` while total size and size on each dimension can be obtained through the following member functions (all the returned values have type `std::size_t`):
   | `Matrix<T, 1>` | `Matrix<T, 2>` | `Matrix<T, 3>` | Description |
@@ -39,7 +40,8 @@ This single header matrix library can be viewed as a wrapper of `std::valarray` 
   std::cout << x.n_rows() << std::endl;            // 2
   std::cout << x.n_cols() << std::endl;            // 3
   ```
-For convenience the following typedefs have been provided for 1D/2D/3D matrix:
+
+For convenience the following typedefs of `Matrix<T, N>` have been provided for 1D/2D/3D matrix:
 
   | type  T  | `Matrix<T, 1>` | `Matrix<T, 2>` | `Matrix<T, 3>` |
   | :------: | :------------: | :------------: | :------------: |
@@ -47,7 +49,7 @@ For convenience the following typedefs have been provided for 1D/2D/3D matrix:
   | `double` | `dvec`         | `dmat`         | `dcube`        |
   | `float`  | `fvec`         | `fmat `        | `fcube`        |
 
-  For example, we assume that type **T** is `double` in the first row, then obviously
+For example, we assume that type **T** is `double` in the first row, then obviously
   + `vec` is a 1D matrix (i.e., `vec = Matrix<double, 1>`)
   + `mat` is a 2D matrix (i.e., `mat = Matrix<double, 2>`)
   + `cube` is a 3D matrix (i.e., `cube = Matrix<double, 3>`)
@@ -57,11 +59,29 @@ For convenience the following typedefs have been provided for 1D/2D/3D matrix:
   + `vec/mat/cube` are used for better readability, but it is possible to use other types
   + Anything marked as **C++11** can be used only when the compiler supports **C++11** (**YP**: Since **std::valarray** is included in **STL** since **C++98**, this matrix library, as a wrapper of **std::valarray**, will support **pre-C++11** compilers) 
 
+### sub-Matrix<T, N>
+Similarly, three wrappers for the corresponding helper classes of `std::valarray<T>` are included in this library, namely `GsliceMatrix<T,N>`, `IndirectMatrix<T,N>` and `MaskMatrix<T>` (see table below for a short description). 
+  | STL class                | Wrapper                    | Description of the Wrapper Class                                            |
+  | :----------------------  | :------------------------  | :------------------------------------------------------------------------   |
+  | `std::valarray<T>`       | `Matrix<T,N>`              | a Matrix template ( `std::valarray` with dimentions)                                  |
+  | `std::gslice_array<T>`   | `GsliceMatrix<T,N>`        | a sub-Matrix descriped by `std::gslice`                                     |
+  | `std::indirect_array<T>` | `IndirectMatrix<T,N>`      | a sub-Matrix described by an index array (i.e., `std::valarray<std::size>`) |
+  | `std::mask_array<T>`     | `MaskMatrix<T>`            | a sub-Matrix described by a bool array (i.e., `std::valarray<bool>`)        |
+
+They behaves just like a `Matrix` except they refers to a `Matrix`, rather than owning their own elements. They can be viewed as a reference to a sub-`Matrix` which will be discussed in more detail in section **Subscripting and Slicing**. Most of the time, it is safe to ignore the existence of these three helper classes when dealing with sub-Matrix. But for completeness, we provide following typedefs for 1D/2D/3D sub-Matrix:
+
+  | type  T  | `GsliceMatrix<T, 1>` <br> `IndirectMatrix<T, 1>` <br> `MaskMatrix<T>` | `GsliceMatrix<T, 2>` <br> `IndirectMatrix<T, 2>`  | `Matrix<T, 3>` <br> `IndirectMatrix<T, 3>` |
+  | :------: | :------------: | :------------: | :------------: |
+  | `double` | `gslice_vec`  <br> `indirect_vec`  <br> `mask_vec`  | `gslice_mat` <br> `indirect_mat`  <br> `mask_mat`    | `gslice_cube` <br> `indirect_cube` <br> `mask_cube` |
+  | `double` | `gslice_dvec` <br> `indirect_dvec` <br> `mask_dvec` | `gslice_dmat`<br> `indirect_dmat`  <br> `mask_dmat`  | `gslice_dcube`<br> `indirect_dcube`<br> `mask_dcube`|
+  | `float`  | `gslice_fvec` <br> `indirect_vec`  <br> `mask_fvec` | `gslice_fmat` <br> `indirect_fmat`  <br> `mask_fmat` | `gslice_fcube`<br> `indirect_fcube`<br> `mask_fcube`|
+
+
 ## Constructions and Assignments
 
 ### Constructors and Destructors
 
-| `Matrix<T, N>::Matrix` &  `Matrix<T, N>::~Matrix` <br> (with T = double, N = 1/2/3)                                                                 |   |
+| Matrix<T, N>::Matrix &  Matrix<T, N>::~Matrix <br> (with T = double, N = 1/2/3)                                                                     |   |
 | :-------------------------------------------------------------------------------------------------------------------------------------------------  |---|
 | `vec()`                              <br> `mat()`                                      <br> `cube()`                                                |(1)|
 | `explicit vec(n_rows)`               <br> `mat(n_rows, n_cols)`                        <br> `cube(n_rows, n_cols, n_slices)`                        |(2)|
@@ -87,11 +107,11 @@ The table above provides ways to construct new matrix from various sources:
   10) Destructs the `vec/mat/cube`. The destructors of the elements (if **T** is a class) are called and the used storage is deallocated.
 
 ### Assignments
-| `Matrix<T, N>::operator=` <br> (with T = double, N = 1/2/3)                                                                     |          |
-| :-----------------------------------------------------------------------------------------------------------------------------  |----------|
-| `vec& operator=(const vec& other)`     <br> `mat& operator=(const mat& other)`     <br> `cube& operator=(const cube& other)`    |(1)       |
+| Matrix<T, N>::operator= <br> (with T = double, N = 1/2/3)                                                                       |   |
+| :-----------------------------------------------------------------------------------------------------------------------------  |---|
+| `vec& operator=(const vec& other)`     <br> `mat& operator=(const mat& other)`     <br> `cube& operator=(const cube& other)`    |(1)|
 | `vec& operator=(vec&& other)`          <br> `mat& operator=(mat&& other)`          <br> `cube& operator=(cube&& other)`         |(2) C++11 |
-| `vec& operator=(const mat& other)`     <br> `mat& operator=(const vec& other)`     <br>                                         |(3)       |
+| `vec& operator=(const mat& other)`     <br> `mat& operator=(const vec& other)`     <br>                                         |(3)|
 | `vec& operator=(mat&& other)`          <br> `mat& operator=(vec&& other)`          <br>                                         |(4) C++11 |
 | `vec& operator=(const elem_type& val)` <br> `mat& operator=(const elem_type& val)` <br> `cube& operator=(const elem_type& val)` |(5)|
 
@@ -102,4 +122,23 @@ The table above provides ways to replace the contents of the matrix:
   4) Move assignment operator for the assignment between a `vec` and a **n x 1** `mat`.
   5) Replaces each value in `*this` with a copy of `val`.
 
-## Element Access and Matrix Slicing
+## Subscripting and Slicing
+### Matrix Subscripting
+| Matrix<T, N>::operator()  (with T = double, N = 1/2/3)                                                                                                    |   |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------  |---|
+| vec : `const elem_type& operator()(i) const` <br> mat : `const elem_type& operator()(i, j) const` <br> cube: `const elem_type& operator()(i, j, k) const` |(1)|
+| vec : `elem_type& operator()(i)`             <br> mat : `elem_type& operator()(i, j)`             <br> cube: `elem_type& operator()(i, j, k)`             |(2)|
+
+### Matrix Slicing with GsliceMatrix
+| Matrix<T, N>'s member functions  (with T = double, N = 1/2/3)                                                                                             |   |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------  |---|
+| mat : `vec row(i) const / vec col(i) const`                                                       <br> cube: `mat slice(i) const`                         |(1)|
+| mat : `gslice_vec row(i) / gslice_vec col(i)`                                                     <br> cube: `gslice_mat slice(i)`                        |(2)|
+| mat : `mat rows(fr, lr) const / mat cols(fc, lc) const`                                           <br> cube: `cube slices(fs, ls) const`                  |(3)|
+| mat : `gslice_mat rows(fr, lr) / gslice_mat cols(fc, lc)`                                         <br> cube: `gslice_cube slices(fs, ls)`                 |(4)|
+| vec : `vec subvec(fr, lr) const`             <br> mat : `mat submat(fr, fc, lr, lc) const`        <br> cube: `cube subcube(fr, fc, fs, lc, lr, ls) const` |(5)|
+| vec : `gslice_vec subvec(fr, lr)`            <br> mat : `gslice_mat submat(fr, fc, lr, lc)`       <br> cube: `gslice_cube subcube(fr, fc, fs, lc, lr, ls)`|(6)|
+
+### Matrix Slicing with IndirectMatrix
+
+### Matrix Slicing with MaskMatrix
