@@ -1478,6 +1478,87 @@ void matrix_3d_test_ind_elem(bool print = false) {
   assert(mat3d_c(1, 1, 0) == 24);
 }
 
+void matrix_1d_test_bool_elem(bool print = false) {
+  std::cout << "[TEST]: 1D Matrix access elements with bool array\n";
+
+  const bool idx[4] = {false, true, false, true};
+  std::valarray<bool> bool_arr(idx, 4);
+
+  const double a[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a, 4);
+  const Matrix<double, 1> mat1d_b(a, 4);
+
+  mat1d_a(bool_arr) = 0;
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a(0) == 1);
+  assert(mat1d_a(1) == 0);
+  assert(mat1d_a(2) == 3);
+  assert(mat1d_a(3) == 0);
+
+  Matrix<double, 1> mat1d_c = mat1d_b(bool_arr);
+  if (print) test_print(mat1d_c, "mat1d_c = ");
+  assert(mat1d_c(0) == 2);
+  assert(mat1d_c(1) == 4);
+}
+
+void matrix_2d_test_bool_elem(bool print = false) {
+  std::cout << "[TEST]: 2D Matrix access elements with bool array\n";
+
+  const bool idx[12] = {false, true,  false, true, false, false,
+                        false, false, false, true, false, true};
+  std::valarray<bool> bool_arr(idx, 12);
+
+  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d_a(arr, 4, 3);
+  const Matrix<double, 2> mat2d_b(arr, 4, 3);
+
+  mat2d_a(bool_arr) = 0;
+  if (print) test_print(mat2d_a, "mat2d_a = ");
+  assert(mat2d_a(0, 0) == 1);
+  assert(mat2d_a(0, 1) == 5);
+  assert(mat2d_a(0, 2) == 9);
+  assert(mat2d_a(3, 0) == 0);
+  assert(mat2d_a(3, 1) == 8);
+  assert(mat2d_a(3, 2) == 0);
+
+  Matrix<double, 1> mat1d_a = mat2d_b(bool_arr);
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a(0) == 2);
+  assert(mat1d_a(1) == 4);
+  assert(mat1d_a(2) == 10);
+  assert(mat1d_a(3) == 12);
+}
+
+void matrix_3d_test_bool_elem(bool print = false) {
+  std::cout << "[TEST]: 3D Matrix access elements with bool array\n";
+
+  const bool idx[24] = {false, false, false, false, false, false, false, false,
+                        false, false, false, false, false, true,  false, true,
+                        false, false, false, false, false, true,  false, true};
+  std::valarray<bool> bool_arr(idx, 24);
+
+  const double arr[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  Matrix<double, 3> mat3d_a(arr, 4, 3, 2);
+  const Matrix<double, 3> mat3d_b(arr, 4, 3, 2);
+
+  mat3d_a(bool_arr) = 0;
+  if (print) test_print(mat3d_a, "mat3d_a = ");
+  assert(mat3d_a(0, 0, 0) == 1);
+  assert(mat3d_a(0, 1, 0) == 5);
+  assert(mat3d_a(0, 2, 0) == 9);
+  assert(mat3d_a(3, 0, 1) == 0);
+  assert(mat3d_a(3, 1, 1) == 20);
+  assert(mat3d_a(3, 2, 1) == 0);
+
+  Matrix<double, 1> mat1d_a = mat3d_b(bool_arr);
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a(0) == 14);
+  assert(mat1d_a(1) == 16);
+  assert(mat1d_a(2) == 22);
+  assert(mat1d_a(3) == 24);
+}
+
 void matrix_test_binary_addition_operator(bool print = false) {
   std::cout << "[TEST]: Applies binary addition operators to each element\n";
 
@@ -1698,6 +1779,10 @@ int main() {
   matrix_1d_test_ind_elem(print_flag);
   matrix_2d_test_ind_elem(print_flag);
   matrix_3d_test_ind_elem(print_flag);
+
+  matrix_1d_test_bool_elem(print_flag);
+  matrix_2d_test_bool_elem(print_flag);
+  matrix_3d_test_bool_elem(print_flag);
 
   matrix_test_binary_addition_operator(print_flag);
   matrix_test_binary_subtraction_operator(print_flag);

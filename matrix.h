@@ -75,6 +75,8 @@ template <class _Tp = double, uword _Size = 1>
 struct GsliceMatrix;
 template <class _Tp = double, uword _Size = 1>
 struct IndirectMatrix;
+template <class _Tp = double>
+struct MaskMatrix;
 
 //-----------------------------------------------------------------------------
 
@@ -180,6 +182,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix(const         Matrix        & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
   Matrix(const   GsliceMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
   Matrix(const IndirectMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
+  Matrix(const     MaskMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
@@ -253,6 +256,9 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
     return Matrix<_Tp, 1>(this->get_elem(__x.get_elem()));
   }
 
+  MaskMatrix<_Tp> operator()(const barray& __bool_arr);
+  Matrix<_Tp, 1> operator()(const barray& __bool_arr) const;
+
   Matrix<_Tp, 2> t() const;
 
   // clang-format off
@@ -310,6 +316,10 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix(const std::valarray<_Tp>& __va, const uarray& __idx_arr,
          const uword __dims[1])
       : _Matrix_base<_Tp>(__va[__idx_arr]) {
+    _M_init();
+  }
+  Matrix(const std::valarray<_Tp>& __va, const barray& __bool_arr)
+      : _Matrix_base<_Tp>(__va[__bool_arr]) {
     _M_init();
   }
 };
@@ -422,6 +432,9 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
     return Matrix<_Tp, 1>(this->get_elem(__x.get_elem()));
   }
+
+  MaskMatrix<_Tp> operator()(const barray& __bool_arr);
+  Matrix<_Tp, 1> operator()(const barray& __bool_arr) const;
 
   Matrix<_Tp, 2> t() const;
 
@@ -574,6 +587,9 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   Matrix<_Tp, 1> elem(const Matrix<std::size_t, 1>& __x) const {
     return Matrix<_Tp, 1>(this->get_elem(__x.get_elem()));
   }
+
+  MaskMatrix<_Tp> operator()(const barray& __bool_arr);
+  Matrix<_Tp, 1> operator()(const barray& __bool_arr) const;
 
   // clang-format off
  public:
@@ -947,6 +963,22 @@ struct IndirectMatrix {
 };
 
 template <class _Tp>
+struct MaskMatrix {
+ public:
+  typedef _Tp elem_type;
+  std::mask_array<_Tp> _M_elem;
+  MaskMatrix(std::valarray<_Tp>& __va, const std::valarray<bool>& __boolarr)
+      : _M_elem(__va[__boolarr]) {}
+  void operator=(const _Tp& __value) { _M_elem = __value; }
+
+  std::valarray<_Tp> get_elem() const { return std::valarray<_Tp>(_M_elem); }
+
+  elem_type sum() const { return get_elem().sum(); }
+  elem_type min() const { return get_elem().min(); }
+  elem_type max() const { return get_elem().max(); }
+};
+
+template <class _Tp>
 inline Matrix<_Tp, 1> Matrix<_Tp, 1>::subvec(uword __i, uword __j) const {
   if (__i > __j || __j >= _M_dims[0]) error("1D subscription error");
   const uword __start = __i;
@@ -1160,6 +1192,36 @@ inline Matrix<_Tp, 3> Matrix<_Tp, 3>::operator()(
     }
   }
   return Matrix<_Tp, 3>(this->_M_elem, __idx_arr, __dims);
+}
+
+template <class _Tp>
+inline MaskMatrix<_Tp> Matrix<_Tp, 1>::operator()(const barray& __bool_arr) {
+  return MaskMatrix<_Tp>(this->_M_elem, __bool_arr);
+}
+template <class _Tp>
+inline Matrix<_Tp, 1> Matrix<_Tp, 1>::operator()(
+    const barray& __bool_arr) const {
+  return Matrix<_Tp>(this->_M_elem, __bool_arr);
+}
+
+template <class _Tp>
+inline MaskMatrix<_Tp> Matrix<_Tp, 2>::operator()(const barray& __bool_arr) {
+  return MaskMatrix<_Tp>(this->_M_elem, __bool_arr);
+}
+template <class _Tp>
+inline Matrix<_Tp, 1> Matrix<_Tp, 2>::operator()(
+    const barray& __bool_arr) const {
+  return Matrix<_Tp>(this->_M_elem, __bool_arr);
+}
+
+template <class _Tp>
+inline MaskMatrix<_Tp> Matrix<_Tp, 3>::operator()(const barray& __bool_arr) {
+  return MaskMatrix<_Tp>(this->_M_elem, __bool_arr);
+}
+template <class _Tp>
+inline Matrix<_Tp, 1> Matrix<_Tp, 3>::operator()(
+    const barray& __bool_arr) const {
+  return Matrix<_Tp>(this->_M_elem, __bool_arr);
 }
 
 template <class _Tp>
