@@ -65,8 +65,8 @@ Similar to `Matrix<T, N>`, three wrappers for the corresponding helper classes o
   | :----------------------  | :------------------------  | :------------------------------------------------------------------------   |
   | `std::valarray<T>`       | `Matrix<T,N>`              | a Matrix template ( `std::valarray` with dimentions)                        |
   | `std::gslice_array<T>`   | `GsliceMatrix<T,N>`        | a sub-Matrix descriped by `std::gslice`                                     |
-  | `std::indirect_array<T>` | `IndirectMatrix<T,N>`      | a sub-Matrix described by an index array (i.e., `std::valarray<std::size>`) |
-  | `std::mask_array<T>`     | `MaskMatrix<T>`            | a sub-Matrix described by a bool array (i.e., `std::valarray<bool>`)        |
+  | `std::indirect_array<T>` | `IndirectMatrix<T,N>`      | a sub-Matrix described by an `index_array` (i.e., `std::valarray<std::size>`) |
+  | `std::mask_array<T>`     | `MaskMatrix<T>`            | a sub-Matrix described by a `bool_array` (i.e., `std::valarray<bool>`)        |
 
 These wrapper classes behave just like the `Matrix` except they refer to a `Matrix`, rather than owning their own elements. They can be viewed as a reference to a sub-`Matrix` which will be discussed in more detail in section **Subscripting and Slicing**. Most of the time, it is safe to ignore the existence of these three helper classes when dealing with sub-Matrix. But for completeness, we provide following typedefs for 1D/2D/3D sub-Matrix:
 
