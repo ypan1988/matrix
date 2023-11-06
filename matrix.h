@@ -326,6 +326,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
       : _Matrix_base<_Tp>(__va[__bool_arr]) {
     _M_init();
   }
+  uword sub2ind(uword __i) const { return __i; }
 };
 
 //-----------------------------------------------------------------------------
@@ -503,6 +504,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
       : _Matrix_base<_Tp>(__va[__idx_arr]) {
     _M_init(__dims[0], __dims[1]);
   }
+  uword sub2ind(uword __i, uword __j) const { return __i + __j * _M_dims[0]; }
 };
 
 //-----------------------------------------------------------------------------
@@ -573,11 +575,11 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   // subscripting:
   elem_type& operator()(uword __n1, uword __n2, uword __n3) {
     range_check(__n1, __n2, __n3);
-    return this->_M_elem[__n1 + __n2 * _M_dims[0] + __n3 * _M_d1xd2];
+    return this->_M_elem[sub2ind(__n1, __n2, __n3)];
   }
   const elem_type& operator()(uword __n1, uword __n2, uword __n3) const {
     range_check(__n1, __n2, __n3);
-    return this->_M_elem[__n1 + __n2 * _M_dims[0] + __n3 * _M_d1xd2];
+    return this->_M_elem[sub2ind(__n1, __n2, __n3)];
   }
 
   Matrix<_Tp, 2> slice(uword) const;
@@ -663,6 +665,9 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
          const uword __dims[3])
       : _Matrix_base<_Tp>(__va[__idx_arr]) {
     _M_init(__dims[0], __dims[1], __dims[2]);
+  }
+  uword sub2ind(uword __i, uword __j, uword __k) const {
+    return __i + __j * _M_dims[0] + __k * _M_d1xd2;
   }
 };
 
@@ -1132,7 +1137,7 @@ template <class _Tp>
 inline Matrix<_Tp, 3> Matrix<_Tp, 3>::subcube(uword __fr, uword __fc,
                                               uword __fs, uword __lr,
                                               uword __lc, uword __ls) const {
-  const uword __start = __fs * _M_d1xd2 + n_rows() * __fc + __fr;
+  const uword __start = sub2ind(__fr, __fc, __fs);
   const uword __size[3] = {__ls - __fs + 1, __lc - __fc + 1, __lr - __fr + 1};
   const uword __stride[3] = {_M_d1xd2, n_rows(), 1};
   return Matrix<_Tp, 3>(this->_M_elem, __start, __size, __stride);
@@ -1142,7 +1147,7 @@ template <class _Tp>
 inline GsliceMatrix<_Tp, 3> Matrix<_Tp, 3>::subcube(uword __fr, uword __fc,
                                                     uword __fs, uword __lr,
                                                     uword __lc, uword __ls) {
-  const uword __start = __fs * _M_d1xd2 + n_rows() * __fc + __fr;
+  const uword __start = sub2ind(__fr, __fc, __fs);
   const uword __size[3] = {__ls - __fs + 1, __lc - __fc + 1, __lr - __fr + 1};
   const uword __stride[3] = {_M_d1xd2, n_rows(), 1};
   return GsliceMatrix<_Tp, 3>(this->_M_elem, __start, __size, __stride);
@@ -1202,8 +1207,8 @@ inline IndirectMatrix<_Tp, 3> Matrix<_Tp, 3>::operator()(
   for (uword __k = 0; __k < __idx_arr3.size(); ++__k) {
     for (uword __j = 0; __j < __idx_arr2.size(); ++__j) {
       for (uword __i = 0; __i < __idx_arr1.size(); ++__i) {
-        __idx_arr[__idx++] = __idx_arr1[__i] + __idx_arr2[__j] * _M_dims[0] +
-                             __idx_arr3[__k] * _M_d1xd2;
+        __idx_arr[__idx++] =
+            sub2ind(__idx_arr1[__i], __idx_arr2[__j], __idx_arr3[__k]);
       }
     }
   }
@@ -1220,8 +1225,8 @@ inline Matrix<_Tp, 3> Matrix<_Tp, 3>::operator()(
   for (uword __k = 0; __k < __idx_arr3.size(); ++__k) {
     for (uword __j = 0; __j < __idx_arr2.size(); ++__j) {
       for (uword __i = 0; __i < __idx_arr1.size(); ++__i) {
-        __idx_arr[__idx++] = __idx_arr1[__i] + __idx_arr2[__j] * _M_dims[0] +
-                             __idx_arr3[__k] * _M_d1xd2;
+        __idx_arr[__idx++] =
+            sub2ind(__idx_arr1[__i], __idx_arr2[__j], __idx_arr3[__k]);
       }
     }
   }
