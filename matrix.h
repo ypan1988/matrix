@@ -248,6 +248,9 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix<_Tp, 1> subvec(uword, uword) const;
   GsliceMatrix<_Tp, 1> subvec(uword, uword);
 
+  Matrix<_Tp, 1> operator()(std::slice __s) const;
+  GsliceMatrix<_Tp, 1> operator()(std::slice __s);
+
   IndirectMatrix<_Tp, 1> operator()(const index_array& __idx_arr);
   Matrix<_Tp, 1> operator()(const index_array& __idx_arr) const;
 
@@ -427,6 +430,8 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   GsliceMatrix<_Tp, 2> cols(uword, uword);
   Matrix<_Tp, 2> submat(uword, uword, uword, uword) const;
   GsliceMatrix<_Tp, 2> submat(uword, uword, uword, uword);
+  Matrix<_Tp, 2> operator()(std::slice __s1, std::slice __s2) const;
+  GsliceMatrix<_Tp, 2> operator()(std::slice __s1, std::slice __s2);
 
   IndirectMatrix<_Tp, 2> operator()(const index_array& __idx_arr1,
                                     const index_array& __idx_arr2);
@@ -588,6 +593,10 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   GsliceMatrix<_Tp, 3> slices(uword, uword);
   Matrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword) const;
   GsliceMatrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword);
+  Matrix<_Tp, 3> operator()(std::slice __s1, std::slice __s2,
+                            std::slice __s3) const;
+  GsliceMatrix<_Tp, 3> operator()(std::slice __s1, std::slice __s2,
+                                  std::slice __s3);
 
   IndirectMatrix<_Tp, 3> operator()(const index_array&, const index_array&,
                                     const index_array&);
@@ -1150,6 +1159,62 @@ inline GsliceMatrix<_Tp, 3> Matrix<_Tp, 3>::subcube(uword __fr, uword __fc,
   const uword __start = sub2ind(__fr, __fc, __fs);
   const uword __size[3] = {__ls - __fs + 1, __lc - __fc + 1, __lr - __fr + 1};
   const uword __stride[3] = {_M_d1xd2, n_rows(), 1};
+  return GsliceMatrix<_Tp, 3>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 1> Matrix<_Tp, 1>::operator()(std::slice __s) const {
+  const uword __start = __s.start();
+  const uword __size[1] = {__s.size()};
+  const uword __stride[1] = {__s.stride()};
+  return Matrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline GsliceMatrix<_Tp, 1> Matrix<_Tp, 1>::operator()(std::slice __s) {
+  const uword __start = __s.start();
+  const uword __size[1] = {__s.size()};
+  const uword __stride[1] = {__s.stride()};
+  return GsliceMatrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 2> Matrix<_Tp, 2>::operator()(std::slice __s1,
+                                                 std::slice __s2) const {
+  const uword __start = sub2ind(__s1.start(), __s2.start());
+  const uword __size[2] = {__s2.size(), __s1.size()};
+  const uword __stride[2] = {n_rows() * __s2.stride(), 1 * __s1.stride()};
+  return Matrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline GsliceMatrix<_Tp, 2> Matrix<_Tp, 2>::operator()(std::slice __s1,
+                                                       std::slice __s2) {
+  const uword __start = sub2ind(__s1.start(), __s2.start());
+  const uword __size[2] = {__s2.size(), __s1.size()};
+  const uword __stride[2] = {n_rows() * __s2.stride(), 1 * __s1.stride()};
+  return GsliceMatrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 3> Matrix<_Tp, 3>::operator()(std::slice __s1,
+                                                 std::slice __s2,
+                                                 std::slice __s3) const {
+  const uword __start = sub2ind(__s1.start(), __s2.start(), __s3.start());
+  const uword __size[3] = {__s3.size(), __s2.size(), __s1.size()};
+  const uword __stride[3] = {_M_d1xd2 * __s3.stride(), n_rows() * __s2.stride(),
+                             1 * __s1.stride()};
+  return Matrix<_Tp, 3>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline GsliceMatrix<_Tp, 3> Matrix<_Tp, 3>::operator()(std::slice __s1,
+                                                       std::slice __s2,
+                                                       std::slice __s3) {
+  const uword __start = sub2ind(__s1.start(), __s2.start(), __s3.start());
+  const uword __size[3] = {__s3.size(), __s2.size(), __s1.size()};
+  const uword __stride[3] = {_M_d1xd2 * __s3.stride(), n_rows() * __s2.stride(),
+                             1 * __s1.stride()};
   return GsliceMatrix<_Tp, 3>(this->_M_elem, __start, __size, __stride);
 }
 
