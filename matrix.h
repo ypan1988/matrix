@@ -401,11 +401,11 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   // subscripting:
   elem_type& operator()(uword __n1, uword __n2) {
     range_check(__n1, __n2);
-    return this->_M_elem[__n1 + __n2 * _M_dims[0]];
+    return this->_M_elem[sub2ind(__n1, __n2)];
   }
   const elem_type& operator()(uword __n1, uword __n2) const {
     range_check(__n1, __n2);
-    return this->_M_elem[__n1 + __n2 * _M_dims[0]];
+    return this->_M_elem[sub2ind(__n1, __n2)];
   }
 
   std::valarray<_Tp> diag() const {
@@ -1177,7 +1177,7 @@ inline IndirectMatrix<_Tp, 2> Matrix<_Tp, 2>::operator()(
   uword __idx = 0;
   for (uword __j = 0; __j < __idx_arr2.size(); ++__j) {
     for (uword __i = 0; __i < __idx_arr1.size(); ++__i) {
-      __idx_arr[__idx++] = __idx_arr1[__i] + __idx_arr2[__j] * _M_dims[0];
+      __idx_arr[__idx++] = sub2ind(__idx_arr1[__i], __idx_arr2[__j]);
     }
   }
   return IndirectMatrix<_Tp, 2>(this->_M_elem, __idx_arr, __dims);
@@ -1191,7 +1191,7 @@ inline Matrix<_Tp, 2> Matrix<_Tp, 2>::operator()(
   uword __idx = 0;
   for (uword __j = 0; __j < __idx_arr2.size(); ++__j) {
     for (uword __i = 0; __i < __idx_arr1.size(); ++__i) {
-      __idx_arr[__idx++] = __idx_arr1[__i] + __idx_arr2[__j] * _M_dims[0];
+      __idx_arr[__idx++] = sub2ind(__idx_arr1[__i], __idx_arr2[__j]);
     }
   }
   return Matrix<_Tp, 2>(this->_M_elem, __idx_arr, __dims);
