@@ -219,7 +219,6 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   Matrix& operator=(const std::mask_array<_Tp>    & __ma) { this->_M_elem = __ma; _M_init(); return *this; }
   Matrix& operator=(const std::indirect_array<_Tp>& __ia) { this->_M_elem = __ia; _M_init(); return *this; }
   Matrix& operator=(const Matrix<_Tp, 2>& __x);
-  // clang-format on
 
 #if defined(__MATRIX_LIB_USE_R)
   // this operator enables implicit Rcpp::wrap
@@ -229,7 +228,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 #endif
 
   index_array get_dims() const { return index_array(_M_dims, 1); }
-  uword n_rows() const { return _M_dims[0]; }
+  uword         n_rows() const { return _M_dims[0]; }
 
   void range_check(uword __n1) const {
     if (_M_dims[0] <= __n1) error("1D range error: dimension 1");
@@ -245,30 +244,24 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
     return this->_M_elem[__n1];
   }
 
-  Matrix<_Tp, 1> subvec(uword, uword) const;
-  GsliceMatrix<_Tp, 1> subvec(uword, uword);
+  // GsliceMatrix related member functions
+          Matrix<_Tp, 1> subvec(uword, uword) const;
+    GsliceMatrix<_Tp, 1> subvec(uword, uword);
+          Matrix<_Tp, 1> operator()(std::slice __s) const;
+    GsliceMatrix<_Tp, 1> operator()(std::slice __s);
 
-  Matrix<_Tp, 1> operator()(std::slice __s) const;
-  GsliceMatrix<_Tp, 1> operator()(std::slice __s);
-
+  // IndirectMatrix related member functions
+          Matrix<_Tp, 1> elem(const index_array& __idx_arr) const;
+  IndirectMatrix<_Tp, 1> elem(const index_array& __idx_arr);
+          Matrix<_Tp, 1> operator()(const index_array& __idx_arr) const;
   IndirectMatrix<_Tp, 1> operator()(const index_array& __idx_arr);
-  Matrix<_Tp, 1> operator()(const index_array& __idx_arr) const;
 
-  IndirectMatrix<_Tp, 1> elem(const index_array& __idx_arr) {
-    uword dims[1] = {__idx_arr.size()};
-    return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
-  }
-  Matrix<_Tp, 1> elem(const index_array& __idx_arr) const {
-    uword dims[1] = {__idx_arr.size()};
-    return Matrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
-  }
-
-  MaskMatrix<_Tp> operator()(const bool_array& __bool_arr);
-  Matrix<_Tp, 1> operator()(const bool_array& __bool_arr) const;
+  // MaskMatrix related member functions
+          Matrix<_Tp, 1> operator()(const bool_array& __bool_arr) const;
+      MaskMatrix<_Tp   > operator()(const bool_array& __bool_arr);
 
   Matrix<_Tp, 2> t() const;
 
-  // clang-format off
  public:
   Matrix operator+() const { return *this; }
   Matrix operator-() const { return Matrix(-this->_M_elem, _M_dims); }
@@ -382,7 +375,6 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
 #endif
   Matrix& operator=(const elem_type& __x) { this->_M_elem = __x; return *this; }
   Matrix& operator=(const Matrix<_Tp, 1>& __x);
-  // clang-format on
 
 #if defined(__MATRIX_LIB_USE_R)
   // this operator enables implicit Rcpp::wrap
@@ -392,9 +384,8 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
 #endif
 
   index_array get_dims() const { return index_array(_M_dims, 2); }
-
-  uword n_rows() const { return _M_dims[0]; }
-  uword n_cols() const { return _M_dims[1]; }
+  uword         n_rows() const { return _M_dims[0]; }
+  uword         n_cols() const { return _M_dims[1]; }
 
   void range_check(uword __n1, uword __n2) const {
     if (_M_dims[0] <= __n1) error("2D range error: dimension 1");
@@ -420,39 +411,32 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
                                     _M_dims[0] + 1)];
   }
 
-  Matrix<_Tp, 1> row(uword) const;
-  GsliceMatrix<_Tp, 1> row(uword);
-  Matrix<_Tp, 1> col(uword) const;
-  GsliceMatrix<_Tp, 1> col(uword);
-  Matrix<_Tp, 2> rows(uword, uword) const;
-  GsliceMatrix<_Tp, 2> rows(uword, uword);
-  Matrix<_Tp, 2> cols(uword, uword) const;
-  GsliceMatrix<_Tp, 2> cols(uword, uword);
-  Matrix<_Tp, 2> submat(uword, uword, uword, uword) const;
-  GsliceMatrix<_Tp, 2> submat(uword, uword, uword, uword);
-  Matrix<_Tp, 2> operator()(std::slice __s1, std::slice __s2) const;
-  GsliceMatrix<_Tp, 2> operator()(std::slice __s1, std::slice __s2);
+  // GsliceMatrix related member functions
+          Matrix<_Tp, 1> row(uword) const;
+    GsliceMatrix<_Tp, 1> row(uword);
+          Matrix<_Tp, 1> col(uword) const;
+    GsliceMatrix<_Tp, 1> col(uword);
+          Matrix<_Tp, 2> rows(uword, uword) const;
+    GsliceMatrix<_Tp, 2> rows(uword, uword);
+          Matrix<_Tp, 2> cols(uword, uword) const;
+    GsliceMatrix<_Tp, 2> cols(uword, uword);
+          Matrix<_Tp, 2> submat(uword, uword, uword, uword) const;
+    GsliceMatrix<_Tp, 2> submat(uword, uword, uword, uword);
+          Matrix<_Tp, 2> operator()(std::slice __s1, std::slice __s2) const;
+    GsliceMatrix<_Tp, 2> operator()(std::slice __s1, std::slice __s2);
 
-  IndirectMatrix<_Tp, 2> operator()(const index_array& __idx_arr1,
-                                    const index_array& __idx_arr2);
-  Matrix<_Tp, 2> operator()(const index_array& __idx_arr1,
-                            const index_array& __idx_arr2) const;
+  // IndirectMatrix related member functions
+          Matrix<_Tp, 1> elem(const index_array& __idx_arr) const;
+  IndirectMatrix<_Tp, 1> elem(const index_array& __idx_arr);
+          Matrix<_Tp, 2> operator()(const index_array& __idx_arr1, const index_array& __idx_arr2) const;
+  IndirectMatrix<_Tp, 2> operator()(const index_array& __idx_arr1, const index_array& __idx_arr2);
 
-  IndirectMatrix<_Tp, 1> elem(const index_array& __idx_arr) {
-    uword dims[1] = {__idx_arr.size()};
-    return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
-  }
-  Matrix<_Tp, 1> elem(const index_array& __idx_arr) const {
-    uword dims[1] = {__idx_arr.size()};
-    return Matrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
-  }
-
-  MaskMatrix<_Tp> operator()(const bool_array& __bool_arr);
-  Matrix<_Tp, 1> operator()(const bool_array& __bool_arr) const;
+  // MaskMatrix related member functions
+          Matrix<_Tp, 1> operator()(const bool_array& __bool_arr) const;
+      MaskMatrix<_Tp   > operator()(const bool_array& __bool_arr);
 
   Matrix<_Tp, 2> t() const;
 
-  // clang-format off
  public:
   Matrix operator+() const { return *this; }
   Matrix operator-() const { return Matrix(-this->_M_elem, _M_dims); }
@@ -556,7 +540,6 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   Matrix& operator=(Matrix&& __x) = default;
 #endif
   Matrix& operator=(const elem_type& __x) { this->_M_elem = __x; return *this; }
-  // clang-format on
 
 #if defined(__MATRIX_LIB_USE_R)
   // this operator enables implicit Rcpp::wrap
@@ -566,10 +549,9 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
 #endif
 
   index_array get_dims() const { return index_array(_M_dims, 3); }
-
-  uword n_rows() const { return _M_dims[0]; }
-  uword n_cols() const { return _M_dims[1]; }
-  uword n_slices() const { return _M_dims[2]; }
+  uword         n_rows() const { return _M_dims[0]; }
+  uword         n_cols() const { return _M_dims[1]; }
+  uword       n_slices() const { return _M_dims[2]; }
 
   void range_check(uword __n1, uword __n2, uword __n3) const {
     if (_M_dims[0] <= __n1) error("3D range error: dimension 1");
@@ -587,35 +569,26 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
     return this->_M_elem[sub2ind(__n1, __n2, __n3)];
   }
 
-  Matrix<_Tp, 2> slice(uword) const;
-  GsliceMatrix<_Tp, 2> slice(uword);
-  Matrix<_Tp, 3> slices(uword, uword) const;
-  GsliceMatrix<_Tp, 3> slices(uword, uword);
-  Matrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword) const;
-  GsliceMatrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword);
-  Matrix<_Tp, 3> operator()(std::slice __s1, std::slice __s2,
-                            std::slice __s3) const;
-  GsliceMatrix<_Tp, 3> operator()(std::slice __s1, std::slice __s2,
-                                  std::slice __s3);
+  // GsliceMatrix related member functions
+          Matrix<_Tp, 2> slice(uword) const;
+    GsliceMatrix<_Tp, 2> slice(uword);
+          Matrix<_Tp, 3> slices(uword, uword) const;
+    GsliceMatrix<_Tp, 3> slices(uword, uword);
+          Matrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword) const;
+    GsliceMatrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword);
+          Matrix<_Tp, 3> operator()(std::slice __s1, std::slice __s2, std::slice __s3) const;
+    GsliceMatrix<_Tp, 3> operator()(std::slice __s1, std::slice __s2, std::slice __s3);
 
-  IndirectMatrix<_Tp, 3> operator()(const index_array&, const index_array&,
-                                    const index_array&);
-  Matrix<_Tp, 3> operator()(const index_array&, const index_array&,
-                            const index_array&) const;
+  // IndirectMatrix related member functions
+          Matrix<_Tp, 1> elem(const index_array& __idx_arr) const;
+  IndirectMatrix<_Tp, 1> elem(const index_array& __idx_arr);
+          Matrix<_Tp, 3> operator()(const index_array&, const index_array&, const index_array&) const;
+  IndirectMatrix<_Tp, 3> operator()(const index_array&, const index_array&, const index_array&);
 
-  IndirectMatrix<_Tp, 1> elem(const index_array& __idx_arr) {
-    uword dims[1] = {__idx_arr.size()};
-    return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
-  }
-  Matrix<_Tp, 1> elem(const index_array& __idx_arr) const {
-    uword dims[1] = {__idx_arr.size()};
-    return Matrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
-  }
+  // MaskMatrix related member functions
+          Matrix<_Tp, 1> operator()(const bool_array& __bool_arr) const;
+      MaskMatrix<_Tp   > operator()(const bool_array& __bool_arr);
 
-  MaskMatrix<_Tp> operator()(const bool_array& __bool_arr);
-  Matrix<_Tp, 1> operator()(const bool_array& __bool_arr) const;
-
-  // clang-format off
  public:
   Matrix operator+() const { return *this; }
   Matrix operator-() const { return Matrix(-this->_M_elem, _M_dims); }
@@ -1025,24 +998,6 @@ struct MaskMatrix {
 // Matrix member functions dealing with GsliceMatrix
 
 template <class _Tp>
-inline Matrix<_Tp, 1> Matrix<_Tp, 1>::subvec(uword __i, uword __j) const {
-  if (__i > __j || __j >= _M_dims[0]) error("1D subscription error");
-  const uword __start = __i;
-  const uword __size[1] = {__j - __i + 1};
-  const uword __stride[1] = {1};
-  return Matrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
-}
-
-template <class _Tp>
-inline GsliceMatrix<_Tp, 1> Matrix<_Tp, 1>::subvec(uword __i, uword __j) {
-  if (__i > __j || __j >= _M_dims[0]) error("1D subscription error");
-  const uword __start = __i;
-  const uword __size[1] = {__j - __i + 1};
-  const uword __stride[1] = {1};
-  return GsliceMatrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
-}
-
-template <class _Tp>
 inline Matrix<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) const {
   range_check(__r, 0);
   const uword __start = __r;
@@ -1079,6 +1034,22 @@ inline GsliceMatrix<_Tp, 1> Matrix<_Tp, 2>::col(uword __c) {
 }
 
 template <class _Tp>
+inline Matrix<_Tp, 2> Matrix<_Tp, 3>::slice(uword __s) const {
+  const uword __start = __s * _M_d1xd2;
+  const uword __size[2] = {n_cols(), n_rows()};
+  const uword __stride[2] = {n_rows(), 1};
+  return Matrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline GsliceMatrix<_Tp, 2> Matrix<_Tp, 3>::slice(uword __s) {
+  const uword __start = __s * _M_d1xd2;
+  const uword __size[2] = {n_cols(), n_rows()};
+  const uword __stride[2] = {n_rows(), 1};
+  return GsliceMatrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
 inline Matrix<_Tp, 2> Matrix<_Tp, 2>::rows(uword __fr, uword __lr) const {
   return submat(__fr, 0, __lr, n_cols() - 1);
 }
@@ -1099,6 +1070,34 @@ inline GsliceMatrix<_Tp, 2> Matrix<_Tp, 2>::cols(uword __fc, uword __lc) {
 }
 
 template <class _Tp>
+inline Matrix<_Tp, 3> Matrix<_Tp, 3>::slices(uword __fs, uword __ls) const {
+  return subcube(0, 0, __fs, n_rows() - 1, n_cols() - 1, __ls);
+}
+
+template <class _Tp>
+inline GsliceMatrix<_Tp, 3> Matrix<_Tp, 3>::slices(uword __fs, uword __ls) {
+  return subcube(0, 0, __fs, n_rows() - 1, n_cols() - 1, __ls);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 1> Matrix<_Tp, 1>::subvec(uword __i, uword __j) const {
+  if (__i > __j || __j >= _M_dims[0]) error("1D subscription error");
+  const uword __start = __i;
+  const uword __size[1] = {__j - __i + 1};
+  const uword __stride[1] = {1};
+  return Matrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
+inline GsliceMatrix<_Tp, 1> Matrix<_Tp, 1>::subvec(uword __i, uword __j) {
+  if (__i > __j || __j >= _M_dims[0]) error("1D subscription error");
+  const uword __start = __i;
+  const uword __size[1] = {__j - __i + 1};
+  const uword __stride[1] = {1};
+  return GsliceMatrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+}
+
+template <class _Tp>
 inline Matrix<_Tp, 2> Matrix<_Tp, 2>::submat(uword __fr, uword __fc, uword __lr,
                                              uword __lc) const {
   const uword __start = n_rows() * __fc + __fr;
@@ -1114,32 +1113,6 @@ inline GsliceMatrix<_Tp, 2> Matrix<_Tp, 2>::submat(uword __fr, uword __fc,
   const uword __size[2] = {__lc - __fc + 1, __lr - __fr + 1};
   const uword __stride[2] = {n_rows(), 1};
   return GsliceMatrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
-}
-
-template <class _Tp>
-inline Matrix<_Tp, 2> Matrix<_Tp, 3>::slice(uword __s) const {
-  const uword __start = __s * _M_d1xd2;
-  const uword __size[2] = {n_cols(), n_rows()};
-  const uword __stride[2] = {n_rows(), 1};
-  return Matrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
-}
-
-template <class _Tp>
-inline GsliceMatrix<_Tp, 2> Matrix<_Tp, 3>::slice(uword __s) {
-  const uword __start = __s * _M_d1xd2;
-  const uword __size[2] = {n_cols(), n_rows()};
-  const uword __stride[2] = {n_rows(), 1};
-  return GsliceMatrix<_Tp, 2>(this->_M_elem, __start, __size, __stride);
-}
-
-template <class _Tp>
-inline Matrix<_Tp, 3> Matrix<_Tp, 3>::slices(uword __fs, uword __ls) const {
-  return subcube(0, 0, __fs, n_rows() - 1, n_cols() - 1, __ls);
-}
-
-template <class _Tp>
-inline GsliceMatrix<_Tp, 3> Matrix<_Tp, 3>::slices(uword __fs, uword __ls) {
-  return subcube(0, 0, __fs, n_rows() - 1, n_cols() - 1, __ls);
 }
 
 template <class _Tp>
@@ -1221,10 +1194,41 @@ inline GsliceMatrix<_Tp, 3> Matrix<_Tp, 3>::operator()(std::slice __s1,
 // Matrix member functions dealing with index_array and IndirectMatrix
 
 template <class _Tp>
-inline IndirectMatrix<_Tp, 1> Matrix<_Tp, 1>::operator()(
+inline Matrix<_Tp, 1> Matrix<_Tp, 1>::elem(const index_array& __idx_arr) const {
+  uword dims[1] = {__idx_arr.size()};
+  return Matrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
+}
+
+template <class _Tp>
+inline IndirectMatrix<_Tp, 1> Matrix<_Tp, 1>::elem(
     const index_array& __idx_arr) {
-  uword __dims[1] = {__idx_arr.size()};
-  return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, __dims);
+  uword dims[1] = {__idx_arr.size()};
+  return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
+}
+template <class _Tp>
+inline Matrix<_Tp, 1> Matrix<_Tp, 2>::elem(const index_array& __idx_arr) const {
+  uword dims[1] = {__idx_arr.size()};
+  return Matrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
+}
+
+template <class _Tp>
+inline IndirectMatrix<_Tp, 1> Matrix<_Tp, 2>::elem(
+    const index_array& __idx_arr) {
+  uword dims[1] = {__idx_arr.size()};
+  return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
+}
+
+template <class _Tp>
+inline Matrix<_Tp, 1> Matrix<_Tp, 3>::elem(const index_array& __idx_arr) const {
+  uword dims[1] = {__idx_arr.size()};
+  return Matrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
+}
+
+template <class _Tp>
+inline IndirectMatrix<_Tp, 1> Matrix<_Tp, 3>::elem(
+    const index_array& __idx_arr) {
+  uword dims[1] = {__idx_arr.size()};
+  return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, dims);
 }
 
 template <class _Tp>
@@ -1235,17 +1239,10 @@ inline Matrix<_Tp, 1> Matrix<_Tp, 1>::operator()(
 }
 
 template <class _Tp>
-inline IndirectMatrix<_Tp, 2> Matrix<_Tp, 2>::operator()(
-    const index_array& __idx_arr1, const index_array& __idx_arr2) {
-  uword __dims[2] = {__idx_arr1.size(), __idx_arr2.size()};
-  index_array __idx_arr(__dims[0] * __dims[1]);
-  uword __idx = 0;
-  for (uword __j = 0; __j < __idx_arr2.size(); ++__j) {
-    for (uword __i = 0; __i < __idx_arr1.size(); ++__i) {
-      __idx_arr[__idx++] = sub2ind(__idx_arr1[__i], __idx_arr2[__j]);
-    }
-  }
-  return IndirectMatrix<_Tp, 2>(this->_M_elem, __idx_arr, __dims);
+inline IndirectMatrix<_Tp, 1> Matrix<_Tp, 1>::operator()(
+    const index_array& __idx_arr) {
+  uword __dims[1] = {__idx_arr.size()};
+  return IndirectMatrix<_Tp, 1>(this->_M_elem, __idx_arr, __dims);
 }
 
 template <class _Tp>
@@ -1263,21 +1260,17 @@ inline Matrix<_Tp, 2> Matrix<_Tp, 2>::operator()(
 }
 
 template <class _Tp>
-inline IndirectMatrix<_Tp, 3> Matrix<_Tp, 3>::operator()(
-    const index_array& __idx_arr1, const index_array& __idx_arr2,
-    const index_array& __idx_arr3) {
-  uword __dims[3] = {__idx_arr1.size(), __idx_arr2.size(), __idx_arr3.size()};
-  index_array __idx_arr(__dims[0] * __dims[1] * __dims[2]);
+inline IndirectMatrix<_Tp, 2> Matrix<_Tp, 2>::operator()(
+    const index_array& __idx_arr1, const index_array& __idx_arr2) {
+  uword __dims[2] = {__idx_arr1.size(), __idx_arr2.size()};
+  index_array __idx_arr(__dims[0] * __dims[1]);
   uword __idx = 0;
-  for (uword __k = 0; __k < __idx_arr3.size(); ++__k) {
-    for (uword __j = 0; __j < __idx_arr2.size(); ++__j) {
-      for (uword __i = 0; __i < __idx_arr1.size(); ++__i) {
-        __idx_arr[__idx++] =
-            sub2ind(__idx_arr1[__i], __idx_arr2[__j], __idx_arr3[__k]);
-      }
+  for (uword __j = 0; __j < __idx_arr2.size(); ++__j) {
+    for (uword __i = 0; __i < __idx_arr1.size(); ++__i) {
+      __idx_arr[__idx++] = sub2ind(__idx_arr1[__i], __idx_arr2[__j]);
     }
   }
-  return IndirectMatrix<_Tp, 3>(this->_M_elem, __idx_arr, __dims);
+  return IndirectMatrix<_Tp, 2>(this->_M_elem, __idx_arr, __dims);
 }
 
 template <class _Tp>
@@ -1298,15 +1291,40 @@ inline Matrix<_Tp, 3> Matrix<_Tp, 3>::operator()(
   return Matrix<_Tp, 3>(this->_M_elem, __idx_arr, __dims);
 }
 
+template <class _Tp>
+inline IndirectMatrix<_Tp, 3> Matrix<_Tp, 3>::operator()(
+    const index_array& __idx_arr1, const index_array& __idx_arr2,
+    const index_array& __idx_arr3) {
+  uword __dims[3] = {__idx_arr1.size(), __idx_arr2.size(), __idx_arr3.size()};
+  index_array __idx_arr(__dims[0] * __dims[1] * __dims[2]);
+  uword __idx = 0;
+  for (uword __k = 0; __k < __idx_arr3.size(); ++__k) {
+    for (uword __j = 0; __j < __idx_arr2.size(); ++__j) {
+      for (uword __i = 0; __i < __idx_arr1.size(); ++__i) {
+        __idx_arr[__idx++] =
+            sub2ind(__idx_arr1[__i], __idx_arr2[__j], __idx_arr3[__k]);
+      }
+    }
+  }
+  return IndirectMatrix<_Tp, 3>(this->_M_elem, __idx_arr, __dims);
+}
+
 // Matrix member functions dealing with bool_array and MaskMatrix
+
+template <class _Tp>
+inline Matrix<_Tp, 1> Matrix<_Tp, 1>::operator()(
+    const bool_array& __bool_arr) const {
+  return Matrix<_Tp>(this->_M_elem, __bool_arr);
+}
 
 template <class _Tp>
 inline MaskMatrix<_Tp> Matrix<_Tp, 1>::operator()(
     const bool_array& __bool_arr) {
   return MaskMatrix<_Tp>(this->_M_elem, __bool_arr);
 }
+
 template <class _Tp>
-inline Matrix<_Tp, 1> Matrix<_Tp, 1>::operator()(
+inline Matrix<_Tp, 1> Matrix<_Tp, 2>::operator()(
     const bool_array& __bool_arr) const {
   return Matrix<_Tp>(this->_M_elem, __bool_arr);
 }
@@ -1316,8 +1334,9 @@ inline MaskMatrix<_Tp> Matrix<_Tp, 2>::operator()(
     const bool_array& __bool_arr) {
   return MaskMatrix<_Tp>(this->_M_elem, __bool_arr);
 }
+
 template <class _Tp>
-inline Matrix<_Tp, 1> Matrix<_Tp, 2>::operator()(
+inline Matrix<_Tp, 1> Matrix<_Tp, 3>::operator()(
     const bool_array& __bool_arr) const {
   return Matrix<_Tp>(this->_M_elem, __bool_arr);
 }
@@ -1326,11 +1345,6 @@ template <class _Tp>
 inline MaskMatrix<_Tp> Matrix<_Tp, 3>::operator()(
     const bool_array& __bool_arr) {
   return MaskMatrix<_Tp>(this->_M_elem, __bool_arr);
-}
-template <class _Tp>
-inline Matrix<_Tp, 1> Matrix<_Tp, 3>::operator()(
-    const bool_array& __bool_arr) const {
-  return Matrix<_Tp>(this->_M_elem, __bool_arr);
 }
 
 //----------------------------------------------------------------------
