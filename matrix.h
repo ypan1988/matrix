@@ -17,12 +17,12 @@
 
 #if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900)
 #define __MATRIX_LIB_USE_CPP11
+#define _CRT_SECURE_NO_WARNINGS
 #endif
 
 #include <algorithm>
 #include <cstddef>
-#include <iostream>
-#include <string>
+#include <cstdio>
 #include <valarray>
 
 #if defined(__MATRIX_LIB_USE_CPP11)
@@ -32,24 +32,33 @@
 #if defined(__MATRIX_LIB_USE_R)
 #include <R_ext/BLAS.h>
 #include <RcppCommon.h>
+#else
+#include <cstdlib>  // std::abort()
 #endif
 
 namespace matrix_lib {
 
 //-----------------------------------------------------------------------------
 
-struct _Matrix_error {
-  std::string _M_name;
-  _Matrix_error(const char* __q) : _M_name(__q) {}
-  _Matrix_error(std::string __n) : _M_name(__n) {}
-};
-
-//-----------------------------------------------------------------------------
-
 #if defined(__MATRIX_LIB_USE_R)
 inline void error(const char* __p) { Rcpp::stop(__p); }
 #else
-inline void error(const char* __p) { throw _Matrix_error(__p); }
+inline void error(const char* __p) {
+  fprintf(stderr, "%s", __p);
+  std::abort();
+}
+#endif
+
+#ifndef NDEBUG
+#define __assert(expr, msg)                                                 \
+  if (!(expr)) {                                                            \
+    char buffer[250];                                                       \
+    sprintf(buffer, "%s:%d assertion failed: %s\n%s\n", __FILE__, __LINE__, \
+            #expr, msg);                                                    \
+    error(buffer);                                                          \
+  }
+#else
+#define __assert(expr)
 #endif
 
 //-----------------------------------------------------------------------------
@@ -222,7 +231,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 
 #if defined(__MATRIX_LIB_USE_R)
   // this operator enables implicit Rcpp::wrap
-  operator SEXP() { return __export_matrix_to_sexp(); }
+  operator SEXP()       { return __export_matrix_to_sexp(); }
   operator SEXP() const { return __export_matrix_to_sexp(); }
   SEXP __export_matrix_to_sexp() const;
 #endif
@@ -230,13 +239,13 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   index_array get_dims() const { return index_array(_M_dims, 1); }
   uword         n_rows() const { return _M_dims[0]; }
 
-  void range_check(uword __n1) const {
-    if (_M_dims[0] <= __n1) error("1D range error: dimension 1");
+  void _M_range_check(uword __n1) const {
+    __assert(__n1 < n_rows(), "Matrix<T, 1>::_M_range_check: index is out of bound");
   }
 
   // subscripting:
-        elem_type& operator()(uword __n1)       { range_check(__n1); return this->_M_elem[__n1]; }
-  const elem_type& operator()(uword __n1) const { range_check(__n1); return this->_M_elem[__n1]; }
+        elem_type& operator()(uword __n1)       { _M_range_check(__n1); return this->_M_elem[__n1]; }
+  const elem_type& operator()(uword __n1) const { _M_range_check(__n1); return this->_M_elem[__n1]; }
 
   // GsliceMatrix related member functions
           Matrix<_Tp, 1> subvec(uword, uword) const;
@@ -372,7 +381,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
 
 #if defined(__MATRIX_LIB_USE_R)
   // this operator enables implicit Rcpp::wrap
-  operator SEXP() { return __export_matrix_to_sexp(); }
+  operator SEXP()       { return __export_matrix_to_sexp(); }
   operator SEXP() const { return __export_matrix_to_sexp(); }
   SEXP __export_matrix_to_sexp() const;
 #endif
@@ -381,16 +390,16 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   uword         n_rows() const { return _M_dims[0]; }
   uword         n_cols() const { return _M_dims[1]; }
 
-  void range_check(uword __n1, uword __n2) const {
-    if (_M_dims[0] <= __n1) error("2D range error: dimension 1");
-    if (_M_dims[1] <= __n2) error("2D range error: dimension 2");
+  void _M_range_check(uword __n1, uword __n2) const {
+    __assert(__n1 < n_rows(), "Matrix<T, 2>::_M_range_check: index is out of bound for dimension 1");
+    __assert(__n2 < n_cols(), "Matrix<T, 2>::_M_range_check: index is out of bound for dimension 2");
   }
 
   // subscripting:
         elem_type& operator()(uword __n1, uword __n2)
-  { range_check(__n1, __n2); return this->_M_elem[sub2ind(__n1, __n2)]; }
+  { _M_range_check(__n1, __n2); return this->_M_elem[sub2ind(__n1, __n2)]; }
   const elem_type& operator()(uword __n1, uword __n2) const
-  { range_check(__n1, __n2); return this->_M_elem[sub2ind(__n1, __n2)]; }
+  { _M_range_check(__n1, __n2); return this->_M_elem[sub2ind(__n1, __n2)]; }
 
   std::valarray<_Tp> diag() const {
     return this->_M_elem[std::slice(0, std::min(_M_dims[0], _M_dims[1]),
@@ -533,7 +542,7 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
 
 #if defined(__MATRIX_LIB_USE_R)
   // this operator enables implicit Rcpp::wrap
-  operator SEXP() { return __export_matrix_to_sexp(); }
+  operator SEXP()       { return __export_matrix_to_sexp(); }
   operator SEXP() const { return __export_matrix_to_sexp(); }
   SEXP __export_matrix_to_sexp() const;
 #endif
@@ -543,17 +552,17 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   uword         n_cols() const { return _M_dims[1]; }
   uword       n_slices() const { return _M_dims[2]; }
 
-  void range_check(uword __n1, uword __n2, uword __n3) const {
-    if (_M_dims[0] <= __n1) error("3D range error: dimension 1");
-    if (_M_dims[1] <= __n2) error("3D range error: dimension 2");
-    if (_M_dims[2] <= __n3) error("3D range error: dimension 3");
+  void _M_range_check(uword __n1, uword __n2, uword __n3) const {
+    __assert(__n1 < n_rows()  , "Matrix<T, 3>::_M_range_check: index is out of bound for dimension 1");
+    __assert(__n2 < n_cols()  , "Matrix<T, 3>::_M_range_check: index is out of bound for dimension 2");
+    __assert(__n3 < n_slices(), "Matrix<T, 3>::_M_range_check: index is out of bound for dimension 3");
   }
 
   // subscripting:
         elem_type& operator()(uword __n1, uword __n2, uword __n3)
-  { range_check(__n1, __n2, __n3); return this->_M_elem[sub2ind(__n1, __n2, __n3)]; }
+  { _M_range_check(__n1, __n2, __n3); return this->_M_elem[sub2ind(__n1, __n2, __n3)]; }
   const elem_type& operator()(uword __n1, uword __n2, uword __n3) const
-  { range_check(__n1, __n2, __n3); return this->_M_elem[sub2ind(__n1, __n2, __n3)]; }
+  { _M_range_check(__n1, __n2, __n3); return this->_M_elem[sub2ind(__n1, __n2, __n3)]; }
 
   // GsliceMatrix related member functions
           Matrix<_Tp, 2> slice(uword) const;
@@ -985,7 +994,7 @@ struct MaskMatrix {
 
 template <class _Tp>
 inline Matrix<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) const {
-  range_check(__r, 0);
+  _M_range_check(__r, 0);
   const uword __start = __r;
   const uword __size[1] = {_M_dims[1]};
   const uword __stride[1] = {_M_dims[0]};
@@ -994,7 +1003,7 @@ inline Matrix<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) const {
 
 template <class _Tp>
 inline GsliceMatrix<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) {
-  range_check(__r, 0);
+  _M_range_check(__r, 0);
   const uword __start = __r;
   const uword __size[1] = {_M_dims[1]};
   const uword __stride[1] = {_M_dims[0]};
@@ -1003,7 +1012,7 @@ inline GsliceMatrix<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) {
 
 template <class _Tp>
 inline Matrix<_Tp, 1> Matrix<_Tp, 2>::col(uword __c) const {
-  range_check(0, __c);
+  _M_range_check(0, __c);
   const uword __start = __c * _M_dims[0];
   const uword __size[1] = {_M_dims[0]};
   const uword __stride[1] = {1};
@@ -1012,7 +1021,7 @@ inline Matrix<_Tp, 1> Matrix<_Tp, 2>::col(uword __c) const {
 
 template <class _Tp>
 inline GsliceMatrix<_Tp, 1> Matrix<_Tp, 2>::col(uword __c) {
-  range_check(0, __c);
+  _M_range_check(0, __c);
   const uword __start = __c * _M_dims[0];
   const uword __size[1] = {_M_dims[0]};
   const uword __stride[1] = {1};
