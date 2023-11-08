@@ -235,14 +235,8 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   }
 
   // subscripting:
-  elem_type& operator()(uword __n1) {
-    range_check(__n1);
-    return this->_M_elem[__n1];
-  }
-  const elem_type& operator()(uword __n1) const {
-    range_check(__n1);
-    return this->_M_elem[__n1];
-  }
+        elem_type& operator()(uword __n1)       { range_check(__n1); return this->_M_elem[__n1]; }
+  const elem_type& operator()(uword __n1) const { range_check(__n1); return this->_M_elem[__n1]; }
 
   // GsliceMatrix related member functions
           Matrix<_Tp, 1> subvec(uword, uword) const;
@@ -393,14 +387,10 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   }
 
   // subscripting:
-  elem_type& operator()(uword __n1, uword __n2) {
-    range_check(__n1, __n2);
-    return this->_M_elem[sub2ind(__n1, __n2)];
-  }
-  const elem_type& operator()(uword __n1, uword __n2) const {
-    range_check(__n1, __n2);
-    return this->_M_elem[sub2ind(__n1, __n2)];
-  }
+        elem_type& operator()(uword __n1, uword __n2)
+  { range_check(__n1, __n2); return this->_M_elem[sub2ind(__n1, __n2)]; }
+  const elem_type& operator()(uword __n1, uword __n2) const
+  { range_check(__n1, __n2); return this->_M_elem[sub2ind(__n1, __n2)]; }
 
   std::valarray<_Tp> diag() const {
     return this->_M_elem[std::slice(0, std::min(_M_dims[0], _M_dims[1]),
@@ -534,7 +524,7 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   ~Matrix() {}
 
   // assignment
-  Matrix& operator=(const Matrix           & __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
+  Matrix& operator=(const Matrix              & __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
   Matrix& operator=(const GsliceMatrix<_Tp, 3>& __x) { this->set_elem(__x._M_elem); _M_init(__x._M_dims); return *this; }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& __x) = default;
@@ -560,14 +550,10 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   }
 
   // subscripting:
-  elem_type& operator()(uword __n1, uword __n2, uword __n3) {
-    range_check(__n1, __n2, __n3);
-    return this->_M_elem[sub2ind(__n1, __n2, __n3)];
-  }
-  const elem_type& operator()(uword __n1, uword __n2, uword __n3) const {
-    range_check(__n1, __n2, __n3);
-    return this->_M_elem[sub2ind(__n1, __n2, __n3)];
-  }
+        elem_type& operator()(uword __n1, uword __n2, uword __n3)
+  { range_check(__n1, __n2, __n3); return this->_M_elem[sub2ind(__n1, __n2, __n3)]; }
+  const elem_type& operator()(uword __n1, uword __n2, uword __n3) const
+  { range_check(__n1, __n2, __n3); return this->_M_elem[sub2ind(__n1, __n2, __n3)]; }
 
   // GsliceMatrix related member functions
           Matrix<_Tp, 2> slice(uword) const;
