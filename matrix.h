@@ -253,8 +253,8 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   const elem_type& operator()(uword __n1) const { _M_range_check(__n1); return this->_M_elem[__n1]; }
 
   // GsliceMatrix related member functions
-          Matrix<_Tp, 1> subvec(uword, uword) const;
-    GsliceMatrix<_Tp, 1> subvec(uword, uword);
+          Matrix<_Tp, 1> subvec(uword __first_index, uword __last_index) const;
+    GsliceMatrix<_Tp, 1> subvec(uword __first_index, uword __last_index);
           Matrix<_Tp, 1> operator()(std::slice __s) const;
     GsliceMatrix<_Tp, 1> operator()(std::slice __s);
 
@@ -416,16 +416,16 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   }
 
   // GsliceMatrix related member functions
-          Matrix<_Tp, 1> row(uword) const;
-    GsliceMatrix<_Tp, 1> row(uword);
-          Matrix<_Tp, 1> col(uword) const;
-    GsliceMatrix<_Tp, 1> col(uword);
-          Matrix<_Tp, 2> rows(uword, uword) const;
-    GsliceMatrix<_Tp, 2> rows(uword, uword);
-          Matrix<_Tp, 2> cols(uword, uword) const;
-    GsliceMatrix<_Tp, 2> cols(uword, uword);
-          Matrix<_Tp, 2> submat(uword, uword, uword, uword) const;
-    GsliceMatrix<_Tp, 2> submat(uword, uword, uword, uword);
+          Matrix<_Tp, 1> row(uword __row_number) const;
+    GsliceMatrix<_Tp, 1> row(uword __row_number);
+          Matrix<_Tp, 1> col(uword __col_number) const;
+    GsliceMatrix<_Tp, 1> col(uword __col_number);
+          Matrix<_Tp, 2> rows(uword __first_row, uword __last_row) const;
+    GsliceMatrix<_Tp, 2> rows(uword __first_row, uword __last_row);
+          Matrix<_Tp, 2> cols(uword __first_col, uword __last_col) const;
+    GsliceMatrix<_Tp, 2> cols(uword __first_col, uword __last_col);
+          Matrix<_Tp, 2> submat(uword __first_row, uword __first_col, uword __last_row, uword __last_col) const;
+    GsliceMatrix<_Tp, 2> submat(uword __first_row, uword __first_col, uword __last_row, uword __last_col);
           Matrix<_Tp, 2> operator()(std::slice __s1, std::slice __s2) const;
     GsliceMatrix<_Tp, 2> operator()(std::slice __s1, std::slice __s2);
 
@@ -570,12 +570,14 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   { _M_range_check(__n1, __n2, __n3); return this->_M_elem[sub2ind(__n1, __n2, __n3)]; }
 
   // GsliceMatrix related member functions
-          Matrix<_Tp, 2> slice(uword) const;
-    GsliceMatrix<_Tp, 2> slice(uword);
-          Matrix<_Tp, 3> slices(uword, uword) const;
-    GsliceMatrix<_Tp, 3> slices(uword, uword);
-          Matrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword) const;
-    GsliceMatrix<_Tp, 3> subcube(uword, uword, uword, uword, uword, uword);
+          Matrix<_Tp, 2> slice(uword __slice_number) const;
+    GsliceMatrix<_Tp, 2> slice(uword __slice_number);
+          Matrix<_Tp, 3> slices(uword __first_slice, uword __last_slice) const;
+    GsliceMatrix<_Tp, 3> slices(uword __first_slice, uword __last_slice);
+          Matrix<_Tp, 3> subcube(uword __first_row, uword __first_col, uword __first_slice,
+                                 uword __last_row,  uword __last_col,  uword __last_slice) const;
+    GsliceMatrix<_Tp, 3> subcube(uword __first_row, uword __first_col, uword __first_slice,
+                                 uword __last_row,  uword __last_col,  uword __last_slice);
           Matrix<_Tp, 3> operator()(std::slice __s1, std::slice __s2, std::slice __s3) const;
     GsliceMatrix<_Tp, 3> operator()(std::slice __s1, std::slice __s2, std::slice __s3);
 
