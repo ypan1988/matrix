@@ -1694,8 +1694,37 @@ void matrix_test_binary_subtraction_operator(bool print = false) {
   assert(mat1d_b(3) == 1.0);
 }
 
-void matrix_test_matmul(bool print = false) {
-  std::cout << "[TEST]: Applies matrix multiplication\n";
+void matrix_test_matmul1(bool print = false) {
+  std::cout << "[TEST]: Applies matrix multiplication 1\n";
+  const double a1[] = {1, 2, 3};
+  const double a2[] = {1, 2};
+  Matrix<double, 1> m1(a1, 3);
+  Matrix<double, 2> m2(a2, 1, 2);
+  Matrix<double, 2> res = matmul(m1, m2);
+
+  assert(res.n_elem() == 6);
+  assert(res.n_rows() == 3);
+  assert(res.n_cols() == 2);
+  assert(res(0, 0) == 1);
+  assert(res(0, 1) == 2);
+  assert(res(2, 0) == 3);
+  assert(res(2, 1) == 6);
+}
+
+void matrix_test_matmul2(bool print = false) {
+  std::cout << "[TEST]: Applies matrix multiplication 2\n";
+  const double a1[] = {1, 4, 2, 5, 3, 6};
+  const double a2[] = {1, 2, 3};
+  Matrix<double, 2> m1(a1, 2, 3);
+  Matrix<double, 1> m2(a2, 3);
+  Matrix<double, 1> res = matmul(m1, m2);
+
+  assert(res(0) == 14.0);
+  assert(res(1) == 32.0);
+}
+
+void matrix_test_matmul3(bool print = false) {
+  std::cout << "[TEST]: Applies matrix multiplication 3\n";
   const double a1[] = {1, 4, 2, 5, 3, 6};
   const double a2[] = {7, 9, 11, 8, 10, 12};
   Matrix<double, 2> m1(a1, 2, 3);
@@ -1874,7 +1903,10 @@ int main() {
 
   matrix_test_binary_addition_operator(print_flag);
   matrix_test_binary_subtraction_operator(print_flag);
-  matrix_test_matmul(print_flag);
+
+  matrix_test_matmul1(print_flag);
+  matrix_test_matmul2(print_flag);
+  matrix_test_matmul3(print_flag);
 
   matrix_test_abs(print_flag);
   matrix_test_exp(print_flag);

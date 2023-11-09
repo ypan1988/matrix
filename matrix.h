@@ -214,7 +214,6 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 #if defined(__MATRIX_LIB_USE_R)
   Matrix(SEXP __x) : _Matrix_base<_Tp>(__x) { _M_init();  }
 #endif
-
   ~Matrix() {}
 
   // assignment
@@ -371,7 +370,6 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
     _M_init(INTEGER(__dims)[0], INTEGER(__dims)[1]);
   }
 #endif
-
   ~Matrix() {}
 
   // assignment
@@ -534,7 +532,6 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
     _M_init(INTEGER(__dims)[0], INTEGER(__dims)[1], INTEGER(__dims)[2]);
   }
 #endif
-
   ~Matrix() {}
 
   // assignment
@@ -793,23 +790,6 @@ inline Matrix<_Tp, _Size> operator%(const Matrix<_Tp, _Size>& __x,
                                     const Matrix<_Tp, _Size>& __y) {
   Matrix<_Tp, _Size> __tmp(__x);
   return __tmp %= __y;
-}
-
-// matrix multiplication
-
-template <class _Tp>
-inline Matrix<_Tp, 2> matmul(const Matrix<_Tp, 2>& __x,
-                             const Matrix<_Tp, 2>& __y) {
-  const uword nr = __x.n_rows();
-  const uword nc = __x.n_cols();
-  if (nc != __y.n_rows()) error("matmul(x, y) : non-conformable arguments");
-
-  const uword p = __y.n_cols();
-  Matrix<_Tp, 2> __res(nr, p);
-  for (uword i = 0; i != nr; ++i)
-    for (uword j = 0; j != p; ++j)
-      for (uword k = 0; k != nc; ++k) __res(i, j) += __x(i, k) * __y(k, j);
-  return __res;
 }
 
 // Binary arithmetic operations between an array and a scalar.
@@ -1367,6 +1347,51 @@ Matrix<_Tp, 2> Matrix<_Tp, 2>::t() const {
     __res._M_elem[idx] = (*this)[n * j + i];
   }
 
+  return __res;
+}
+
+//----------------------------------------------------------------------
+// Matrix functions
+
+// matrix multiplication
+
+template <typename _Tp>
+Matrix<_Tp, 2> matmul(const Matrix<_Tp, 1>& __x, const Matrix<_Tp, 2>& __y) {
+  __assert(__y.n_rows() == 1, "matmul(x, y): non-conformable arguments");
+  const uword __n = __x.n_rows();
+  const uword __m = __y.n_cols();
+  Matrix<_Tp, 2> __res(__n, __m);
+  for (uword __i = 0; __i != __n; ++__i)
+    for (uword __j = 0; __j != __m; ++__j)
+      __res(__i, __j) = __x(__i) * __y(0, __j);
+  return __res;
+}
+
+template <typename _Tp>
+Matrix<_Tp, 1> matmul(const Matrix<_Tp, 2>& __x, const Matrix<_Tp, 1>& __y) {
+  __assert(__x.n_cols() == __y.n_rows(),
+           "matmul(x, y): non-conformable arguments");
+  const uword __nr = __x.n_rows();
+  const uword __nc = __x.n_cols();
+  Matrix<_Tp, 1> __res(__nr);
+  for (uword __i = 0; __i != __nr; ++__i)
+    for (uword __j = 0; __j != __nc; ++__j)
+      __res(__i) += __x(__i, __j) * __y(__j);
+  return __res;
+}
+
+template <typename _Tp>
+Matrix<_Tp, 2> matmul(const Matrix<_Tp, 2>& __x, const Matrix<_Tp, 2>& __y) {
+  __assert(__x.n_cols() == __y.n_rows(),
+           "matmul(x, y): non-conformable arguments");
+  const uword __nr = __x.n_rows();
+  const uword __nc = __x.n_cols();
+  const uword __p = __y.n_cols();
+  Matrix<_Tp, 2> __res(__nr, __p);
+  for (uword __i = 0; __i != __nr; ++__i)
+    for (uword __j = 0; __j != __p; ++__j)
+      for (uword __k = 0; __k != __nc; ++__k)
+        __res(__i, __j) += __x(__i, __k) * __y(__k, __j);
   return __res;
 }
 
