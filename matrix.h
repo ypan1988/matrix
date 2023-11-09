@@ -17,12 +17,13 @@
 
 #if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900)
 #define __MATRIX_LIB_USE_CPP11
-#define _CRT_SECURE_NO_WARNINGS
 #endif
 
 #include <algorithm>
 #include <cstddef>
-#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <string>
 #include <valarray>
 
 #if defined(__MATRIX_LIB_USE_CPP11)
@@ -44,18 +45,20 @@ namespace matrix_lib {
 inline void error(const char* __p) { Rcpp::stop(__p); }
 #else
 inline void error(const char* __p) {
-  fprintf(stderr, "%s", __p);
+  std::cerr << __p << std::endl;
   std::abort();
 }
 #endif
 
 #ifndef NDEBUG
-#define __assert(expr, msg)                                                 \
-  if (!(expr)) {                                                            \
-    char buffer[250];                                                       \
-    sprintf(buffer, "%s:%d assertion failed: %s\n%s\n", __FILE__, __LINE__, \
-            #expr, msg);                                                    \
-    error(buffer);                                                          \
+#define __assert(expr, msg)                                             \
+  if (!(expr)) {                                                        \
+    std::stringstream ss;                                               \
+    ss << std::endl                                                     \
+       << __FILE__ << ":" << __LINE__ << " assertion failed: " << #expr \
+       << "\n"                                                          \
+       << msg << std::endl;                                             \
+    error(ss.str().c_str());                                            \
   }
 #else
 #define __assert(expr)
@@ -240,7 +243,9 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   uword         n_rows() const { return _M_dims[0]; }
 
   void _M_range_check(uword __n1) const {
-    __assert(__n1 < n_rows(), "Matrix<T, 1>::_M_range_check: index is out of bound");
+    __assert(__n1 < n_rows(),
+            "Matrix<T, 1>::_M_range_check:\n" <<
+            "  Index " << __n1 << " is out of bound for axis 0 with size " << n_rows());
   }
 
   // subscripting:
