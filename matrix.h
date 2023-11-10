@@ -754,12 +754,20 @@ SEXP Matrix<_Tp, 3>::__export_matrix_to_sexp() const {
 //----------------------------------------------------------------------
 // Matrix non-member functions.
 
-// Binary arithmetic operations between two Matrix. Behavior is
-// undefined if the two Matrix do not have the same length.
+bool __same_dims(const std::valarray<uword>& __d1,
+                 const std::valarray<uword>& __d2) {
+  uword __n = __d1.size();
+  for (uword __i = 0; __i != __n; ++__i)
+    if (__d1[__i] != __d2[__i]) return false;
+  return true;
+}
+
+// Binary arithmetic operations between two Matrix.
 
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator+(const Matrix<_Tp, _Size>& __x,
                                     const Matrix<_Tp, _Size>& __y) {
+  __assert(__same_dims(__x.get_dims(), __y.get_dims()), "dimension mismatch");
   Matrix<_Tp, _Size> __tmp(__x);
   return __tmp += __y;
 }
@@ -767,6 +775,7 @@ inline Matrix<_Tp, _Size> operator+(const Matrix<_Tp, _Size>& __x,
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator-(const Matrix<_Tp, _Size>& __x,
                                     const Matrix<_Tp, _Size>& __y) {
+  __assert(__same_dims(__x.get_dims(), __y.get_dims()), "dimension mismatch");
   Matrix<_Tp, _Size> __tmp(__x);
   return __tmp -= __y;
 }
@@ -774,6 +783,7 @@ inline Matrix<_Tp, _Size> operator-(const Matrix<_Tp, _Size>& __x,
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator*(const Matrix<_Tp, _Size>& __x,
                                     const Matrix<_Tp, _Size>& __y) {
+  __assert(__same_dims(__x.get_dims(), __y.get_dims()), "dimension mismatch");
   Matrix<_Tp, _Size> __tmp(__x);
   return __tmp *= __y;
 }
@@ -781,6 +791,7 @@ inline Matrix<_Tp, _Size> operator*(const Matrix<_Tp, _Size>& __x,
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator/(const Matrix<_Tp, _Size>& __x,
                                     const Matrix<_Tp, _Size>& __y) {
+  __assert(__same_dims(__x.get_dims(), __y.get_dims()), "dimension mismatch");
   Matrix<_Tp, _Size> __tmp(__x);
   return __tmp /= __y;
 }
@@ -788,6 +799,7 @@ inline Matrix<_Tp, _Size> operator/(const Matrix<_Tp, _Size>& __x,
 template <class _Tp, uword _Size>
 inline Matrix<_Tp, _Size> operator%(const Matrix<_Tp, _Size>& __x,
                                     const Matrix<_Tp, _Size>& __y) {
+  __assert(__same_dims(__x.get_dims(), __y.get_dims()), "dimension mismatch");
   Matrix<_Tp, _Size> __tmp(__x);
   return __tmp %= __y;
 }
@@ -864,6 +876,50 @@ inline Matrix<_Tp, _Size> operator%(const _Tp& __c,
                                     const Matrix<_Tp, _Size>& __x) {
   Matrix<_Tp, _Size> __tmp(__c % __x.get_elem(), __x.get_dims());
   return __tmp;
+}
+
+// Binary logical operations between two Matrices.
+
+template <class _Tp, uword _Size>
+inline bool_array operator==(const Matrix<_Tp, _Size>& __x,
+                             const Matrix<_Tp, _Size>& __y) {
+  __assert(__same_dims(__x.get_dims(), __y.get_dims()), "dimension mismatch");
+  return __x.get_elem() == __y.get_elem();
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator!=(const Matrix<_Tp, _Size>& __x,
+                             const Matrix<_Tp, _Size>& __y) {
+  __assert(__same_dims(__x.get_dims(), __y.get_dims()), "dimension mismatch");
+  return __x.get_elem() != __y.get_elem();
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator<(const Matrix<_Tp, _Size>& __x,
+                            const Matrix<_Tp, _Size>& __y) {
+  __assert(__same_dims(__x.get_dims(), __y.get_dims()), "dimension mismatch");
+  return __x.get_elem() < __y.get_elem();
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator<=(const Matrix<_Tp, _Size>& __x,
+                             const Matrix<_Tp, _Size>& __y) {
+  __assert(__same_dims(__x.get_dims(), __y.get_dims()), "dimension mismatch");
+  return __x.get_elem() <= __y.get_elem();
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator>(const Matrix<_Tp, _Size>& __x,
+                            const Matrix<_Tp, _Size>& __y) {
+  __assert(__same_dims(__x.get_dims(), __y.get_dims()), "dimension mismatch");
+  return __x.get_elem() > __y.get_elem();
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator>=(const Matrix<_Tp, _Size>& __x,
+                             const Matrix<_Tp, _Size>& __y) {
+  __assert(__same_dims(__x.get_dims(), __y.get_dims()), "dimension mismatch");
+  return __x.get_elem() >= __y.get_elem();
 }
 
 // Matrix "transcendentals" (the list includes abs and sqrt, which,

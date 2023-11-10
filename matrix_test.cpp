@@ -1694,6 +1694,30 @@ void matrix_test_binary_subtraction_operator(bool print = false) {
   assert(mat1d_b(3) == 1.0);
 }
 
+void matrix_test_binary_equal_operator(bool print = false) {
+  std::cout << "[TEST]: Matrix1 == Matrix2\n";
+  const double a1[6] = {1, 2, 3, 4, 5, 6};
+  const double a2[6] = {1, 2, 3, 7, 8, 9};
+  Matrix<double, 2> m1(a1, 3, 2);
+  Matrix<double, 2> m2(a1, 3, 2);
+  Matrix<double, 2> m3(a2, 3, 2);
+  bool_array ba1 = (m1 == m2);
+  bool_array ba2 = (m1 == m3);
+  assert(ba1[0] == true);
+  assert(ba1[1] == true);
+  assert(ba1[2] == true);
+  assert(ba1[3] == true);
+  assert(ba1[4] == true);
+  assert(ba1[5] == true);
+
+  assert(ba2[0] == true);
+  assert(ba2[1] == true);
+  assert(ba2[2] == true);
+  assert(ba2[3] == false);
+  assert(ba2[4] == false);
+  assert(ba2[5] == false);
+}
+
 void matrix_test_matmul1(bool print = false) {
   std::cout << "[TEST]: Applies matrix multiplication 1\n";
   const double a1[] = {1, 2, 3};
@@ -1903,6 +1927,7 @@ int main() {
 
   matrix_test_binary_addition_operator(print_flag);
   matrix_test_binary_subtraction_operator(print_flag);
+  matrix_test_binary_equal_operator(print_flag);
 
   matrix_test_matmul1(print_flag);
   matrix_test_matmul2(print_flag);
