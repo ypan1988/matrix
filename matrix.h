@@ -922,6 +922,68 @@ inline bool_array operator>=(const Matrix<_Tp, _Size>& __x,
   return __x.get_elem() >= __y.get_elem();
 }
 
+// Logical operations between a Matrix and a scalar.
+
+template <class _Tp, uword _Size>
+inline bool_array operator==(const Matrix<_Tp, _Size>& __x, const _Tp& __c) {
+  return __x.get_elem() == __c;
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator==(const _Tp& __c, const Matrix<_Tp, _Size>& __x) {
+  return __c == __x.get_elem();
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator!=(const Matrix<_Tp, _Size>& __x, const _Tp& __c) {
+  return __x.get_elem() != __c;
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator!=(const _Tp& __c, const Matrix<_Tp, _Size>& __x) {
+  return __c != __x.get_elem();
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator<(const Matrix<_Tp, _Size>& __x, const _Tp& __c) {
+  return __x.get_elem() < __c;
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator<(const _Tp& __c, const Matrix<_Tp, _Size>& __x) {
+  return __c < __x.get_elem();
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator<=(const Matrix<_Tp, _Size>& __x, const _Tp& __c) {
+  return __x.get_elem() <= __c;
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator<=(const _Tp& __c, const Matrix<_Tp, _Size>& __x) {
+  return __c <= __x.get_elem();
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator>(const Matrix<_Tp, _Size>& __x, const _Tp& __c) {
+  return __x.get_elem() > __c;
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator>(const _Tp& __c, const Matrix<_Tp, _Size>& __x) {
+  return __c > __x.get_elem();
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator>=(const Matrix<_Tp, _Size>& __x, const _Tp& __c) {
+  return __x.get_elem() >= __c;
+}
+
+template <class _Tp, uword _Size>
+inline bool_array operator>=(const _Tp& __c, const Matrix<_Tp, _Size>& __x) {
+  return __c >= __x.get_elem();
+}
+
 // Matrix "transcendentals" (the list includes abs and sqrt, which,
 // of course, are not transcendental).
 
