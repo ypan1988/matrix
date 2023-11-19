@@ -1,7 +1,7 @@
 matrix.h: A small multidimensional matrix library
 ==
 
-## background
+## Introduction
 
 **C++** does not come with its own matrix library. This is partially true -- the **Standard Template Library (STL)** has introduced [`std::valarray`](https://en.cppreference.com/w/cpp/numeric/valarray) for fast mathematical computations since **C++98**. The `std::valarray` by itself only acts like a 1D array, but it can be used to simulate a **N**-dimensional matrix quite easily with its helper classes (i.e., `std::slice_array`, `std::gslice_array`, `std::mask_array` and `std::indirect_array`) which have the reference semantics to a subset of the array.
 

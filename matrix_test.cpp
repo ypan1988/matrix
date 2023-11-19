@@ -42,6 +42,8 @@ void test_print(const Matrix<T, 3>& m, std::string msg = "") {
   }
 }
 
+// ----- Testing Matrix<T, N> Constructions -----
+
 void matrix_test_constructor_01(bool print = false) {
   std::cout << "[TEST]: Constructs an empty Matrix\n";
 
@@ -372,6 +374,8 @@ void matrix_test_constructor_14(bool print = false) {
   std::cout << "... TEST SKIPPED (C++11 NOT SUPPORTED)\n";
 #endif
 }
+
+// ----- Testing Matrix<T, N> Assignments -----
 
 void matrix_test_assignment_1(bool print = false) {
   std::cout << "[TEST]: Assigns a Matrix with other matrix\n";
@@ -1871,6 +1875,7 @@ int main() {
 
   bool print_flag = false;
 
+  std::cout << "----- Testing Matrix<T, N> Constructions -----" << std::endl;
   matrix_test_constructor_01(print_flag);
   matrix_test_constructor_02(print_flag);
   matrix_test_constructor_03(print_flag);
@@ -1882,6 +1887,7 @@ int main() {
   matrix_test_constructor_13(print_flag);
   matrix_test_constructor_14(print_flag);
 
+  std::cout << "----- Testing Matrix<T, N> Assignments -----" << std::endl;
   matrix_test_assignment_1(print_flag);
   matrix_test_assignment_2(print_flag);
   matrix_test_assignment_3(print_flag);
@@ -1937,7 +1943,7 @@ int main() {
   matrix_test_exp(print_flag);
   matrix_test_dot(print_flag);
 
-  std::cout << "All tests are done..." << std::endl;
+  std::cout << "----- All tests are done... -----" << std::endl;
 
   return 0;
 }
