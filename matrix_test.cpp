@@ -38,14 +38,14 @@ void test_print(const Matrix<T, 3>& m, std::string msg = "") {
       }
       std::cout << '\n';
     }
-    std::cout << '\n';
   }
 }
 
 // ----- Testing Matrix<T, N> Constructions -----
 
 void matrix_test_constructor_01(bool print = false) {
-  std::cout << "[TEST]: Constructs an empty Matrix\n";
+  std::cout << "[TEST]: 01.Default constructor. Constructs an empty "
+               "`vec/mat/cube`.\n";
 
   Matrix<double, 1> mat1d;
   if (print) test_print(mat1d, "mat1d =");
@@ -67,7 +67,8 @@ void matrix_test_constructor_01(bool print = false) {
 }
 
 void matrix_test_constructor_02(bool print = false) {
-  std::cout << "[TEST]: Constructs a Matrix with n_rows, n_cols and n_slices\n";
+  std::cout << "[TEST]: 02.Constructs a `vec/mat/cube` with the specified "
+               "number of elements in each dimension.\n";
 
   Matrix<double, 1> mat1d(4);
   if (print) test_print(mat1d, "mat1d =");
@@ -94,20 +95,30 @@ void matrix_test_constructor_02(bool print = false) {
 
 void matrix_test_constructor_03(bool print = false) {
   std::cout
-      << "[TEST]: Constructs a Matrix with val, n_rows, n_cols and n_slices\n";
+      << "[TEST]: 03.Constructs a `vec/mat/cube` with all elements set to "
+         "`val` and the specified number of elements in each dimension.\n";
 
   Matrix<double, 1> mat1d(1.0, 4);
   if (print) test_print(mat1d, "mat1d =");
+  assert(mat1d.n_elem() == 4);
+  assert(mat1d.n_rows() == 4);
   assert(mat1d(0) == 1.0);
   assert(mat1d(3) == 1.0);
 
   Matrix<double, 2> mat2d(2.0, 4, 3);
   if (print) test_print(mat2d, "mat2d =");
+  assert(mat2d.n_elem() == 12);
+  assert(mat2d.n_rows() == 4);
+  assert(mat2d.n_cols() == 3);
   assert(mat2d(0, 0) == 2.0);
   assert(mat2d(3, 2) == 2.0);
 
   Matrix<double, 3> mat3d(3.0, 4, 3, 2);
   if (print) test_print(mat3d, "mat3d =");
+  assert(mat3d.n_elem() == 24);
+  assert(mat3d.n_rows() == 4);
+  assert(mat3d.n_cols() == 3);
+  assert(mat3d.n_slices() == 2);
   assert(mat3d(0, 0, 0) == 3.0);
   assert(mat3d(3, 2, 1) == 3.0);
 }

@@ -96,8 +96,8 @@ These wrapper classes behave just like the `Matrix` except they refer to a `Matr
 
 The table above provides ways to construct new matrix from various sources:
   1) Default constructor. Constructs an empty `vec/mat/cube`.
-  2) Constructs a `vec/mat/cube` with the specified dimensions.
-  3) Constructs a `vec/mat/cube` with the specified dimensions, all elements set to `val`.
+  2) Constructs a `vec/mat/cube` with the specified number of elements in each dimension.
+  3) Constructs a `vec/mat/cube` with all elements set to `val` and the specified number of elements in each dimension.
   4) Constructs a `vec/mat/cube` with the contents of array pointed by `vals` and specified dimensions.
   5) Copy constructor. Constructs an `vec/mat/cube` from the other one.
   6) Move constructor. Constructs an `vec/mat/cube` from the other one using move semantics.
