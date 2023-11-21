@@ -19,9 +19,9 @@ This single header matrix library can be viewed as a wrapper of `std::valarray` 
   Matrix<double, 2> x;
   // ...
   // make a copy for the array of elements 
-  std::valarray<double> va2 = x.get_elem();
+  std::valarray<double> va1 = x.get_elem();
   // extract a read-only array of elements
-  const std::valarray<double> &va1 = x.get_elem();
+  const std::valarray<double> &va2 = x.get_elem();
   ```
 
 + **Dimensions** of `Matrix<T, N>` can be accessed similarly by `get_dims()` while total size and size on each dimension can be obtained through the following member functions (all the returned values have type `std::size_t`):
@@ -98,11 +98,11 @@ The table above provides ways to construct new matrix from various sources:
   1) Default constructor. Constructs an empty `vec/mat/cube`.
   2) Constructs a `vec/mat/cube` with the specified number of elements in each dimension.
   3) Constructs a `vec/mat/cube` with all elements set to `val` and the specified number of elements in each dimension.
-  4) Constructs a `vec/mat/cube` with the contents of array pointed by `vals` and specified dimensions.
-  5) Copy constructor. Constructs an `vec/mat/cube` from the other one.
-  6) Move constructor. Constructs an `vec/mat/cube` from the other one using move semantics.
-  7) Constructs a `vec/mat/cube` with the contents of the `valarray` and specified dimensions.
-  8) Constructs a `vec/mat/cube` with the contents of the `initializer_list` and specified dimensions.
+  4) Constructs a `vec/mat/cube` with elements set to the contents of array pointed by `vals` and the specified number of elements in each dimension. If this array contains less than total number of elements (i.e., products of the specified number of elements in each dimension), the behavior is undefined.
+  5) Copy constructor. Constructs a `vec/mat/cube` from another one using copy semantics.
+  6) Move constructor. Constructs a `vec/mat/cube` from another one using move semantics.
+  7) Constructs a `vec/mat/cube` with elements set to the contents of the `valarray` and the specified number of elements in each dimension.
+  8) Constructs a `vec/mat/cube` with elements set to the contents of the `initializer_list` and the specified number of elements in each dimension.
   9) Constructs a `vec` from a **n x 1** `mat`; Constructs a **n x 1** `mat` from a `vec`.
   10) Destructs the `vec/mat/cube`. The destructors of the elements (if **T** is a class) are called and the used storage is deallocated.
 

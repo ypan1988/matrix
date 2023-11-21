@@ -41,10 +41,10 @@ void test_print(const Matrix<T, 3>& m, std::string msg = "") {
   }
 }
 
-// ----- Testing Matrix<T, N> Constructions -----
+// ----- A: Testing Matrix<T, N> Constructions -----
 
-void matrix_test_constructor_01(bool print = false) {
-  std::cout << "[TEST]: 01.Default constructor. Constructs an empty "
+void matrix_test_constructor_a01(bool print = false) {
+  std::cout << "[TEST]: A01.Default constructor. Constructs an empty "
                "`vec/mat/cube`.\n";
 
   Matrix<double, 1> mat1d;
@@ -66,8 +66,8 @@ void matrix_test_constructor_01(bool print = false) {
   assert(mat3d.n_slices() == 0);
 }
 
-void matrix_test_constructor_02(bool print = false) {
-  std::cout << "[TEST]: 02.Constructs a `vec/mat/cube` with the specified "
+void matrix_test_constructor_a02(bool print = false) {
+  std::cout << "[TEST]: A02.Constructs a `vec/mat/cube` with the specified "
                "number of elements in each dimension.\n";
 
   Matrix<double, 1> mat1d(4);
@@ -93,9 +93,9 @@ void matrix_test_constructor_02(bool print = false) {
   assert(mat3d.n_slices() == 2);
 }
 
-void matrix_test_constructor_03(bool print = false) {
+void matrix_test_constructor_a03(bool print = false) {
   std::cout
-      << "[TEST]: 03.Constructs a `vec/mat/cube` with all elements set to "
+      << "[TEST]: A03.Constructs a `vec/mat/cube` with all elements set to "
          "`val` and the specified number of elements in each dimension.\n";
 
   Matrix<double, 1> mat1d(1.0, 4);
@@ -123,13 +123,16 @@ void matrix_test_constructor_03(bool print = false) {
   assert(mat3d(3, 2, 1) == 3.0);
 }
 
-void matrix_test_constructor_04(bool print = false) {
-  std::cout << "[TEST]: Constructs a Matrix with array, n_rows, n_cols and "
-               "n_slices\n";
+void matrix_test_constructor_a04(bool print = false) {
+  std::cout << "[TEST]: A04.Constructs a `vec/mat/cube` with elements set to "
+               "the contents of array pointed by `vals` and the specified "
+               "number of elements in each dimension.\n";
 
   const double a1[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d(a1, 4);
   if (print) test_print(mat1d, "mat1d =");
+  assert(mat1d.n_elem() == 4);
+  assert(mat1d.n_rows() == 4);
   assert(mat1d(0) == 1.0);
   assert(mat1d(1) == 2.0);
   assert(mat1d(2) == 3.0);
@@ -138,6 +141,9 @@ void matrix_test_constructor_04(bool print = false) {
   const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
   Matrix<double, 2> mat2d(a2, 4, 3);
   if (print) test_print(mat2d, "mat2d =");
+  assert(mat2d.n_elem() == 12);
+  assert(mat2d.n_rows() == 4);
+  assert(mat2d.n_cols() == 3);
   assert(mat2d(0, 0) == 1.0);
   assert(mat2d(1, 0) == 2.0);
   assert(mat2d(2, 0) == 3.0);
@@ -151,6 +157,10 @@ void matrix_test_constructor_04(bool print = false) {
                        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
   Matrix<double, 3> mat3d(a3, 4, 3, 2);
   if (print) test_print(mat3d, "mat3d =");
+  assert(mat3d.n_elem() == 24);
+  assert(mat3d.n_rows() == 4);
+  assert(mat3d.n_cols() == 3);
+  assert(mat3d.n_slices() == 2);
   assert(mat3d(0, 0, 0) == 1.0);
   assert(mat3d(1, 0, 0) == 2.0);
   assert(mat3d(2, 0, 0) == 3.0);
@@ -161,9 +171,9 @@ void matrix_test_constructor_04(bool print = false) {
   assert(mat3d(3, 2, 1) == 24.0);
 }
 
-void matrix_test_constructor_05(bool print = false) {
-  std::cout << "[TEST]: Constructs a Matrix with the contents of an"
-               "other matrix using copy semantics\n";
+void matrix_test_constructor_a05(bool print = false) {
+  std::cout << "[TEST]: A05.Copy constructor. Constructs a `vec/mat/cube` from "
+               "another one using copy semantics.\n";
 
   const double a1[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d_a(a1, 4);
@@ -202,9 +212,9 @@ void matrix_test_constructor_05(bool print = false) {
   assert(mat3d_b(3, 2, 1) == 24.0);
 }
 
-void matrix_test_constructor_06(bool print = false) {
-  std::cout << "[TEST]: Constructs a Matrix with the contents of an"
-               "other matrix using move semantics\n";
+void matrix_test_constructor_a06(bool print = false) {
+  std::cout << "[TEST]: A06.Move constructor. Constructs a `vec/mat/cube` from "
+               "another one using move semantics.\n";
 
 #if defined __MATRIX_LIB_USE_CPP11
   const double a1[] = {1, 2, 3, 4};
@@ -243,13 +253,14 @@ void matrix_test_constructor_06(bool print = false) {
   assert(mat3d_b(2, 2, 1) == 23.0);
   assert(mat3d_b(3, 2, 1) == 24.0);
 #else
-  std::cout << "... TEST SKIPPED (C++11 NOT SUPPORTED)\n";
+  std::cout << "[WARNING]: TEST A06 SKIPPED (C++11 NOT SUPPORTED)\n";
 #endif
 }
 
-void matrix_test_constructor_07(bool print = false) {
-  std::cout << "[TEST]: Constructs a Matrix with valarray, n_rows, n_cols and "
-               "n_slices\n";
+void matrix_test_constructor_a07(bool print = false) {
+  std::cout << "[TEST]: A07.Constructs a `vec/mat/cube` with elements set to "
+               "the contents of the `valarray` and the specified number of "
+               "elements in each dimension.\n";
 
   const double a1[] = {1, 2, 3, 4};
   const std::valarray<double> va1(a1, 4);
@@ -288,9 +299,10 @@ void matrix_test_constructor_07(bool print = false) {
   assert(mat3d(3, 2, 1) == 24.0);
 }
 
-void matrix_test_constructor_12(bool print = false) {
-  std::cout << "[TEST]: Constructs a Matrix with initializer_list, n_rows,"
-               " n_cols and n_slices\n";
+void matrix_test_constructor_a08(bool print = false) {
+  std::cout << "[TEST]: A08.Constructs a `vec/mat/cube` with elements set to "
+               "the contents of the `initializer_list` and the specified "
+               "number of elements in each dimension.\n";
 
 #if defined __MATRIX_LIB_USE_CPP11
   Matrix<double, 1> mat1d({1, 2, 3, 4});
@@ -324,7 +336,7 @@ void matrix_test_constructor_12(bool print = false) {
   assert(mat3d(2, 2, 1) == 23.0);
   assert(mat3d(3, 2, 1) == 24.0);
 #else
-  std::cout << "... TEST SKIPPED (C++11 NOT SUPPORTED)\n";
+  std::cout << "[WARNING]: TEST A08 SKIPPED (C++11 NOT SUPPORTED)\n";
 #endif
 }
 
@@ -1886,19 +1898,19 @@ int main() {
 
   bool print_flag = false;
 
-  std::cout << "----- Testing Matrix<T, N> Constructions -----" << std::endl;
-  matrix_test_constructor_01(print_flag);
-  matrix_test_constructor_02(print_flag);
-  matrix_test_constructor_03(print_flag);
-  matrix_test_constructor_04(print_flag);
-  matrix_test_constructor_05(print_flag);
-  matrix_test_constructor_06(print_flag);
-  matrix_test_constructor_07(print_flag);
-  matrix_test_constructor_12(print_flag);
+  std::cout << "----- A: Testing Matrix<T, N> Constructions -----" << std::endl;
+  matrix_test_constructor_a01(print_flag);
+  matrix_test_constructor_a02(print_flag);
+  matrix_test_constructor_a03(print_flag);
+  matrix_test_constructor_a04(print_flag);
+  matrix_test_constructor_a05(print_flag);
+  matrix_test_constructor_a06(print_flag);
+  matrix_test_constructor_a07(print_flag);
+  matrix_test_constructor_a08(print_flag);
   matrix_test_constructor_13(print_flag);
   matrix_test_constructor_14(print_flag);
 
-  std::cout << "----- Testing Matrix<T, N> Assignments -----" << std::endl;
+  std::cout << "----- B: Testing Matrix<T, N> Assignments -----" << std::endl;
   matrix_test_assignment_1(print_flag);
   matrix_test_assignment_2(print_flag);
   matrix_test_assignment_3(print_flag);
