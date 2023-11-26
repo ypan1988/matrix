@@ -64,17 +64,18 @@ Similar to `Matrix<T, N>`, three wrappers for the corresponding helper classes o
   | STL Class                | Wrapper Class              | Description of the Wrapper Class                                              |
   | :----------------------  | :------------------------  | :--------------------------------------------------------------------------   |
   | `std::valarray<T>`       | `Matrix<T,N>`              | a Matrix template ( `std::valarray` with dimensions)                          |
+  | `std::slice_array<T>`    | `SliceMatrix<T>`           | a sub-Matrix described by `std::slice`                                       |
   | `std::gslice_array<T>`   | `GsliceMatrix<T,N>`        | a sub-Matrix described by `std::gslice`                                       |
   | `std::indirect_array<T>` | `IndirectMatrix<T,N>`      | a sub-Matrix described by an `index_array` (i.e., `std::valarray<std::size>`) |
   | `std::mask_array<T>`     | `MaskMatrix<T>`            | a sub-Matrix described by a `bool_array` (i.e., `std::valarray<bool>`)        |
 
 These wrapper classes behave just like the `Matrix` except they refer to a `Matrix`, rather than owning their own elements. They can be viewed as a reference to a sub-`Matrix` which will be discussed in more detail in section **Subscripting and Slicing**. Most of the time, it is safe to ignore the existence of these three helper classes when dealing with sub-Matrix. But for completeness, we provide following typedefs for 1D/2D/3D sub-Matrix:
 
-  | type  T  | `GsliceMatrix<T, 1>` <br> `IndirectMatrix<T, 1>` <br> `MaskMatrix<T>` | `GsliceMatrix<T, 2>` <br> `IndirectMatrix<T, 2>`  | `Matrix<T, 3>` <br> `IndirectMatrix<T, 3>` |
-  | :------: | :-------------------------------------------------: | :-------------------------------------------------: | :-------------------------------------------------: |
-  | `double` | `gslice_vec`  <br> `indirect_vec`  <br> `mask_vec`  | `gslice_mat`  <br> `indirect_mat`  <br> `mask_mat`  | `gslice_cube` <br> `indirect_cube` <br> `mask_cube` |
-  | `double` | `gslice_dvec` <br> `indirect_dvec` <br> `mask_dvec` | `gslice_dmat` <br> `indirect_dmat` <br> `mask_dmat` | `gslice_dcube`<br> `indirect_dcube`<br> `mask_dcube`|
-  | `float`  | `gslice_fvec` <br> `indirect_vec`  <br> `mask_fvec` | `gslice_fmat` <br> `indirect_fmat` <br> `mask_fmat` | `gslice_fcube`<br> `indirect_fcube`<br> `mask_fcube`|
+  | type  T  | `SliceMatrix<T>` <br> `GsliceMatrix<T, 1>` <br> `IndirectMatrix<T, 1>` <br> `MaskMatrix<T>` | `GsliceMatrix<T, 2>` <br> `IndirectMatrix<T, 2>`  | `Matrix<T, 3>` <br> `IndirectMatrix<T, 3>` |
+  | :------: | :-------------------------------------------------------------------: | :--------------------------------: | :---------------------------------: |
+  | `double` | `slice_vec`  <br> `gslice_vec`  <br> `indirect_vec`  <br> `mask_vec`  | `gslice_mat`  <br> `indirect_mat`  | `gslice_cube` <br> `indirect_cube`  |
+  | `double` | `slice_dvec` <br> `gslice_dvec` <br> `indirect_dvec` <br> `mask_dvec` | `gslice_dmat` <br> `indirect_dmat` | `gslice_dcube`<br> `indirect_dcube` |
+  | `float`  | `slice_fvec` <br> `gslice_fvec` <br> `indirect_vec`  <br> `mask_fvec` | `gslice_fmat` <br> `indirect_fmat` | `gslice_fcube`<br> `indirect_fcube` |
 
 
 ## Constructions and Assignments
