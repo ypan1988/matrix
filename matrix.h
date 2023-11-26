@@ -1692,6 +1692,10 @@ typedef Matrix<float, 1> fvec;
 typedef Matrix<float, 2> fmat;
 typedef Matrix<float, 3> fcube;
 
+typedef SliceMatrix<double> slice_vec;
+typedef SliceMatrix<double> slice_dvec;
+typedef SliceMatrix<float> slice_fvec;
+
 typedef GsliceMatrix<double, 1> gslice_vec;
 typedef GsliceMatrix<double, 2> gslice_mat;
 typedef GsliceMatrix<double, 3> gslice_cube;
