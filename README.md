@@ -54,17 +54,16 @@ For example, we assume that type **T** is `double` in the first row, then obviou
   + `mat` is a 2D matrix (i.e., `mat = Matrix<double, 2>`)
   + `cube` is a 3D matrix (i.e., `cube = Matrix<double, 3>`)
 
-  Note that in the following part of this document, we assume that
+Note that in the following part of this document, we assume that
   + `T = double` by default, and `elem_type` should always be the same as type **T**
   + `vec/mat/cube` are used for better readability, but it is possible to use other types
   + Anything marked as **C++11** can be used only when the compiler supports **C++11** (**YP**: Since **std::valarray** is included in **STL** since **C++98**, this matrix library, as a wrapper of **std::valarray**, will support **pre-C++11** compilers) 
 
 ### sub-Matrix<T, N>
-Similar to `Matrix<T, N>`, three wrappers for the corresponding helper classes of `std::valarray<T>` are included in this library, namely `GsliceMatrix<T,N>`, `IndirectMatrix<T,N>` and `MaskMatrix<T>` (see table below for a short description).
+Similar to `Matrix<T, N>`, four wrappers for the corresponding helper classes of `std::valarray<T>` are included in this library, namely `SliceMatrix<T>`, `GsliceMatrix<T,N>`, `IndirectMatrix<T,N>` and `MaskMatrix<T>` (see table below for a short description).
   | STL Class                | Wrapper Class              | Description of the Wrapper Class                                              |
   | :----------------------  | :------------------------  | :--------------------------------------------------------------------------   |
-  | `std::valarray<T>`       | `Matrix<T,N>`              | a Matrix template ( `std::valarray` with dimensions)                          |
-  | `std::slice_array<T>`    | `SliceMatrix<T>`           | a sub-Matrix described by `std::slice`                                       |
+  | `std::slice_array<T>`    | `SliceMatrix<T>`           | a sub-Matrix described by `std::slice`                                        |
   | `std::gslice_array<T>`   | `GsliceMatrix<T,N>`        | a sub-Matrix described by `std::gslice`                                       |
   | `std::indirect_array<T>` | `IndirectMatrix<T,N>`      | a sub-Matrix described by an `index_array` (i.e., `std::valarray<std::size>`) |
   | `std::mask_array<T>`     | `MaskMatrix<T>`            | a sub-Matrix described by a `bool_array` (i.e., `std::valarray<bool>`)        |
