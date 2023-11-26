@@ -51,6 +51,7 @@ void matrix_test_constructor_a01(bool print = false) {
   if (print) test_print(mat1d, "mat1d =");
   assert(mat1d.n_elem() == 0);
   assert(mat1d.n_rows() == 0);
+  assert(mat1d.n_cols() == 0);
 
   Matrix<double, 2> mat2d;
   if (print) test_print(mat2d, "mat2d =");
@@ -74,6 +75,7 @@ void matrix_test_constructor_a02(bool print = false) {
   if (print) test_print(mat1d, "mat1d =");
   assert(mat1d.n_elem() == 4);
   assert(mat1d.n_rows() == 4);
+  assert(mat1d.n_cols() == 1);
 
   // It would not compile because Matrix<T, 1>(uword __n1) is explicit
   // Matrix<double, 1> mat1d_x = 4;
@@ -102,6 +104,7 @@ void matrix_test_constructor_a03(bool print = false) {
   if (print) test_print(mat1d, "mat1d =");
   assert(mat1d.n_elem() == 4);
   assert(mat1d.n_rows() == 4);
+  assert(mat1d.n_cols() == 1);
   assert(mat1d(0) == 1.0);
   assert(mat1d(3) == 1.0);
 
@@ -133,6 +136,7 @@ void matrix_test_constructor_a04(bool print = false) {
   if (print) test_print(mat1d, "mat1d =");
   assert(mat1d.n_elem() == 4);
   assert(mat1d.n_rows() == 4);
+  assert(mat1d.n_cols() == 1);
   assert(mat1d(0) == 1.0);
   assert(mat1d(1) == 2.0);
   assert(mat1d(2) == 3.0);
@@ -181,6 +185,7 @@ void matrix_test_constructor_a05(bool print = false) {
   if (print) test_print(mat1d_b, "mat1d_b =");
   assert(mat1d_b.n_elem() == 4);
   assert(mat1d_b.n_rows() == 4);
+  assert(mat1d_b.n_cols() == 1);
   assert(mat1d_b(0) == 1.0);
   assert(mat1d_b(1) == 2.0);
   assert(mat1d_b(2) == 3.0);
@@ -232,6 +237,7 @@ void matrix_test_constructor_a06(bool print = false) {
   if (print) test_print(mat1d_b, "mat1d_b =");
   assert(mat1d_b.n_elem() == 4);
   assert(mat1d_b.n_rows() == 4);
+  assert(mat1d_b.n_cols() == 1);
   assert(mat1d_b(0) == 1.0);
   assert(mat1d_b(1) == 2.0);
   assert(mat1d_b(2) == 3.0);
@@ -285,6 +291,7 @@ void matrix_test_constructor_a11(bool print = false) {
   if (print) test_print(mat1d, "mat1d =");
   assert(mat1d.n_elem() == 4);
   assert(mat1d.n_rows() == 4);
+  assert(mat1d.n_cols() == 1);
   assert(mat1d(0) == 1.0);
   assert(mat1d(1) == 2.0);
   assert(mat1d(2) == 3.0);
@@ -336,6 +343,7 @@ void matrix_test_constructor_a12(bool print = false) {
   if (print) test_print(mat1d, "mat1d =");
   assert(mat1d.n_elem() == 4);
   assert(mat1d.n_rows() == 4);
+  assert(mat1d.n_cols() == 1);
   assert(mat1d(0) == 1.0);
   assert(mat1d(1) == 2.0);
   assert(mat1d(2) == 3.0);

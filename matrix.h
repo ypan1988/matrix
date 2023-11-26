@@ -187,6 +187,7 @@ template <class _Tp>
 struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
  public:
   typedef _Tp elem_type;
+  bool is_column_vector;
   friend struct Matrix<_Tp, 2>;
   friend struct Matrix<_Tp, 3>;
 
@@ -242,7 +243,8 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
 #endif
 
   index_array get_dims() const { return index_array(_M_dims, 1); }
-  uword         n_rows() const { return _M_dims[0]; }
+  uword         n_rows() const { return  is_column_vector ? _M_dims[0] : (_M_dims[0] ? 1 : 0); }
+  uword         n_cols() const { return !is_column_vector ? _M_dims[0] : (_M_dims[0] ? 1 : 0); }
 
   void _M_range_check(uword __n1) const {
     __assert(__n1 < n_rows(),
@@ -306,16 +308,21 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
  private:
   uword _M_dims[1];
 
-  void _M_init() { _M_dims[0] = this->n_elem(); }
+  void _M_init() {
+    _M_dims[0] = this->n_elem();
+    is_column_vector = true;
+  }
   void _M_init(const uword __dims[1]) {
     if (this->n_elem() != __dims[0])
       error("1D Cstor error: dimension mismatch");
     _M_dims[0] = __dims[0];
+    is_column_vector = true;
   }
   void _M_init(const index_array& __dims) {
     if (this->n_elem() != __dims[0])
       error("1D Cstor error: dimension mismatch");
     _M_dims[0] = __dims[0];
+    is_column_vector = true;
   }
   Matrix(const std::valarray<_Tp>& __va, uword __start, const uword __size[1],
          const uword __stride[1])
@@ -1167,10 +1174,11 @@ struct SliceMatrix {
  public:
   typedef _Tp elem_type;
   std::slice_array<_Tp> _M_elem;
-  bool _M_is_rowvec;
+  bool is_column_vector;
   SliceMatrix(std::valarray<_Tp>& __va, uword __start, uword __size,
-              uword __stride, bool __is_rowvec = true)
-      : _M_elem(__va[std::slice(__start, __size, __stride)]) {}
+              uword __stride, bool __is_colvec = true)
+      : _M_elem(__va[std::slice(__start, __size, __stride)]),
+        is_column_vector(__is_colvec) {}
   void operator=(const _Tp& __value) { _M_elem = __value; }
 
   std::valarray<_Tp> get_elem() const { return std::valarray<_Tp>(_M_elem); }

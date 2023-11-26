@@ -29,7 +29,7 @@ This single header matrix library can be viewed as a wrapper of `std::valarray` 
   | :------------: | :------------: | :------------: | :---------- |
   | `x.n_elem()`   | `x.n_elem()`   | `x.n_elem()`   | total number of elements in x |
   | `x.n_rows()`   | `x.n_rows()`   | `x.n_rows()`   | number of rows in x           |
-  |                | `x.n_cols()`   | `x.n_cols()`   | number of columns in x        |
+  | `x.n_cols()`   | `x.n_cols()`   | `x.n_cols()`   | number of columns in x        |
   |                |                | `x.n_slices()` | number of slices in x         |
   ```cpp
   // define a 2x3 matrix
