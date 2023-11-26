@@ -275,8 +275,58 @@ void matrix_test_constructor_a06(bool print = false) {
 #endif
 }
 
-void matrix_test_constructor_a07(bool print = false) {
-  std::cout << "[TEST]: A07.Constructs a `vec/mat/cube` with elements set to "
+void matrix_test_constructor_a11(bool print = false) {
+  std::cout << "[TEST]: A11.Constructs a `vec/mat/cube` with elements set to "
+               "the contents of the `initializer_list` and the specified "
+               "number of elements in each dimension.\n";
+
+#if defined __MATRIX_LIB_USE_CPP11
+  Matrix<double, 1> mat1d({1, 2, 3, 4});
+  if (print) test_print(mat1d, "mat1d =");
+  assert(mat1d.n_elem() == 4);
+  assert(mat1d.n_rows() == 4);
+  assert(mat1d(0) == 1.0);
+  assert(mat1d(1) == 2.0);
+  assert(mat1d(2) == 3.0);
+  assert(mat1d(3) == 4.0);
+
+  Matrix<double, 2> mat2d({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}, 4, 3);
+  if (print) test_print(mat2d, "mat2d =");
+  assert(mat2d.n_elem() == 12);
+  assert(mat2d.n_rows() == 4);
+  assert(mat2d.n_cols() == 3);
+  assert(mat2d(0, 0) == 1.0);
+  assert(mat2d(1, 0) == 2.0);
+  assert(mat2d(2, 0) == 3.0);
+  assert(mat2d(3, 0) == 4.0);
+  assert(mat2d(0, 2) == 9.0);
+  assert(mat2d(1, 2) == 10.0);
+  assert(mat2d(2, 2) == 11.0);
+  assert(mat2d(3, 2) == 12.0);
+
+  Matrix<double, 3> mat3d({1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                           13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24},
+                          4, 3, 2);
+  if (print) test_print(mat3d, "mat3d =");
+  assert(mat3d.n_elem() == 24);
+  assert(mat3d.n_rows() == 4);
+  assert(mat3d.n_cols() == 3);
+  assert(mat3d.n_slices() == 2);
+  assert(mat3d(0, 0, 0) == 1.0);
+  assert(mat3d(1, 0, 0) == 2.0);
+  assert(mat3d(2, 0, 0) == 3.0);
+  assert(mat3d(3, 0, 0) == 4.0);
+  assert(mat3d(0, 2, 1) == 21.0);
+  assert(mat3d(1, 2, 1) == 22.0);
+  assert(mat3d(2, 2, 1) == 23.0);
+  assert(mat3d(3, 2, 1) == 24.0);
+#else
+  std::cout << "[WARNING]: TEST A08 SKIPPED (C++11 NOT SUPPORTED)\n";
+#endif
+}
+
+void matrix_test_constructor_a12(bool print = false) {
+  std::cout << "[TEST]: A12.Constructs a `vec/mat/cube` with elements set to "
                "the contents of the `valarray` and the specified number of "
                "elements in each dimension.\n";
 
@@ -324,56 +374,6 @@ void matrix_test_constructor_a07(bool print = false) {
   assert(mat3d(1, 2, 1) == 22.0);
   assert(mat3d(2, 2, 1) == 23.0);
   assert(mat3d(3, 2, 1) == 24.0);
-}
-
-void matrix_test_constructor_a08(bool print = false) {
-  std::cout << "[TEST]: A08.Constructs a `vec/mat/cube` with elements set to "
-               "the contents of the `initializer_list` and the specified "
-               "number of elements in each dimension.\n";
-
-#if defined __MATRIX_LIB_USE_CPP11
-  Matrix<double, 1> mat1d({1, 2, 3, 4});
-  if (print) test_print(mat1d, "mat1d =");
-  assert(mat1d.n_elem() == 4);
-  assert(mat1d.n_rows() == 4);
-  assert(mat1d(0) == 1.0);
-  assert(mat1d(1) == 2.0);
-  assert(mat1d(2) == 3.0);
-  assert(mat1d(3) == 4.0);
-
-  Matrix<double, 2> mat2d({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}, 4, 3);
-  if (print) test_print(mat2d, "mat2d =");
-  assert(mat2d.n_elem() == 12);
-  assert(mat2d.n_rows() == 4);
-  assert(mat2d.n_cols() == 3);
-  assert(mat2d(0, 0) == 1.0);
-  assert(mat2d(1, 0) == 2.0);
-  assert(mat2d(2, 0) == 3.0);
-  assert(mat2d(3, 0) == 4.0);
-  assert(mat2d(0, 2) == 9.0);
-  assert(mat2d(1, 2) == 10.0);
-  assert(mat2d(2, 2) == 11.0);
-  assert(mat2d(3, 2) == 12.0);
-
-  Matrix<double, 3> mat3d({1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-                           13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24},
-                          4, 3, 2);
-  if (print) test_print(mat3d, "mat3d =");
-  assert(mat3d.n_elem() == 24);
-  assert(mat3d.n_rows() == 4);
-  assert(mat3d.n_cols() == 3);
-  assert(mat3d.n_slices() == 2);
-  assert(mat3d(0, 0, 0) == 1.0);
-  assert(mat3d(1, 0, 0) == 2.0);
-  assert(mat3d(2, 0, 0) == 3.0);
-  assert(mat3d(3, 0, 0) == 4.0);
-  assert(mat3d(0, 2, 1) == 21.0);
-  assert(mat3d(1, 2, 1) == 22.0);
-  assert(mat3d(2, 2, 1) == 23.0);
-  assert(mat3d(3, 2, 1) == 24.0);
-#else
-  std::cout << "[WARNING]: TEST A08 SKIPPED (C++11 NOT SUPPORTED)\n";
-#endif
 }
 
 void matrix_test_constructor_13(bool print = false) {
@@ -1941,8 +1941,8 @@ int main() {
   matrix_test_constructor_a04(print_flag);
   matrix_test_constructor_a05(print_flag);
   matrix_test_constructor_a06(print_flag);
-  matrix_test_constructor_a07(print_flag);
-  matrix_test_constructor_a08(print_flag);
+  matrix_test_constructor_a11(print_flag);
+  matrix_test_constructor_a12(print_flag);
   matrix_test_constructor_13(print_flag);
   matrix_test_constructor_14(print_flag);
 

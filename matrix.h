@@ -83,6 +83,8 @@ struct Matrix {
              //	template<class A> Matrix(A);
 };
 
+template <class _Tp = double>
+struct SliceMatrix;
 template <class _Tp = double, uword _Size = 1>
 struct GsliceMatrix;
 template <class _Tp = double, uword _Size = 1>
@@ -192,6 +194,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(); }
   Matrix(const         Matrix        & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
+  Matrix(const    SliceMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
   Matrix(const   GsliceMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
   Matrix(const IndirectMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
   Matrix(const     MaskMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
@@ -345,6 +348,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(0, 0); }
   Matrix(const         Matrix        & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const    SliceMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem) { __x._M_is_rowvec? _M_init(this->n_elem(), 1) : _M_init(1, this->n_elem()); }
   Matrix(const   GsliceMatrix<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
   Matrix(const IndirectMatrix<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
 
@@ -1154,6 +1158,27 @@ template <class _Tp>
 _Tp dot(const Matrix<_Tp, 1>& __x, const Matrix<_Tp, 1>& __y) {
   return (__x.get_elem() * __y.get_elem()).sum();
 }
+
+//----------------------------------------------------------------------
+// SliceMatrix
+
+template <class _Tp>
+struct SliceMatrix {
+ public:
+  typedef _Tp elem_type;
+  std::slice_array<_Tp> _M_elem;
+  bool _M_is_rowvec;
+  SliceMatrix(std::valarray<_Tp>& __va, uword __start, uword __size,
+              uword __stride, bool __is_rowvec = true)
+      : _M_elem(__va[std::slice(__start, __size, __stride)]) {}
+  void operator=(const _Tp& __value) { _M_elem = __value; }
+
+  std::valarray<_Tp> get_elem() const { return std::valarray<_Tp>(_M_elem); }
+
+  elem_type sum() const { return get_elem().sum(); }
+  elem_type min() const { return get_elem().min(); }
+  elem_type max() const { return get_elem().max(); }
+};
 
 //----------------------------------------------------------------------
 // GsliceMatrix
