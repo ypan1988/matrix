@@ -247,7 +247,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   uword         n_cols() const { return !is_column_vector ? _M_dims[0] : (_M_dims[0] ? 1 : 0); }
 
   void _M_range_check(uword __n1) const {
-    __assert(__n1 < n_rows(),
+    __assert(__n1 < this->n_elem(),
             "Matrix<T, 1>::_M_range_check:\n" <<
             "  Index " << __n1 << " is out of bound for axis 0 with size " << n_rows());
   }
@@ -322,7 +322,13 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
     if (this->n_elem() != __dims[0])
       error("1D Cstor error: dimension mismatch");
     _M_dims[0] = __dims[0];
-    is_column_vector = true;
+    this->is_column_vector = true;
+  }
+  Matrix(const std::valarray<_Tp>& __va, uword __start, const uword __size,
+         const uword __stride, bool __is_colvec = true)
+      : _Matrix_base<_Tp>(__va[std::slice(__start, __size, __stride)]) {
+    _M_init();
+    this->is_column_vector = __is_colvec;
   }
   Matrix(const std::valarray<_Tp>& __va, uword __start, const uword __size[1],
          const uword __stride[1])
@@ -355,7 +361,7 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(0, 0); }
   Matrix(const         Matrix        & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
-  Matrix(const    SliceMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem) { __x._M_is_rowvec? _M_init(this->n_elem(), 1) : _M_init(1, this->n_elem()); }
+  Matrix(const    SliceMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem) { __x.is_column_vector? _M_init(this->n_elem(), 1) : _M_init(1, this->n_elem()); }
   Matrix(const   GsliceMatrix<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
   Matrix(const IndirectMatrix<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
 
@@ -424,11 +430,13 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
                                     _M_dims[0] + 1)];
   }
 
+  // SliceMatrix related member functions
+  Matrix<_Tp, 1> row(uword __row_number) const;
+  SliceMatrix<_Tp> row(uword __row_number);
+  Matrix<_Tp, 1> col(uword __col_number) const;
+  SliceMatrix<_Tp> col(uword __col_number);
+
   // GsliceMatrix related member functions
-          Matrix<_Tp, 1> row(uword __row_number) const;
-    GsliceMatrix<_Tp, 1> row(uword __row_number);
-          Matrix<_Tp, 1> col(uword __col_number) const;
-    GsliceMatrix<_Tp, 1> col(uword __col_number);
           Matrix<_Tp, 2> rows(uword __first_row, uword __last_row) const;
     GsliceMatrix<_Tp, 2> rows(uword __first_row, uword __last_row);
           Matrix<_Tp, 2> cols(uword __first_col, uword __last_col) const;
@@ -675,7 +683,7 @@ Matrix<_Tp, 1>::Matrix(const Matrix<_Tp, 2>& __x)
 template <class _Tp>
 Matrix<_Tp, 2>::Matrix(const Matrix<_Tp, 1>& __x)
     : _Matrix_base<_Tp>(__x.get_elem()) {
-  _M_init(__x.n_elem(), 1);
+  __x.is_column_vector ? _M_init(__x.n_elem(), 1) : _M_init(1, __x.n_elem());
 }
 
 template <class _Tp>
@@ -706,7 +714,7 @@ Matrix<_Tp, 1>::Matrix(Matrix<_Tp, 2>&& __x)
 template <class _Tp>
 Matrix<_Tp, 2>::Matrix(Matrix<_Tp, 1>&& __x)
     : _Matrix_base<_Tp>(std::move(__x._M_elem)) {
-  _M_init(__x.n_rows(), 1);
+  __x.is_column_vector ? _M_init(__x.n_elem(), 1) : _M_init(1, __x.n_elem());
 }
 
 template <class _Tp>
@@ -1267,43 +1275,45 @@ struct MaskMatrix {
   elem_type max() const { return get_elem().max(); }
 };
 
-// Matrix member functions dealing with GsliceMatrix
+// Matrix member functions dealing with SliceMatrix
 
 template <class _Tp>
 inline Matrix<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) const {
   _M_range_check(__r, 0);
   const uword __start = __r;
-  const uword __size[1] = {_M_dims[1]};
-  const uword __stride[1] = {_M_dims[0]};
-  return Matrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+  const uword __size = _M_dims[1];
+  const uword __stride = _M_dims[0];
+  return Matrix<_Tp, 1>(this->_M_elem, __start, __size, __stride, false);
 }
 
 template <class _Tp>
-inline GsliceMatrix<_Tp, 1> Matrix<_Tp, 2>::row(uword __r) {
+inline SliceMatrix<_Tp> Matrix<_Tp, 2>::row(uword __r) {
   _M_range_check(__r, 0);
   const uword __start = __r;
-  const uword __size[1] = {_M_dims[1]};
-  const uword __stride[1] = {_M_dims[0]};
-  return GsliceMatrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+  const uword __size = _M_dims[1];
+  const uword __stride = _M_dims[0];
+  return SliceMatrix<_Tp>(this->_M_elem, __start, __size, __stride, false);
 }
 
 template <class _Tp>
 inline Matrix<_Tp, 1> Matrix<_Tp, 2>::col(uword __c) const {
   _M_range_check(0, __c);
   const uword __start = __c * _M_dims[0];
-  const uword __size[1] = {_M_dims[0]};
-  const uword __stride[1] = {1};
+  const uword __size = _M_dims[0];
+  const uword __stride = 1;
   return Matrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
 }
 
 template <class _Tp>
-inline GsliceMatrix<_Tp, 1> Matrix<_Tp, 2>::col(uword __c) {
+inline SliceMatrix<_Tp> Matrix<_Tp, 2>::col(uword __c) {
   _M_range_check(0, __c);
   const uword __start = __c * _M_dims[0];
-  const uword __size[1] = {_M_dims[0]};
-  const uword __stride[1] = {1};
-  return GsliceMatrix<_Tp, 1>(this->_M_elem, __start, __size, __stride);
+  const uword __size = _M_dims[0];
+  const uword __stride = 1;
+  return SliceMatrix<_Tp>(this->_M_elem, __start, __size, __stride);
 }
+
+// Matrix member functions dealing with GsliceMatrix
 
 template <class _Tp>
 inline Matrix<_Tp, 2> Matrix<_Tp, 3>::slice(uword __s) const {

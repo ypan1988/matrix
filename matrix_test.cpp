@@ -281,6 +281,24 @@ void matrix_test_constructor_a06(bool print = false) {
 #endif
 }
 
+void matrix_test_constructor_a07(bool print = false) {
+  const double a[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d(a, 4, 3);
+
+  Matrix<double, 2> mat2d_row = mat2d.row(1);
+  if (print) test_print(mat2d_row, "mat2d_row = ");
+  assert(mat2d_row(0, 0) == 2);
+  assert(mat2d_row(0, 1) == 6);
+  assert(mat2d_row(0, 2) == 10);
+
+  Matrix<double, 2> mat2d_col = mat2d.col(2);
+  if (print) test_print(mat2d_col, "mat2d_col = ");
+  assert(mat2d_col(0, 0) == 9);
+  assert(mat2d_col(1, 0) == 10);
+  assert(mat2d_col(2, 0) == 11);
+  assert(mat2d_col(3, 0) == 12);
+}
+
 void matrix_test_constructor_a11(bool print = false) {
   std::cout << "[TEST]: A11.Constructs a `vec/mat/cube` with elements set to "
                "the contents of the `initializer_list` and the specified "
@@ -1194,11 +1212,11 @@ void matrix_2d_test_rows(bool print = false) {
   Matrix<double, 2> mat2d_c(mat2d_b.row(0));
   if (print) test_print(mat2d_c, "mat2d_c = ");
   assert(mat2d_c.n_elem() == 3);
-  assert(mat2d_c.n_rows() == 3);
-  assert(mat2d_c.n_cols() == 1);
+  assert(mat2d_c.n_rows() == 1);
+  assert(mat2d_c.n_cols() == 3);
   assert(mat2d_c(0, 0) == 1);
-  assert(mat2d_c(1, 0) == 5);
-  assert(mat2d_c(2, 0) == 9);
+  assert(mat2d_c(0, 1) == 5);
+  assert(mat2d_c(0, 2) == 9);
 
   const Matrix<double, 2> mat2d_d = mat2d_b.rows(0, 1);
   if (print) test_print(mat2d_d, "mat2d_d = ");
@@ -1949,6 +1967,7 @@ int main() {
   matrix_test_constructor_a04(print_flag);
   matrix_test_constructor_a05(print_flag);
   matrix_test_constructor_a06(print_flag);
+  matrix_test_constructor_a07(print_flag);
   matrix_test_constructor_a11(print_flag);
   matrix_test_constructor_a12(print_flag);
   matrix_test_constructor_13(print_flag);
