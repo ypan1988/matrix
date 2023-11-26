@@ -90,8 +90,12 @@ These wrapper classes behave just like the `Matrix` except they refer to a `Matr
 | `vec(const elem_type* vals, n_rows)` <br> `mat(const elem_type* vals, n_rows, n_cols)` <br> `cube(const elem_type* vals, n_rows, n_cols, n_slides)` |(4)|
 | `vec(const vec& other)`              <br> `mat(const mat& other)`                      <br> `cube(const cube& other)`                               |(5)|
 | `vec(vec&& other) noexcept`          <br> `mat(mat&& other) noexcept`                  <br> `cube(cube&& other) noexcept`                           |(6) C++11|
-| `vec(valarray)`                      <br> `mat(valarray, n_rows, n_cols)`              <br> `cube(valarray, n_rows, n_cols, n_slides)`              |(7)|
-| `vec(initializer_list)`              <br> `mat(initializer_list, n_rows, n_cols)`      <br> `cube(initializer_list, n_rows, n_cols, n_slices)`      |(8) C++11|
+| `vec(slice_vec)`                     <br> `mat(slice_vec)`                             <br>                                                         |(7)|
+| `vec(gslice_vec)`                    <br> `mat(gslice_mat)`                            <br> `cube(gslice_mat)`                                      |(8)|
+| `vec(indirect_vec)`                  <br> `mat(indirect_vec)`                          <br> `cube(indirect_mat)`                                    |(9)|
+| `vec(mask_vec)`                      <br> `mat(mask_vec)`                              <br>                                                         |(10)|
+| `vec(initializer_list)`              <br> `mat(initializer_list, n_rows, n_cols)`      <br> `cube(initializer_list, n_rows, n_cols, n_slices)`      |(11) C++11|
+| `vec(valarray)`                      <br> `mat(valarray, n_rows, n_cols)`              <br> `cube(valarray, n_rows, n_cols, n_slides)`              |(12)|
 | `vec(mat)`                           <br> `mat(vec)`                                   <br>                                                         |(9)|
 | `~vec()`                             <br> `~mat()`                                     <br> `~cube()`                                               |(10)|
 
@@ -102,8 +106,12 @@ The table above provides ways to construct new matrix from various sources:
   4) Constructs a `vec/mat/cube` with elements set to the contents of array pointed by `vals` and the specified number of elements in each dimension. If this array contains less than total number of elements (i.e., products of the specified number of elements in each dimension), the behavior is undefined.
   5) Copy constructor. Constructs a `vec/mat/cube` from another one using copy semantics.
   6) Move constructor. Constructs a `vec/mat/cube` from another one using move semantics.
-  7) Constructs a `vec/mat/cube` with elements set to the contents of the `valarray` and the specified number of elements in each dimension.
-  8) Constructs a `vec/mat/cube` with elements set to the contents of the `initializer_list` and the specified number of elements in each dimension.
+  7) Constructs a `vec/mat/cube` from a `slice_vec` (i.e., a `sub-Matrix` described by `std::slice`).
+  8) Constructs a `vec/mat/cube` from a `gslice_vec/gslice_mat/gslice_cube` (i.e., a `sub-Matrix` described by `std::gslice`).
+  9) Constructs a `vec/mat/cube` from a `indirect_vec/indirect_mat/indirect_cube` (i.e., a `sub-Matrix` described by `index_array`).
+  10) Constructs a `vec/mat/cube` from a `mask_vec` (i.e., a `sub-Matrix` described by `bool_array`).
+  11) Constructs a `vec/mat/cube` with elements set to the contents of the `initializer_list` and the specified number of elements in each dimension.
+  12) Constructs a `vec/mat/cube` with elements set to the contents of the `valarray` and the specified number of elements in each dimension.
   9) Constructs a `vec` from a **n x 1** `mat`; Constructs a **n x 1** `mat` from a `vec`.
   10) Destructs the `vec/mat/cube`. The destructors of the elements (if **T** is a class) are called and the used storage is deallocated.
 
