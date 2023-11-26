@@ -322,13 +322,13 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
     if (this->n_elem() != __dims[0])
       error("1D Cstor error: dimension mismatch");
     _M_dims[0] = __dims[0];
-    this->is_column_vector = true;
+    is_column_vector = true;
   }
   Matrix(const std::valarray<_Tp>& __va, uword __start, const uword __size,
          const uword __stride, bool __is_colvec = true)
       : _Matrix_base<_Tp>(__va[std::slice(__start, __size, __stride)]) {
     _M_init();
-    this->is_column_vector = __is_colvec;
+    is_column_vector = __is_colvec;
   }
   Matrix(const std::valarray<_Tp>& __va, uword __start, const uword __size[1],
          const uword __stride[1])
