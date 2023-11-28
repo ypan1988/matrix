@@ -195,7 +195,7 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(); }
   Matrix(const         Matrix        & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
-  Matrix(const    SliceMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(); }
+  Matrix(const    SliceMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(__x.is_column_vector); }
   Matrix(const   GsliceMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(); }
   Matrix(const IndirectMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(); }
   Matrix(const     MaskMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(); }
@@ -308,33 +308,32 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
  private:
   uword _M_dims[1];
 
-  void _M_init() {
+  void _M_init(bool __is_colvec = true) {
     _M_dims[0] = this->n_elem();
-    is_column_vector = true;
+    is_column_vector = __is_colvec;
   }
-  void _M_init(const uword __dims[1]) {
+  void _M_init(const uword __dims[1], bool __is_colvec = true) {
     if (this->n_elem() != __dims[0])
       error("1D Cstor error: dimension mismatch");
     _M_dims[0] = __dims[0];
-    is_column_vector = true;
+    is_column_vector = __is_colvec;
   }
-  void _M_init(const index_array& __dims) {
+  void _M_init(const index_array& __dims, bool __is_colvec = true) {
     if (this->n_elem() != __dims[0])
       error("1D Cstor error: dimension mismatch");
     _M_dims[0] = __dims[0];
-    is_column_vector = true;
+    is_column_vector = __is_colvec;
   }
   Matrix(const std::valarray<_Tp>& __va, uword __start, const uword __size,
          const uword __stride, bool __is_colvec = true)
       : _Matrix_base<_Tp>(__va[std::slice(__start, __size, __stride)]) {
-    _M_init();
-    is_column_vector = __is_colvec;
+    _M_init(__is_colvec);
   }
   Matrix(const std::valarray<_Tp>& __va, uword __start, const uword __size[1],
-         const uword __stride[1])
+         const uword __stride[1], bool __is_colvec = true)
       : _Matrix_base<_Tp>(__va[std::gslice(__start, index_array(__size, 1),
                                            index_array(__stride, 1))]) {
-    _M_init();
+    _M_init(__is_colvec);
   }
   Matrix(const std::valarray<_Tp>& __va, const index_array& __idx_arr,
          const uword __dims[1])

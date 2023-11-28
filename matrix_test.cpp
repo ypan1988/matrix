@@ -44,8 +44,10 @@ void test_print(const Matrix<T, 3>& m, std::string msg = "") {
 // ----- A: Testing Matrix<T, N> Constructions -----
 
 void matrix_test_constructor_a01(bool print = false) {
-  std::cout << "[TEST]: A01.Default constructor. Constructs an empty "
-               "`vec/mat/cube`.\n";
+  std::cout << "[TEST]: A01. Default constructor\n"
+            << "        vec: vec()\n"
+            << "        mat: mat()\n"
+            << "        cube: cube()" << std::endl;
 
   Matrix<double, 1> mat1d;
   if (print) test_print(mat1d, "mat1d =");
@@ -68,8 +70,10 @@ void matrix_test_constructor_a01(bool print = false) {
 }
 
 void matrix_test_constructor_a02(bool print = false) {
-  std::cout << "[TEST]: A02.Constructs a `vec/mat/cube` with the specified "
-               "number of elements in each dimension.\n";
+  std::cout << "[TEST]: A02. Dimensions only\n"
+            << "        vec: explicit vec(n_rows)\n"
+            << "        mat: mat(n_rows, n_cols)\n"
+            << "        cube: cube(n_rows, n_cols, n_slices)" << std::endl;
 
   Matrix<double, 1> mat1d(4);
   if (print) test_print(mat1d, "mat1d =");
@@ -97,8 +101,11 @@ void matrix_test_constructor_a02(bool print = false) {
 
 void matrix_test_constructor_a03(bool print = false) {
   std::cout
-      << "[TEST]: A03.Constructs a `vec/mat/cube` with all elements set to "
-         "`val` and the specified number of elements in each dimension.\n";
+      << "[TEST]: A03. Elements (single value) + Dimensions\n"
+      << "        vec: vec(const elem_type& val, n_rows)\n"
+      << "        mat: mat(const elem_type& val, n_rows, n_cols)\n"
+      << "        cube: cube(const elem_type& val, n_rows, n_cols, n_slides)"
+      << std::endl;
 
   Matrix<double, 1> mat1d(1.0, 4);
   if (print) test_print(mat1d, "mat1d =");
@@ -127,9 +134,12 @@ void matrix_test_constructor_a03(bool print = false) {
 }
 
 void matrix_test_constructor_a04(bool print = false) {
-  std::cout << "[TEST]: A04.Constructs a `vec/mat/cube` with elements set to "
-               "the contents of array pointed by `vals` and the specified "
-               "number of elements in each dimension.\n";
+  std::cout
+      << "[TEST]: A04. Elements (raw array) + Dimension\n"
+      << "        vec: vec(const elem_type* vals, n_rows)\n"
+      << "        mat: mat(const elem_type* vals, n_rows, n_cols)\n"
+      << "        cube: cube(const elem_type* vals, n_rows, n_cols, n_slides)"
+      << std::endl;
 
   const double a1[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d(a1, 4);
@@ -176,8 +186,10 @@ void matrix_test_constructor_a04(bool print = false) {
 }
 
 void matrix_test_constructor_a05(bool print = false) {
-  std::cout << "[TEST]: A05.Copy constructor. Constructs a `vec/mat/cube` from "
-               "another one using copy semantics.\n";
+  std::cout << "[TEST]: A05. Copy constructor\n"
+            << "        vec: vec(const vec& other)\n"
+            << "        mat: mat(const mat& other)\n"
+            << "        cube: cube(const cube& other)" << std::endl;
 
   const double a1[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d_a(a1, 4);
@@ -227,8 +239,10 @@ void matrix_test_constructor_a05(bool print = false) {
 }
 
 void matrix_test_constructor_a06(bool print = false) {
-  std::cout << "[TEST]: A06.Move constructor. Constructs a `vec/mat/cube` from "
-               "another one using move semantics.\n";
+  std::cout << "[TEST]: A06. Move constructor\n"
+            << "        vec: vec(vec&& other) noexcept\n"
+            << "        mat: mat(mat&& other) noexcept\n"
+            << "        cube: cube(cube&& other) noexcept" << std::endl;
 
 #if defined __MATRIX_LIB_USE_CPP11
   const double a1[] = {1, 2, 3, 4};
@@ -282,17 +296,44 @@ void matrix_test_constructor_a06(bool print = false) {
 }
 
 void matrix_test_constructor_a07(bool print = false) {
+  std::cout << "[TEST]: A07. Constructor with Sub-Matrix (SliceMatrix)\n"
+            << "        vec: vec(slice_vec)\n"
+            << "        mat: mat(slice_vec)" << std::endl;
+
   const double a[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
   Matrix<double, 2> mat2d(a, 4, 3);
 
+  Matrix<double, 1> mat1d_row(mat2d.row(1));
+  if (print) test_print(mat1d_row, "mat1d_row = ");
+  assert(mat1d_row.n_elem() == 3);
+  assert(mat1d_row.n_rows() == 1);
+  assert(mat1d_row.n_cols() == 3);
+  assert(mat1d_row(0) == 2);
+  assert(mat1d_row(1) == 6);
+  assert(mat1d_row(2) == 10);
   Matrix<double, 2> mat2d_row = mat2d.row(1);
   if (print) test_print(mat2d_row, "mat2d_row = ");
+  assert(mat2d_row.n_elem() == 3);
+  assert(mat2d_row.n_rows() == 1);
+  assert(mat2d_row.n_cols() == 3);
   assert(mat2d_row(0, 0) == 2);
   assert(mat2d_row(0, 1) == 6);
   assert(mat2d_row(0, 2) == 10);
 
+  Matrix<double, 1> mat1d_col(mat2d.col(2));
+  if (print) test_print(mat1d_col, "mat1d_col = ");
+  assert(mat1d_col.n_elem() == 4);
+  assert(mat1d_col.n_rows() == 4);
+  assert(mat1d_col.n_cols() == 1);
+  assert(mat1d_col(0) == 9);
+  assert(mat1d_col(1) == 10);
+  assert(mat1d_col(2) == 11);
+  assert(mat1d_col(3) == 12);
   Matrix<double, 2> mat2d_col = mat2d.col(2);
   if (print) test_print(mat2d_col, "mat2d_col = ");
+  assert(mat2d_col.n_elem() == 4);
+  assert(mat2d_col.n_rows() == 4);
+  assert(mat2d_col.n_cols() == 1);
   assert(mat2d_col(0, 0) == 9);
   assert(mat2d_col(1, 0) == 10);
   assert(mat2d_col(2, 0) == 11);
