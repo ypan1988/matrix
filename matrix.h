@@ -195,10 +195,10 @@ struct Matrix<_Tp, 1> : public _Matrix_base<_Tp> {
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(); }
   Matrix(const         Matrix        & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
-  Matrix(const    SliceMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
-  Matrix(const   GsliceMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
-  Matrix(const IndirectMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
-  Matrix(const     MaskMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(); }
+  Matrix(const    SliceMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(); }
+  Matrix(const   GsliceMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(); }
+  Matrix(const IndirectMatrix<_Tp, 1>& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(); }
+  Matrix(const     MaskMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(); }
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
   Matrix(std::initializer_list<_Tp> __x) : _Matrix_base<_Tp>(__x) { _M_init(); }
@@ -361,9 +361,9 @@ struct Matrix<_Tp, 2> : public _Matrix_base<_Tp> {
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(0, 0); }
   Matrix(const         Matrix        & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
-  Matrix(const    SliceMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem) { __x.is_column_vector? _M_init(this->n_elem(), 1) : _M_init(1, this->n_elem()); }
-  Matrix(const   GsliceMatrix<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
-  Matrix(const IndirectMatrix<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const    SliceMatrix<_Tp   >& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { __x.is_column_vector? _M_init(this->n_elem(), 1) : _M_init(1, this->n_elem()); }
+  Matrix(const   GsliceMatrix<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(__x._M_dims); }
+  Matrix(const IndirectMatrix<_Tp, 2>& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(__x._M_dims); }
 
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
@@ -528,8 +528,8 @@ struct Matrix<_Tp, 3> : public _Matrix_base<_Tp> {
   // construct/destroy:
   Matrix() : _Matrix_base<_Tp>() { _M_init(0, 0, 0); }
   Matrix(const         Matrix        & __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
-  Matrix(const   GsliceMatrix<_Tp, 3>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
-  Matrix(const IndirectMatrix<_Tp, 3>& __x) : _Matrix_base<_Tp>(__x._M_elem) { _M_init(__x._M_dims); }
+  Matrix(const   GsliceMatrix<_Tp, 3>& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(__x._M_dims); }
+  Matrix(const IndirectMatrix<_Tp, 3>& __x) : _Matrix_base<_Tp>(__x._M_elem[__x._M_desc]) { _M_init(__x._M_dims); }
 
 #if defined(__MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& __x) = default;
@@ -1181,15 +1181,19 @@ template <class _Tp>
 struct SliceMatrix {
  public:
   typedef _Tp elem_type;
-  std::slice_array<_Tp> _M_elem;
+  std::valarray<_Tp>& _M_elem;
+  std::slice _M_desc;
   bool is_column_vector;
   SliceMatrix(std::valarray<_Tp>& __va, uword __start, uword __size,
               uword __stride, bool __is_colvec = true)
-      : _M_elem(__va[std::slice(__start, __size, __stride)]),
+      : _M_elem(__va),
+        _M_desc(__start, __size, __stride),
         is_column_vector(__is_colvec) {}
-  void operator=(const _Tp& __value) { _M_elem = __value; }
+  void operator=(const _Tp& __value) { _M_elem[_M_desc] = __value; }
 
-  std::valarray<_Tp> get_elem() const { return std::valarray<_Tp>(_M_elem); }
+  std::valarray<_Tp> get_elem() const {
+    return std::valarray<_Tp>(_M_elem[_M_desc]);
+  }
 
   elem_type sum() const { return get_elem().sum(); }
   elem_type min() const { return get_elem().min(); }
@@ -1203,11 +1207,12 @@ template <class _Tp, uword _Size>
 struct GsliceMatrix {
  public:
   typedef _Tp elem_type;
-  std::gslice_array<_Tp> _M_elem;
+  std::valarray<_Tp>& _M_elem;
+  std::gslice _M_desc;
   uword _M_dims[_Size];
   GsliceMatrix(std::valarray<_Tp>& __va, uword __start,
                const index_array& __size, const index_array& __stride)
-      : _M_elem(__va[std::gslice(__start, __size, __stride)]) {
+      : _M_elem(__va), _M_desc(__start, __size, __stride) {
     uword n = __size.size();
     for (uword idx = 0; idx < n; ++idx) {
       _M_dims[idx] = __size[n - idx - 1];
@@ -1215,16 +1220,19 @@ struct GsliceMatrix {
   }
   GsliceMatrix(std::valarray<_Tp>& __va, uword __start,
                const uword __size[_Size], const uword __stride[_Size])
-      : _M_elem(__va[std::gslice(__start, index_array(__size, _Size),
-                                 index_array(__stride, _Size))]) {
+      : _M_elem(__va),
+        _M_desc(__start, index_array(__size, _Size),
+                index_array(__stride, _Size)) {
     uword n = _Size;
     for (uword idx = 0; idx < n; ++idx) {
       _M_dims[idx] = __size[n - idx - 1];
     }
   }
-  void operator=(const _Tp& __value) { _M_elem = __value; }
+  void operator=(const _Tp& __value) { _M_elem[_M_desc] = __value; }
 
-  std::valarray<_Tp> get_elem() const { return std::valarray<_Tp>(_M_elem); }
+  std::valarray<_Tp> get_elem() const {
+    return std::valarray<_Tp>(_M_elem[_M_desc]);
+  }
 
   elem_type sum() const { return get_elem().sum(); }
   elem_type min() const { return get_elem().min(); }
@@ -1238,18 +1246,21 @@ template <class _Tp, uword _Size>
 struct IndirectMatrix {
  public:
   typedef _Tp elem_type;
-  std::indirect_array<_Tp> _M_elem;
+  std::valarray<_Tp>& _M_elem;
+  index_array _M_desc;
   uword _M_dims[_Size];
   IndirectMatrix(std::valarray<_Tp>& __va, const index_array& __ind_arr,
                  const uword __dims[_Size])
-      : _M_elem(__va[__ind_arr]) {
+      : _M_elem(__va), _M_desc(__ind_arr) {
     for (uword idx = 0; idx < _Size; ++idx) {
       _M_dims[idx] = __dims[idx];
     }
   }
-  void operator=(const _Tp& __value) { _M_elem = __value; }
+  void operator=(const _Tp& __value) { _M_elem[_M_desc] = __value; }
 
-  std::valarray<_Tp> get_elem() const { return std::valarray<_Tp>(_M_elem); }
+  std::valarray<_Tp> get_elem() const {
+    return std::valarray<_Tp>(_M_elem[_M_desc]);
+  }
 
   elem_type sum() const { return get_elem().sum(); }
   elem_type min() const { return get_elem().min(); }
@@ -1263,12 +1274,15 @@ template <class _Tp>
 struct MaskMatrix {
  public:
   typedef _Tp elem_type;
-  std::mask_array<_Tp> _M_elem;
+  std::valarray<_Tp>& _M_elem;
+  bool_array _M_desc;
   MaskMatrix(std::valarray<_Tp>& __va, const bool_array& __boolarr)
-      : _M_elem(__va[__boolarr]) {}
-  void operator=(const _Tp& __value) { _M_elem = __value; }
+      : _M_elem(__va), _M_desc(__boolarr) {}
+  void operator=(const _Tp& __value) { _M_elem[_M_desc] = __value; }
 
-  std::valarray<_Tp> get_elem() const { return std::valarray<_Tp>(_M_elem); }
+  std::valarray<_Tp> get_elem() const {
+    return std::valarray<_Tp>(_M_elem[_M_desc]);
+  }
 
   elem_type sum() const { return get_elem().sum(); }
   elem_type min() const { return get_elem().min(); }
