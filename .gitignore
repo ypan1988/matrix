@@ -5,3 +5,5 @@
 *.obj
 *.tds
 *.xlsx
+.idea
+cmake-build-debug
