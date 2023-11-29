@@ -244,7 +244,7 @@ void matrix_test_constructor_a06(bool print = false) {
             << "        mat: mat(mat&& other) noexcept\n"
             << "        cube: cube(cube&& other) noexcept" << std::endl;
 
-#if defined __MATRIX_LIB_USE_CPP11
+#if defined MATRIX_LIB_USE_CPP11
   const double a1[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d_a(a1, 4);
   Matrix<double, 1> mat1d_b(std::move(mat1d_a));
@@ -340,12 +340,54 @@ void matrix_test_constructor_a07(bool print = false) {
   assert(mat2d_col(3, 0) == 12);
 }
 
+void matrix_test_constructor_a08(bool print = false) {
+  std::cout << "[TEST]: A08. Constructor with Sub-Matrix (GsliceMatrix)\n"
+            << "        vec: vec(gslice_vec)\n"
+            << "        mat: mat(gslice_mat)\n"
+            << "        cube: cube(gslice_cube)" << std::endl;
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a1, 4);
+  Matrix<double, 1> mat1d_b(mat1d_a.subvec(1, 2));
+  if (print) test_print(mat1d_b, "mat1d_b =");
+  assert(mat1d_b.n_elem() == 2);
+  assert(mat1d_b.n_rows() == 2);
+  assert(mat1d_b.n_cols() == 1);
+  assert(mat1d_b(0) == 2.0);
+  assert(mat1d_b(1) == 3.0);
+
+  const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d_a(a2, 4, 3);
+  Matrix<double, 2> mat2d_b(mat2d_a.submat(2, 1, 3, 2));
+  if (print) test_print(mat2d_b, "mat2d_b =");
+  assert(mat2d_b.n_elem() == 4);
+  assert(mat2d_b.n_rows() == 2);
+  assert(mat2d_b.n_cols() == 2);
+  assert(mat2d_b(0, 0) == 7.0);
+  assert(mat2d_b(1, 0) == 8.0);
+  assert(mat2d_b(0, 1) == 11.0);
+  assert(mat2d_b(1, 1) == 12.0);
+
+  const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                       13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  Matrix<double, 3> mat3d_a(a3, 4, 3, 2);
+  Matrix<double, 3> mat3d_b(mat3d_a.subcube(2, 1, 1, 3, 2, 1));
+  if (print) test_print(mat3d_b, "mat3d_b =");
+  assert(mat3d_b.n_elem() == 4);
+  assert(mat3d_b.n_rows() == 2);
+  assert(mat3d_b.n_cols() == 2);
+  assert(mat3d_b.n_slices() == 1);
+  assert(mat3d_b(0, 0, 0) == 19.0);
+  assert(mat3d_b(1, 0, 0) == 20.0);
+  assert(mat3d_b(0, 1, 0) == 23.0);
+  assert(mat3d_b(1, 1, 0) == 24.0);
+}
+
 void matrix_test_constructor_a11(bool print = false) {
   std::cout << "[TEST]: A11.Constructs a `vec/mat/cube` with elements set to "
                "the contents of the `initializer_list` and the specified "
                "number of elements in each dimension.\n";
 
-#if defined __MATRIX_LIB_USE_CPP11
+#if defined MATRIX_LIB_USE_CPP11
   Matrix<double, 1> mat1d({1, 2, 3, 4});
   if (print) test_print(mat1d, "mat1d =");
   assert(mat1d.n_elem() == 4);
@@ -471,7 +513,7 @@ void matrix_test_constructor_14(bool print = false) {
   std::cout << "[TEST]: Constructs a Matrix <- from -> a Vector using move "
                "semantics\n";
 
-#if defined(__MATRIX_LIB_USE_CPP11)
+#if defined(MATRIX_LIB_USE_CPP11)
   const double a[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d_a(a, 4);
   Matrix<double, 2> mat2d_a(a, 4, 1);
@@ -548,7 +590,7 @@ void matrix_test_assignment_1(bool print = false) {
 void matrix_test_assignment_2(bool print = false) {
   std::cout << "[TEST]: Assigns a Matrix with other matrix (move assign)\n";
 
-#if defined __MATRIX_LIB_USE_CPP11
+#if defined MATRIX_LIB_USE_CPP11
   const double a1[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d_a(a1, 4);
   Matrix<double, 1> mat1d_b;
@@ -664,7 +706,7 @@ void matrix_test_assignment_5(bool print = false) {
   std::cout << "[TEST]: Assigns a Matrix <- with -> a Vector using move "
                "semantics\n";
 
-#if defined(__MATRIX_LIB_USE_CPP11)
+#if defined(MATRIX_LIB_USE_CPP11)
   const double a[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d_a(a, 4), mat1d_b;
   Matrix<double, 2> mat2d_a(a, 4, 1), mat2d_b;
@@ -1008,7 +1050,7 @@ void matrix_test_member_function_max(bool print = false) {
   assert(mat3d.max() == 24.0);
 }
 
-#if defined __MATRIX_LIB_USE_CPP11
+#if defined MATRIX_LIB_USE_CPP11
 auto fun = [](double& val) { val += 10.0; };
 #else
 void fun(double& val) { val += 10.0; }
@@ -2009,6 +2051,7 @@ int main() {
   matrix_test_constructor_a05(print_flag);
   matrix_test_constructor_a06(print_flag);
   matrix_test_constructor_a07(print_flag);
+  matrix_test_constructor_a08(print_flag);
   matrix_test_constructor_a11(print_flag);
   matrix_test_constructor_a12(print_flag);
   matrix_test_constructor_13(print_flag);
