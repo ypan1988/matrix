@@ -51,15 +51,17 @@ inline void error(const char* p) {
 #endif
 
 #ifndef NDEBUG
-#define matrix_assert(expr, msg)                                        \
-  if (!(expr)) {                                                        \
-    std::stringstream ss;                                               \
-    ss << std::endl                                                     \
-       << __FILE__ << ":" << __LINE__ << " assertion failed: " << #expr \
-       << "\n"                                                          \
-       << msg << std::endl;                                             \
-    error(ss.str().c_str());                                            \
-  }
+#define matrix_assert(expr, msg)                                          \
+  do {                                                                    \
+    if (!(expr)) {                                                        \
+      std::stringstream ss;                                               \
+      ss << std::endl                                                     \
+         << __FILE__ << ":" << __LINE__ << " assertion failed: " << #expr \
+         << "\n"                                                          \
+         << msg << std::endl;                                             \
+      error(ss.str().c_str());                                            \
+    }                                                                     \
+  } while (false)
 #else
 #define matrix_assert(expr)
 #endif
