@@ -187,7 +187,6 @@ template <class Tp>
 struct Matrix<Tp, 1> : public Matrix_base<Tp> {
  public:
   typedef Tp elem_type;
-  bool is_column_vector;
   friend struct Matrix<Tp, 2>;
   friend struct Matrix<Tp, 3>;
 
@@ -305,9 +304,20 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
   Matrix& operator>>=(const Matrix& x) { this->M_elem >>= x.M_elem; return *this; }
   // clang-format on
 
+#if defined(MATRIX_LIB_USE_CPP11)
+ public:
+  bool is_column_vector = true;
+
+ private:
+  uword M_dims[1] = {0};
+#else
+ public:
+  bool is_column_vector;
+
  private:
   uword M_dims[1];
-
+#endif
+ private:
   void _M_init(bool is_colvec = true) {
     M_dims[0] = this->n_elem();
     is_column_vector = is_colvec;
@@ -487,7 +497,11 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
   // clang-format on
 
  private:
+#if defined(MATRIX_LIB_USE_CPP11)
+  uword M_dims[2] = {0, 0};
+#else
   uword M_dims[2];
+#endif
 
   void _M_init(uword n1, uword n2) {
     if (this->n_elem() != n1 * n2) error("2D Cstor error: dimension mismatch");
@@ -635,8 +649,11 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
   // clang-format on
 
  private:
+#if defined(MATRIX_LIB_USE_CPP11)
+  uword M_dims[3] = {0, 0, 0}, _M_d1xd2 = 0;
+#else
   uword M_dims[3], _M_d1xd2;
-
+#endif
   void _M_init(uword n1, uword n2, uword n3) {
     if (this->n_elem() != n1 * n2 * n3)
       error("3D Cstor error: dimension mismatch");
