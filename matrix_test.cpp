@@ -437,6 +437,33 @@ void matrix_test_constructor_a09(bool print = false) {
   assert(mat3d_b(1, 1, 0) == 24);
 }
 
+void matrix_test_constructor_a10(bool print = false) {
+  std::cout << "[TEST]: A10. Constructor with Sub-Matrix (MaskMatrix)\n"
+            << "        vec: vec(mask_vec)\n"
+            << "        mat: mat(mask_vec)" << std::endl;
+
+  const bool idx[4] = {false, true, false, true};
+  std::valarray<bool> bool_arr(idx, 4);
+
+  const double a[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a, 4);
+  Matrix<double, 1> mat1d_b = mat1d_a(bool_arr);
+  if (print) test_print(mat1d_b, "mat1d_b = ");
+  assert(mat1d_b.n_elem() == 2);
+  assert(mat1d_b.n_rows() == 2);
+  assert(mat1d_b.n_cols() == 1);
+  assert(mat1d_b(0) == 2);
+  assert(mat1d_b(1) == 4);
+
+  Matrix<double, 2> mat2d = mat1d_a(bool_arr);
+  if (print) test_print(mat2d, "mat2d = ");
+  assert(mat2d.n_elem() == 2);
+  assert(mat2d.n_rows() == 2);
+  assert(mat2d.n_cols() == 1);
+  assert(mat2d(0, 0) == 2);
+  assert(mat2d(1, 0) == 4);
+}
+
 void matrix_test_constructor_a11(bool print = false) {
   std::cout << "[TEST]: A11.Constructs a `vec/mat/cube` with elements set to "
                "the contents of the `initializer_list` and the specified "
@@ -2108,6 +2135,7 @@ int main() {
   matrix_test_constructor_a07(print_flag);
   matrix_test_constructor_a08(print_flag);
   matrix_test_constructor_a09(print_flag);
+  matrix_test_constructor_a10(print_flag);
   matrix_test_constructor_a11(print_flag);
   matrix_test_constructor_a12(print_flag);
   matrix_test_constructor_13(print_flag);

@@ -377,6 +377,7 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
   Matrix(const    SliceMatrix<Tp   >& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { x.is_column_vector? M_init(this->n_elem(), 1) : M_init(1, this->n_elem()); }
   Matrix(const   GsliceMatrix<Tp, 2>& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(x.M_dims); }
   Matrix(const IndirectMatrix<Tp, 2>& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(x.M_dims); }
+  Matrix(const     MaskMatrix<Tp   >& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(this->n_elem(), 1); }
 
 #if defined(MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& x) = default;
