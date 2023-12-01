@@ -198,31 +198,27 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
 
   // clang-format off
   // construct/destroy:
-  Matrix()                               : Matrix_base<Tp>(                  ) { M_init(); }
-  Matrix(const         Matrix       & x) : Matrix_base<Tp>(x.M_elem          ) { M_init(); }
-  Matrix(const    SliceMatrix<Tp   >& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(x.is_column_vector); }
-  Matrix(const   GsliceMatrix<Tp, 1>& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(); }
-  Matrix(const IndirectMatrix<Tp, 1>& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(); }
-  Matrix(const     MaskMatrix<Tp   >& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(); }
+  Matrix()                               : Matrix_base<Tp>(                  ) { M_init(); }    // (1)
+  explicit Matrix(uword n1)              : Matrix_base<Tp>(n1                ) { M_init(); }    // (2)
+  Matrix(const elem_type& x, uword n1)   : Matrix_base<Tp>(x, n1             ) { M_init(); }    // (3)
+  Matrix(const elem_type* x, uword n1)   : Matrix_base<Tp>(x, n1             ) { M_init(); }    // (4)
+  Matrix(const         Matrix       & x) : Matrix_base<Tp>(x.M_elem          ) { M_init(); }    // (5)
+  Matrix(const    SliceMatrix<Tp   >& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(x.is_column_vector); }    // (7)
+  Matrix(const   GsliceMatrix<Tp, 1>& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(); }    // (8)
+  Matrix(const IndirectMatrix<Tp, 1>& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(); }    // (9)
+  Matrix(const     MaskMatrix<Tp   >& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(); }    // (10)
+  Matrix(const std::valarray<Tp>    & x) : Matrix_base<Tp>(x                 ) { M_init(); }    // (12)
 #if defined(MATRIX_LIB_USE_CPP11)
-  Matrix(Matrix&& x) = default;
-  Matrix(std::initializer_list<Tp> x) : Matrix_base<Tp>(x) { M_init(); }
+  Matrix(Matrix&& x) = default;                                                                 // (6)
+  Matrix(std::initializer_list<Tp>    x) : Matrix_base<Tp>(x                 ) { M_init(); }    // (11)
   Matrix(Matrix<Tp, 2>&& x);
 #endif
-  explicit Matrix(uword n1) : Matrix_base<Tp>(n1) { M_init(); }
-  Matrix(const elem_type& x, uword n1) : Matrix_base<Tp>(x, n1) { M_init(); }
-  Matrix(const elem_type* x, uword n1) : Matrix_base<Tp>(x, n1) { M_init(); }
-  Matrix(const std::valarray<Tp>      & x) : Matrix_base<Tp>(x) { M_init(); }
-  Matrix(const std::slice_array<Tp>   & x) : Matrix_base<Tp>(x) { M_init(); }
-  Matrix(const std::gslice_array<Tp>  & x) : Matrix_base<Tp>(x) { M_init(); }
-  Matrix(const std::mask_array<Tp>    & x) : Matrix_base<Tp>(x) { M_init(); }
-  Matrix(const std::indirect_array<Tp>& x) : Matrix_base<Tp>(x) { M_init(); }
+#if defined(MATRIX_LIB_USE_R)
+  Matrix(SEXP                         x) : Matrix_base<Tp>(x                 ) { M_init(); }
+#endif
   Matrix(const std::valarray<Tp>& x, const uword      dims[1]) : Matrix_base<Tp>(x) { M_init(dims); }
   Matrix(const std::valarray<Tp>& x, const index_array& dims ) : Matrix_base<Tp>(x) { M_init(dims); }
   Matrix(const Matrix<Tp, 2>& x);
-#if defined(MATRIX_LIB_USE_R)
-  Matrix(SEXP x) : Matrix_base<Tp>(x) { M_init();  }
-#endif
   ~Matrix() {}
 
   // assignment
