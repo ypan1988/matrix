@@ -80,9 +80,13 @@ struct Matrix {
   // multidimensional matrix class
   // ( ) does multidimensional subscripting with range check
   // [ ] retrieves single element or portions of the matrix
+#if defined(MATRIX_LIB_USE_CPP11)
+  Matrix() = delete;
+#else
  private:
   Matrix();  // this should never be compiled
              //	template<class A> Matrix(A);
+#endif
 };
 
 template <class Tp = double>

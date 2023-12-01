@@ -382,6 +382,61 @@ void matrix_test_constructor_a08(bool print = false) {
   assert(mat3d_b(1, 1, 0) == 24.0);
 }
 
+void matrix_test_constructor_a09(bool print = false) {
+  std::cout << "[TEST]: A09. Constructor with Sub-Matrix (IndirectMatrix)\n"
+            << "        vec: vec(indirect_vec)\n"
+            << "        mat: mat(indirect_mat)\n"
+            << "        cube: cube(indirect_cube)" << std::endl;
+
+  const std::size_t idx1[2] = {1, 3};
+  std::valarray<std::size_t> idx_arr1(idx1, 2);
+
+  const double arr_1d[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(arr_1d, 4);
+
+  Matrix<double, 1> mat1d_b = mat1d_a(idx_arr1);
+  if (print) test_print(mat1d_b, "mat1d_c = ");
+  assert(mat1d_b.n_elem() == 2);
+  assert(mat1d_b.n_rows() == 2);
+  assert(mat1d_b.n_cols() == 1);
+  assert(mat1d_b(0) == 2);
+  assert(mat1d_b(1) == 4);
+
+  const std::size_t idx2[2] = {0, 2};
+  std::valarray<std::size_t> idx_arr2(idx2, 2);
+
+  const double arr_2d[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  Matrix<double, 2> mat2d_a(arr_2d, 4, 3);
+
+  Matrix<double, 2> mat2d_b = mat2d_a(idx_arr1, idx_arr2);
+  if (print) test_print(mat2d_b, "mat2d_b = ");
+  assert(mat2d_b.n_elem() == 4);
+  assert(mat2d_b.n_rows() == 2);
+  assert(mat2d_b.n_cols() == 2);
+  assert(mat2d_b(0, 0) == 2);
+  assert(mat2d_b(0, 1) == 10);
+  assert(mat2d_b(1, 0) == 4);
+  assert(mat2d_b(1, 1) == 12);
+
+  const std::size_t idx3[3] = {1};
+  std::valarray<std::size_t> idx_arr3(idx3, 1);
+
+  const double arr_3d[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                           13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+  Matrix<double, 3> mat3d_a(arr_3d, 4, 3, 2);
+
+  Matrix<double, 3> mat3d_b = mat3d_a(idx_arr1, idx_arr2, idx_arr3);
+  if (print) test_print(mat3d_b, "mat3d_b = ");
+  assert(mat3d_b.n_elem() == 4);
+  assert(mat3d_b.n_rows() == 2);
+  assert(mat3d_b.n_cols() == 2);
+  assert(mat3d_b.n_slices() == 1);
+  assert(mat3d_b(0, 0, 0) == 14);
+  assert(mat3d_b(0, 1, 0) == 22);
+  assert(mat3d_b(1, 0, 0) == 16);
+  assert(mat3d_b(1, 1, 0) == 24);
+}
+
 void matrix_test_constructor_a11(bool print = false) {
   std::cout << "[TEST]: A11.Constructs a `vec/mat/cube` with elements set to "
                "the contents of the `initializer_list` and the specified "
@@ -2052,6 +2107,7 @@ int main() {
   matrix_test_constructor_a06(print_flag);
   matrix_test_constructor_a07(print_flag);
   matrix_test_constructor_a08(print_flag);
+  matrix_test_constructor_a09(print_flag);
   matrix_test_constructor_a11(print_flag);
   matrix_test_constructor_a12(print_flag);
   matrix_test_constructor_13(print_flag);
