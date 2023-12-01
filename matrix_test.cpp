@@ -291,7 +291,7 @@ void matrix_test_constructor_a06(bool print = false) {
   assert(mat3d_b(2, 2, 1) == 23.0);
   assert(mat3d_b(3, 2, 1) == 24.0);
 #else
-  std::cout << "[WARNING]: TEST A06 SKIPPED (C++11 NOT SUPPORTED)\n";
+  std::cout << "[NOTE]: TEST A06 SKIPPED (C++11 NOT SUPPORTED)\n";
 #endif
 }
 
@@ -465,9 +465,11 @@ void matrix_test_constructor_a10(bool print = false) {
 }
 
 void matrix_test_constructor_a11(bool print = false) {
-  std::cout << "[TEST]: A11.Constructs a `vec/mat/cube` with elements set to "
-               "the contents of the `initializer_list` and the specified "
-               "number of elements in each dimension.\n";
+  std::cout << "[TEST]: A11. Elements (initializer list) + Dimension\n"
+            << "        vec: vec(initializer_list)\n"
+            << "        mat: mat(initializer_list, n_rows, n_cols)\n"
+            << "        cube: cube(initializer_list, n_rows, n_cols, n_slices)"
+            << std::endl;
 
 #if defined MATRIX_LIB_USE_CPP11
   Matrix<double, 1> mat1d({1, 2, 3, 4});
@@ -511,14 +513,16 @@ void matrix_test_constructor_a11(bool print = false) {
   assert(mat3d(2, 2, 1) == 23.0);
   assert(mat3d(3, 2, 1) == 24.0);
 #else
-  std::cout << "[WARNING]: TEST A08 SKIPPED (C++11 NOT SUPPORTED)\n";
+  std::cout << "[NOTE]: TEST A08 SKIPPED (C++11 NOT SUPPORTED)\n";
 #endif
 }
 
 void matrix_test_constructor_a12(bool print = false) {
-  std::cout << "[TEST]: A12.Constructs a `vec/mat/cube` with elements set to "
-               "the contents of the `valarray` and the specified number of "
-               "elements in each dimension.\n";
+  std::cout << "[TEST]: A12. Elements (valarray) + Dimension\n"
+            << "        vec: vec(valarray)\n"
+            << "        mat: mat(valarray, n_rows, n_cols)\n"
+            << "        cube: cube(valarray, n_rows, n_cols, n_slices)"
+            << std::endl;
 
   const double a1[] = {1, 2, 3, 4};
   const std::valarray<double> va1(a1, 4);
@@ -567,8 +571,10 @@ void matrix_test_constructor_a12(bool print = false) {
   assert(mat3d(3, 2, 1) == 24.0);
 }
 
-void matrix_test_constructor_13(bool print = false) {
-  std::cout << "[TEST]: Constructs a Matrix <- from -> a Vector\n";
+void matrix_test_constructor_a13(bool print = false) {
+  std::cout << "[TEST]: A13. Constructs a Matrix <- from -> a Vector\n"
+            << "        vec: vec(const mat&)\n"
+            << "        mat: mat(const vec&)" << std::endl;
 
   const double a[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d_a(a, 4);
@@ -591,9 +597,10 @@ void matrix_test_constructor_13(bool print = false) {
   assert(mat2d_b(3, 0) == 4.0);
 }
 
-void matrix_test_constructor_14(bool print = false) {
-  std::cout << "[TEST]: Constructs a Matrix <- from -> a Vector using move "
-               "semantics\n";
+void matrix_test_constructor_a14(bool print = false) {
+  std::cout << "[TEST]: A14. Constructs a Matrix <- from -> a Vector (move)\n"
+            << "        vec: vec(mat&&)\n"
+            << "        mat: mat(vec&&)" << std::endl;
 
 #if defined(MATRIX_LIB_USE_CPP11)
   const double a[] = {1, 2, 3, 4};
@@ -621,7 +628,7 @@ void matrix_test_constructor_14(bool print = false) {
   assert(mat2d_b(2, 0) == 3.0);
   assert(mat2d_b(3, 0) == 4.0);
 #else
-  std::cout << "... TEST SKIPPED (C++11 NOT SUPPORTED)\n";
+  std::cout << "[NOTE]: TEST A14 SKIPPED (C++11 NOT SUPPORTED)\n";
 #endif
 }
 
@@ -2125,7 +2132,8 @@ int main() {
 
   bool print_flag = false;
 
-  std::cout << "----- A: Testing Matrix<T, N> Constructions -----" << std::endl;
+  std::cout << "\n----- A: Testing Matrix<T, N> Constructions -----\n"
+            << std::endl;
   matrix_test_constructor_a01(print_flag);
   matrix_test_constructor_a02(print_flag);
   matrix_test_constructor_a03(print_flag);
@@ -2138,10 +2146,11 @@ int main() {
   matrix_test_constructor_a10(print_flag);
   matrix_test_constructor_a11(print_flag);
   matrix_test_constructor_a12(print_flag);
-  matrix_test_constructor_13(print_flag);
-  matrix_test_constructor_14(print_flag);
+  matrix_test_constructor_a13(print_flag);
+  matrix_test_constructor_a14(print_flag);
 
-  std::cout << "----- B: Testing Matrix<T, N> Assignments -----" << std::endl;
+  std::cout << "\n----- B: Testing Matrix<T, N> Assignments -----\n"
+            << std::endl;
   matrix_test_assignment_1(print_flag);
   matrix_test_assignment_2(print_flag);
   matrix_test_assignment_3(print_flag);
