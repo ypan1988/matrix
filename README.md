@@ -98,7 +98,7 @@ These wrapper classes behave just like the `Matrix` except they refer to a `Matr
 | `vec(initializer_list)`              <br> `mat(initializer_list, n_rows, n_cols)`      <br> `cube(initializer_list, n_rows, n_cols, n_slices)`      | (11) C++11 |
 | `vec(valarray)`                      <br> `mat(valarray, n_rows, n_cols)`              <br> `cube(valarray, n_rows, n_cols, n_slides)`              | (12)       |
 | `vec(const mat&)`                    <br> `mat(const vec&)`                            <br>                                                         | (13)       |
-| `vec(mat&&)`                         <br> `mat(vec&&)`                                 <br>                                                         | (14)       |
+| `vec(mat&&)`                         <br> `mat(vec&&)`                                 <br>                                                         | (14) C++11 |
 | `~vec()`                             <br> `~mat()`                                     <br> `~cube()`                                               | (15)       |
 
 The table above provides ways to construct new matrix from various sources:
@@ -119,20 +119,28 @@ The table above provides ways to construct new matrix from various sources:
   15) Destructs the `vec/mat/cube`. The destructors of the elements (if **T** is a class) are called and the used storage is deallocated.
 
 ### Assignments
-| Matrix<T, N>::operator= <br> (with T = double, N = 1/2/3)                                                                       |   |
-| :-----------------------------------------------------------------------------------------------------------------------------  |---|
-| `vec& operator=(const vec& other)`     <br> `mat& operator=(const mat& other)`     <br> `cube& operator=(const cube& other)`    |(1)|
-| `vec& operator=(vec&& other)`          <br> `mat& operator=(mat&& other)`          <br> `cube& operator=(cube&& other)`         |(2) C++11 |
-| `vec& operator=(const mat& other)`     <br> `mat& operator=(const vec& other)`     <br>                                         |(3)|
-| `vec& operator=(mat&& other)`          <br> `mat& operator=(vec&& other)`          <br>                                         |(4) C++11 |
-| `vec& operator=(const elem_type& val)` <br> `mat& operator=(const elem_type& val)` <br> `cube& operator=(const elem_type& val)` |(5)|
+| Matrix<T, N>::operator= <br> (with T = double, N = 1/2/3)                                                                       |           |
+|:--------------------------------------------------------------------------------------------------------------------------------|-----------|
+| `vec& operator=(const vec& other)`     <br> `mat& operator=(const mat& other)`     <br> `cube& operator=(const cube& other)`    | (1)       |
+| `vec& operator=(vec&& other)`          <br> `mat& operator=(mat&& other)`          <br> `cube& operator=(cube&& other)`         | (2) C++11 |
+| `vec& operator=(const elem_type& val)` <br> `mat& operator=(const elem_type& val)` <br> `cube& operator=(const elem_type& val)` | (3)       |
+| `vec& operator=(slice_vec)`            <br> `mat& operator=(slice_vec)`            <br>                                         | (4)       |
+| `vec& operator=(gslice_vec)`           <br> `mat& operator=(gslice_mat)`           <br> `cube& operator=(gslice_cube)`          | (5)       |
+| `vec& operator=(indirect_vec)`         <br> `mat& operator=(indirect_mat)`         <br> `cube& operator=(indirect_cube)`        | (6)       |
+| `vec& operator=(mask_vec)`             <br> `mat& operator=(mask_vec)`             <br>                                         | (7)       |
+| `vec& operator=(const mat& other)`     <br> `mat& operator=(const vec& other)`     <br>                                         | (3)       |
+| `vec& operator=(mat&& other)`          <br> `mat& operator=(vec&& other)`          <br>                                         | (4) C++11 |
 
 The table above provides ways to replace the contents of the matrix:
   1) Copy assignment operator.
   2) Move assignment operator.
+  3) Replaces each value in `*this` with a copy of `val`.
+  4) Assignment with Sub-Matrix (SliceMatrix).
+  5) Assignment with Sub-Matrix (GSliceMatrix)
+  6) Assignment with Sub-Matrix (IndirectMatrix)
+  7) Assignment with Sub-Matrix (MaskMatrix)
   3) Copy assignment operator for the assignment between a `vec` and a **n x 1** `mat`.
   4) Move assignment operator for the assignment between a `vec` and a **n x 1** `mat`.
-  5) Replaces each value in `*this` with a copy of `val`.
 
 ## Subscripting and Slicing
 ### Matrix Subscripting
