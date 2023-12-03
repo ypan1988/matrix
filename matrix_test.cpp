@@ -10,10 +10,11 @@ using namespace matrix_lib;
 template <typename T>
 void test_print(const Matrix<T, 1>& m, std::string msg = "") {
   if (!msg.empty()) std::cout << msg << std::endl;
-  for (uword r = 0; r != m.n_rows(); ++r) {
+  for (uword r = 0; r != m.n_elem(); ++r) {
     std::cout << m(r);
-    std::cout << '\n';
+    m.is_column_vector ? std::cout << '\n' : std::cout << ' ';
   }
+  if (!m.is_column_vector) std::cout << std::endl;
 }
 
 template <typename T>
@@ -577,24 +578,55 @@ void matrix_test_constructor_a13(bool print = false) {
             << "        mat: mat(const vec&)" << std::endl;
 
   const double a[] = {1, 2, 3, 4};
-  Matrix<double, 1> mat1d_a(a, 4);
-  Matrix<double, 2> mat2d_a(a, 4, 1);
+  Matrix<double, 1> mat1d_a1(a, 4);
+  Matrix<double, 1> mat1d_a2(a, 4);
 
-  Matrix<double, 1> mat1d_b(mat2d_a);
-  Matrix<double, 2> mat2d_b(mat1d_a);
+  mat1d_a2.is_column_vector = false;
+  Matrix<double, 2> mat2d_a1(a, 4, 1);
+  Matrix<double, 2> mat2d_a2(a, 1, 4);
 
-  if (print) test_print(mat1d_b, "mat1d_b =");
-  if (print) test_print(mat2d_b, "mat2d_b =");
+  Matrix<double, 1> mat1d_b1(mat2d_a1);  // col
+  Matrix<double, 1> mat1d_b2(mat2d_a2);  // row
 
-  assert(mat1d_b(0) == 1.0);
-  assert(mat1d_b(1) == 2.0);
-  assert(mat1d_b(2) == 3.0);
-  assert(mat1d_b(3) == 4.0);
+  Matrix<double, 2> mat2d_b1(mat1d_a1);  // col
+  Matrix<double, 2> mat2d_b2(mat1d_a2);  // row
 
-  assert(mat2d_b(0, 0) == 1.0);
-  assert(mat2d_b(1, 0) == 2.0);
-  assert(mat2d_b(2, 0) == 3.0);
-  assert(mat2d_b(3, 0) == 4.0);
+  if (print) test_print(mat1d_b1, "mat1d_b1 =");
+  if (print) test_print(mat1d_b2, "mat1d_b2 =");
+  if (print) test_print(mat2d_b1, "mat2d_b1 =");
+  if (print) test_print(mat2d_b2, "mat2d_b2 =");
+
+  assert(mat1d_b1.n_elem() == 4);
+  assert(mat1d_b1.n_rows() == 4);
+  assert(mat1d_b1.n_cols() == 1);
+  assert(mat1d_b1(0) == 1.0);
+  assert(mat1d_b1(1) == 2.0);
+  assert(mat1d_b1(2) == 3.0);
+  assert(mat1d_b1(3) == 4.0);
+
+  assert(mat1d_b2.n_elem() == 4);
+  assert(mat1d_b2.n_rows() == 1);
+  assert(mat1d_b2.n_cols() == 4);
+  assert(mat1d_b2(0) == 1.0);
+  assert(mat1d_b2(1) == 2.0);
+  assert(mat1d_b2(2) == 3.0);
+  assert(mat1d_b2(3) == 4.0);
+
+  assert(mat2d_b1.n_elem() == 4);
+  assert(mat2d_b1.n_rows() == 4);
+  assert(mat2d_b1.n_cols() == 1);
+  assert(mat2d_b1(0, 0) == 1.0);
+  assert(mat2d_b1(1, 0) == 2.0);
+  assert(mat2d_b1(2, 0) == 3.0);
+  assert(mat2d_b1(3, 0) == 4.0);
+
+  assert(mat2d_b2.n_elem() == 4);
+  assert(mat2d_b2.n_rows() == 1);
+  assert(mat2d_b2.n_cols() == 4);
+  assert(mat2d_b2(0, 0) == 1.0);
+  assert(mat2d_b2(0, 1) == 2.0);
+  assert(mat2d_b2(0, 2) == 3.0);
+  assert(mat2d_b2(0, 3) == 4.0);
 }
 
 void matrix_test_constructor_a14(bool print = false) {
@@ -604,29 +636,55 @@ void matrix_test_constructor_a14(bool print = false) {
 
 #if defined(MATRIX_LIB_USE_CPP11)
   const double a[] = {1, 2, 3, 4};
-  Matrix<double, 1> mat1d_a(a, 4);
-  Matrix<double, 2> mat2d_a(a, 4, 1);
+  Matrix<double, 1> mat1d_a1(a, 4);
+  Matrix<double, 1> mat1d_a2(a, 4);
 
-  Matrix<double, 1> mat1d_b(std::move(mat2d_a));
-  Matrix<double, 2> mat2d_b = std::move(mat1d_a);
+  mat1d_a2.is_column_vector = false;
+  Matrix<double, 2> mat2d_a1(a, 4, 1);
+  Matrix<double, 2> mat2d_a2(a, 1, 4);
 
-  if (print) test_print(mat1d_b, "mat1d_b =");
-  if (print) test_print(mat2d_b, "mat2d_b =");
+  Matrix<double, 1> mat1d_b1(std::move(mat2d_a1));  // col
+  Matrix<double, 1> mat1d_b2(std::move(mat2d_a2));  // row
 
-  assert(mat1d_b.n_elem() == 4);
-  assert(mat1d_b.n_rows() == 4);
-  assert(mat1d_b(0) == 1.0);
-  assert(mat1d_b(1) == 2.0);
-  assert(mat1d_b(2) == 3.0);
-  assert(mat1d_b(3) == 4.0);
+  Matrix<double, 2> mat2d_b1(std::move(mat1d_a1));  // col
+  Matrix<double, 2> mat2d_b2(std::move(mat1d_a2));  // row
 
-  assert(mat2d_b.n_elem() == 4);
-  assert(mat2d_b.n_rows() == 4);
-  assert(mat2d_b.n_cols() == 1);
-  assert(mat2d_b(0, 0) == 1.0);
-  assert(mat2d_b(1, 0) == 2.0);
-  assert(mat2d_b(2, 0) == 3.0);
-  assert(mat2d_b(3, 0) == 4.0);
+  if (print) test_print(mat1d_b1, "mat1d_b1 =");
+  if (print) test_print(mat1d_b2, "mat1d_b2 =");
+  if (print) test_print(mat2d_b1, "mat2d_b1 =");
+  if (print) test_print(mat2d_b2, "mat2d_b2 =");
+
+  assert(mat1d_b1.n_elem() == 4);
+  assert(mat1d_b1.n_rows() == 4);
+  assert(mat1d_b1.n_cols() == 1);
+  assert(mat1d_b1(0) == 1.0);
+  assert(mat1d_b1(1) == 2.0);
+  assert(mat1d_b1(2) == 3.0);
+  assert(mat1d_b1(3) == 4.0);
+
+  assert(mat1d_b2.n_elem() == 4);
+  assert(mat1d_b2.n_rows() == 1);
+  assert(mat1d_b2.n_cols() == 4);
+  assert(mat1d_b2(0) == 1.0);
+  assert(mat1d_b2(1) == 2.0);
+  assert(mat1d_b2(2) == 3.0);
+  assert(mat1d_b2(3) == 4.0);
+
+  assert(mat2d_b1.n_elem() == 4);
+  assert(mat2d_b1.n_rows() == 4);
+  assert(mat2d_b1.n_cols() == 1);
+  assert(mat2d_b1(0, 0) == 1.0);
+  assert(mat2d_b1(1, 0) == 2.0);
+  assert(mat2d_b1(2, 0) == 3.0);
+  assert(mat2d_b1(3, 0) == 4.0);
+
+  assert(mat2d_b2.n_elem() == 4);
+  assert(mat2d_b2.n_rows() == 1);
+  assert(mat2d_b2.n_cols() == 4);
+  assert(mat2d_b2(0, 0) == 1.0);
+  assert(mat2d_b2(0, 1) == 2.0);
+  assert(mat2d_b2(0, 2) == 3.0);
+  assert(mat2d_b2(0, 3) == 4.0);
 #else
   std::cout << "[NOTE]: TEST A14 SKIPPED (C++11 NOT SUPPORTED)\n";
 #endif
@@ -956,61 +1014,128 @@ void matrix_test_assignment_b07(bool print = false) {
   assert(mat3d_b(1, 1, 0) == 24);
 }
 
-void matrix_test_assignment_4(bool print = false) {
-  std::cout << "[TEST]: Assigns a Matrix <- with -> a Vector\n";
+void matrix_test_assignment_b09(bool print = false) {
+  std::cout << "[TEST]: B09. Assigns a Matrix <- with -> a Vector\n"
+            << "        vec: vec& operator=(const mat&)\n"
+            << "        mat: mat& operator=(const vec&)" << std::endl;
 
   const double a[] = {1, 2, 3, 4};
-  Matrix<double, 1> mat1d_a(a, 4), mat1d_b;
-  Matrix<double, 2> mat2d_a(a, 4, 1), mat2d_b;
+  Matrix<double, 1> mat1d_a1(a, 4);
+  Matrix<double, 1> mat1d_a2(a, 4);
 
-  mat2d_b = mat1d_a;
-  mat1d_b = mat2d_a;
+  mat1d_a2.is_column_vector = false;
+  Matrix<double, 2> mat2d_a1(a, 4, 1);
+  Matrix<double, 2> mat2d_a2(a, 1, 4);
 
-  assert(mat1d_b.n_elem() == 4);
-  assert(mat1d_b.n_rows() == 4);
-  assert(mat1d_b(0) == 1.0);
-  assert(mat1d_b(1) == 2.0);
-  assert(mat1d_b(2) == 3.0);
-  assert(mat1d_b(3) == 4.0);
+  Matrix<double, 1> mat1d_b1;
+  Matrix<double, 1> mat1d_b2;
+  mat1d_b1 = mat2d_a1;  // col
+  mat1d_b2 = mat2d_a2;  // row
 
-  assert(mat2d_b.n_elem() == 4);
-  assert(mat2d_b.n_rows() == 4);
-  assert(mat2d_b.n_cols() == 1);
-  assert(mat2d_b(0, 0) == 1.0);
-  assert(mat2d_b(1, 0) == 2.0);
-  assert(mat2d_b(2, 0) == 3.0);
-  assert(mat2d_b(3, 0) == 4.0);
+  Matrix<double, 2> mat2d_b1;
+  Matrix<double, 2> mat2d_b2;
+  mat2d_b1 = mat1d_a1;  // col
+  mat2d_b2 = mat1d_a2;  // row
+
+  if (print) test_print(mat1d_b1, "mat1d_b1 =");
+  if (print) test_print(mat1d_b2, "mat1d_b2 =");
+  if (print) test_print(mat2d_b1, "mat2d_b1 =");
+  if (print) test_print(mat2d_b2, "mat2d_b2 =");
+
+  assert(mat1d_b1.n_elem() == 4);
+  assert(mat1d_b1.n_rows() == 4);
+  assert(mat1d_b1.n_cols() == 1);
+  assert(mat1d_b1(0) == 1.0);
+  assert(mat1d_b1(1) == 2.0);
+  assert(mat1d_b1(2) == 3.0);
+  assert(mat1d_b1(3) == 4.0);
+
+  assert(mat1d_b2.n_elem() == 4);
+  assert(mat1d_b2.n_rows() == 1);
+  assert(mat1d_b2.n_cols() == 4);
+  assert(mat1d_b2(0) == 1.0);
+  assert(mat1d_b2(1) == 2.0);
+  assert(mat1d_b2(2) == 3.0);
+  assert(mat1d_b2(3) == 4.0);
+
+  assert(mat2d_b1.n_elem() == 4);
+  assert(mat2d_b1.n_rows() == 4);
+  assert(mat2d_b1.n_cols() == 1);
+  assert(mat2d_b1(0, 0) == 1.0);
+  assert(mat2d_b1(1, 0) == 2.0);
+  assert(mat2d_b1(2, 0) == 3.0);
+  assert(mat2d_b1(3, 0) == 4.0);
+
+  assert(mat2d_b2.n_elem() == 4);
+  assert(mat2d_b2.n_rows() == 1);
+  assert(mat2d_b2.n_cols() == 4);
+  assert(mat2d_b2(0, 0) == 1.0);
+  assert(mat2d_b2(0, 1) == 2.0);
+  assert(mat2d_b2(0, 2) == 3.0);
+  assert(mat2d_b2(0, 3) == 4.0);
 }
 
-void matrix_test_assignment_5(bool print = false) {
-  std::cout << "[TEST]: Assigns a Matrix <- with -> a Vector using move "
-               "semantics\n";
+void matrix_test_assignment_b10(bool print = false) {
+  std::cout << "[TEST]: B10. Assigns a Matrix <- with -> a Vector (move)\n"
+            << "        vec: vec& operator=(mat&&)\n"
+               "        mat: mat& operator=(vec&&)"
+            << std::endl;
 
 #if defined(MATRIX_LIB_USE_CPP11)
   const double a[] = {1, 2, 3, 4};
-  Matrix<double, 1> mat1d_a(a, 4), mat1d_b;
-  Matrix<double, 2> mat2d_a(a, 4, 1), mat2d_b;
+  Matrix<double, 1> mat1d_a1(a, 4);
+  Matrix<double, 1> mat1d_a2(a, 4);
 
-  mat1d_b = std::move(mat2d_a);
-  mat2d_b = std::move(mat1d_a);
+  mat1d_a2.is_column_vector = false;
+  Matrix<double, 2> mat2d_a1(a, 4, 1);
+  Matrix<double, 2> mat2d_a2(a, 1, 4);
 
-  if (print) test_print(mat1d_b, "mat1d_b =");
-  if (print) test_print(mat2d_b, "mat2d_b =");
+  Matrix<double, 1> mat1d_b1;
+  Matrix<double, 1> mat1d_b2;
+  mat1d_b1 = std::move(mat2d_a1);  // col
+  mat1d_b2 = std::move(mat2d_a2);  // row
 
-  assert(mat1d_b.n_elem() == 4);
-  assert(mat1d_b.n_rows() == 4);
-  assert(mat1d_b(0) == 1.0);
-  assert(mat1d_b(1) == 2.0);
-  assert(mat1d_b(2) == 3.0);
-  assert(mat1d_b(3) == 4.0);
+  Matrix<double, 2> mat2d_b1;
+  Matrix<double, 2> mat2d_b2;
+  mat2d_b1 = std::move(mat1d_a1);  // col
+  mat2d_b2 = std::move(mat1d_a2);  // row
 
-  assert(mat2d_b.n_elem() == 4);
-  assert(mat2d_b.n_rows() == 4);
-  assert(mat2d_b.n_cols() == 1);
-  assert(mat2d_b(0, 0) == 1.0);
-  assert(mat2d_b(1, 0) == 2.0);
-  assert(mat2d_b(2, 0) == 3.0);
-  assert(mat2d_b(3, 0) == 4.0);
+  if (print) test_print(mat1d_b1, "mat1d_b1 =");
+  if (print) test_print(mat1d_b2, "mat1d_b2 =");
+  if (print) test_print(mat2d_b1, "mat2d_b1 =");
+  if (print) test_print(mat2d_b2, "mat2d_b2 =");
+
+  assert(mat1d_b1.n_elem() == 4);
+  assert(mat1d_b1.n_rows() == 4);
+  assert(mat1d_b1.n_cols() == 1);
+  assert(mat1d_b1(0) == 1.0);
+  assert(mat1d_b1(1) == 2.0);
+  assert(mat1d_b1(2) == 3.0);
+  assert(mat1d_b1(3) == 4.0);
+
+  assert(mat1d_b2.n_elem() == 4);
+  assert(mat1d_b2.n_rows() == 1);
+  assert(mat1d_b2.n_cols() == 4);
+  assert(mat1d_b2(0) == 1.0);
+  assert(mat1d_b2(1) == 2.0);
+  assert(mat1d_b2(2) == 3.0);
+  assert(mat1d_b2(3) == 4.0);
+
+  assert(mat2d_b1.n_elem() == 4);
+  assert(mat2d_b1.n_rows() == 4);
+  assert(mat2d_b1.n_cols() == 1);
+  assert(mat2d_b1(0, 0) == 1.0);
+  assert(mat2d_b1(1, 0) == 2.0);
+  assert(mat2d_b1(2, 0) == 3.0);
+  assert(mat2d_b1(3, 0) == 4.0);
+
+  assert(mat2d_b2.n_elem() == 4);
+  assert(mat2d_b2.n_rows() == 1);
+  assert(mat2d_b2.n_cols() == 4);
+  assert(mat2d_b2(0, 0) == 1.0);
+  assert(mat2d_b2(0, 1) == 2.0);
+  assert(mat2d_b2(0, 2) == 3.0);
+  assert(mat2d_b2(0, 3) == 4.0);
 #else
   std::cout << "... TEST SKIPPED (C++11 NOT SUPPORTED)\n";
 #endif
@@ -2350,8 +2475,8 @@ int main() {
   matrix_test_assignment_b06(print_flag);
   matrix_test_assignment_b07(print_flag);
 
-  matrix_test_assignment_4(print_flag);
-  matrix_test_assignment_5(print_flag);
+  matrix_test_assignment_b09(print_flag);
+  matrix_test_assignment_b10(print_flag);
 
   matrix_test_unary_add_minus_operator(print_flag);
   matrix_test_addition_assignment_operator(print_flag);

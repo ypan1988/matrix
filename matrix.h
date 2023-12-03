@@ -683,29 +683,27 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
 
 template <class Tp>
 Matrix<Tp, 1>::Matrix(const Matrix<Tp, 2>& x) : Matrix_base<Tp>(x.get_elem()) {
-  if (x.n_cols() != 1) error("x is not a n x 1 matrix");
-  M_init();
+  if (x.n_cols() != 1 && x.n_rows() != 1) error("x is not a col/row vector");
+  M_init(x.n_cols() == 1);
 }
 
 template <class Tp>
 Matrix<Tp, 2>::Matrix(const Matrix<Tp, 1>& x) : Matrix_base<Tp>(x.get_elem()) {
-  x.is_column_vector ? M_init(x.n_elem(), 1) : M_init(1, x.n_elem());
+  M_init(x.is_column_vector);
 }
 
 template <class Tp>
 Matrix<Tp, 1>& Matrix<Tp, 1>::operator=(const Matrix<Tp, 2>& x) {
-  if (x.n_cols() != 1) error("x is not a n x 1 matrix");
-  if (x.n_rows() != n_rows()) this->M_elem.resize(x.n_rows());
-  this->M_elem = x.get_elem();
-  M_init();
+  if (x.n_cols() != 1 && x.n_rows() != 1) error("x is not a col/row vector");
+  this->set_elem(x.get_elem());
+  M_init(x.n_cols() == 1);
   return *this;
 }
 
 template <class Tp>
 Matrix<Tp, 2>& Matrix<Tp, 2>::operator=(const Matrix<Tp, 1>& x) {
-  if (x.n_rows() != n_rows()) this->M_elem.resize(x.n_rows());
-  this->M_elem = x.get_elem();
-  M_init(x.n_elem(), 1);
+  this->set_elem(x.get_elem());
+  M_init(x.is_column_vector);
   return *this;
 }
 
@@ -713,28 +711,28 @@ Matrix<Tp, 2>& Matrix<Tp, 2>::operator=(const Matrix<Tp, 1>& x) {
 template <class Tp>
 Matrix<Tp, 1>::Matrix(Matrix<Tp, 2>&& x)
     : Matrix_base<Tp>(std::move(x.M_elem)) {
-  if (x.n_cols() != 1) error("x is not a n x 1 matrix");
-  M_init();
+  if (x.n_cols() != 1 && x.n_rows() != 1) error("x is not a col/row matrix");
+  M_init(x.n_cols() == 1);
 }
 
 template <class Tp>
 Matrix<Tp, 2>::Matrix(Matrix<Tp, 1>&& x)
     : Matrix_base<Tp>(std::move(x.M_elem)) {
-  x.is_column_vector ? M_init(x.n_elem(), 1) : M_init(1, x.n_elem());
+  M_init(x.is_column_vector);
 }
 
 template <class Tp>
 Matrix<Tp, 1>& Matrix<Tp, 1>::operator=(Matrix<Tp, 2>&& x) {
-  if (x.n_cols() != 1) error("x is not a n x 1 matrix");
+  if (x.n_cols() != 1 && x.n_rows() != 1) error("x is not a col/row matrix");
   this->M_elem = std::move(x.M_elem);
-  M_init();
+  M_init(x.n_cols() == 1);
   return *this;
 }
 
 template <class Tp>
 Matrix<Tp, 2>& Matrix<Tp, 2>::operator=(Matrix<Tp, 1>&& x) {
   this->M_elem = std::move(x.M_elem);
-  M_init(this->n_elem(), 1);
+  M_init(x.is_column_vector);
   return *this;
 }
 #endif
@@ -746,7 +744,7 @@ template <class Tp>
 SEXP Matrix<Tp, 1>::export_matrix_to_sexp() const {
   SEXP x = PROTECT(Rcpp::wrap(this->data(), this->data() + this->n_elem()));
   SEXP dims = PROTECT(Rf_allocVector(INTSXP, 1));
-  INTEGER(dims)[0] = n_rows();
+  INTEGER(dims)[0] = n_elem();
   Rf_setAttrib(x, R_DimSymbol, dims);
   UNPROTECT(2);
   return x;
