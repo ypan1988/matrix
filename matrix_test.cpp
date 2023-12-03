@@ -383,7 +383,34 @@ void matrix_test_constructor_a08(bool print = false) {
 }
 
 void matrix_test_constructor_a09(bool print = false) {
-  std::cout << "[TEST]: A09. Constructor with Sub-Matrix (IndirectMatrix)\n"
+  std::cout << "[TEST]: A09. Constructor with Sub-Matrix (MaskMatrix)\n"
+            << "        vec: vec(mask_vec)\n"
+            << "        mat: mat(mask_vec)" << std::endl;
+
+  const bool idx[4] = {false, true, false, true};
+  std::valarray<bool> bool_arr(idx, 4);
+
+  const double a[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a, 4);
+  Matrix<double, 1> mat1d_b = mat1d_a(bool_arr);
+  if (print) test_print(mat1d_b, "mat1d_b = ");
+  assert(mat1d_b.n_elem() == 2);
+  assert(mat1d_b.n_rows() == 2);
+  assert(mat1d_b.n_cols() == 1);
+  assert(mat1d_b(0) == 2);
+  assert(mat1d_b(1) == 4);
+
+  Matrix<double, 2> mat2d = mat1d_a(bool_arr);
+  if (print) test_print(mat2d, "mat2d = ");
+  assert(mat2d.n_elem() == 2);
+  assert(mat2d.n_rows() == 2);
+  assert(mat2d.n_cols() == 1);
+  assert(mat2d(0, 0) == 2);
+  assert(mat2d(1, 0) == 4);
+}
+
+void matrix_test_constructor_a10(bool print = false) {
+  std::cout << "[TEST]: A10. Constructor with Sub-Matrix (IndirectMatrix)\n"
             << "        vec: vec(indirect_vec)\n"
             << "        mat: mat(indirect_mat)\n"
             << "        cube: cube(indirect_cube)" << std::endl;
@@ -435,33 +462,6 @@ void matrix_test_constructor_a09(bool print = false) {
   assert(mat3d_b(0, 1, 0) == 22);
   assert(mat3d_b(1, 0, 0) == 16);
   assert(mat3d_b(1, 1, 0) == 24);
-}
-
-void matrix_test_constructor_a10(bool print = false) {
-  std::cout << "[TEST]: A10. Constructor with Sub-Matrix (MaskMatrix)\n"
-            << "        vec: vec(mask_vec)\n"
-            << "        mat: mat(mask_vec)" << std::endl;
-
-  const bool idx[4] = {false, true, false, true};
-  std::valarray<bool> bool_arr(idx, 4);
-
-  const double a[] = {1, 2, 3, 4};
-  Matrix<double, 1> mat1d_a(a, 4);
-  Matrix<double, 1> mat1d_b = mat1d_a(bool_arr);
-  if (print) test_print(mat1d_b, "mat1d_b = ");
-  assert(mat1d_b.n_elem() == 2);
-  assert(mat1d_b.n_rows() == 2);
-  assert(mat1d_b.n_cols() == 1);
-  assert(mat1d_b(0) == 2);
-  assert(mat1d_b(1) == 4);
-
-  Matrix<double, 2> mat2d = mat1d_a(bool_arr);
-  if (print) test_print(mat2d, "mat2d = ");
-  assert(mat2d.n_elem() == 2);
-  assert(mat2d.n_rows() == 2);
-  assert(mat2d.n_cols() == 1);
-  assert(mat2d(0, 0) == 2);
-  assert(mat2d(1, 0) == 4);
 }
 
 void matrix_test_constructor_a11(bool print = false) {
@@ -635,7 +635,7 @@ void matrix_test_constructor_a14(bool print = false) {
 // ----- B: Testing Matrix<T, N> Assignments -----
 
 void matrix_test_assignment_b01(bool print = false) {
-  std::cout << "[TEST]: B01. Copy assignment operator.\n"
+  std::cout << "[TEST]: B01. Copy assignment operator\n"
             << "        vec: vec& operator=(const vec&)\n"
             << "        mat: mat& operator=(const mat&)\n"
             << "        cube: cube& operator=(const cube&)" << std::endl;
@@ -680,7 +680,7 @@ void matrix_test_assignment_b01(bool print = false) {
 }
 
 void matrix_test_assignment_b02(bool print = false) {
-  std::cout << "[TEST]: B02. Move assignment operator.\n"
+  std::cout << "[TEST]: B02. Move assignment operator\n"
             << "        vec: vec& operator=(vec&&)\n"
             << "        mat: mat& operator=(mat&&)\n"
             << "        cube: cube& operator=(cube&&)" << std::endl;
@@ -729,7 +729,7 @@ void matrix_test_assignment_b02(bool print = false) {
 }
 
 void matrix_test_assignment_b03(bool print = false) {
-  std::cout << "[TEST]: B03. Assigns a Matrix with a value.\n"
+  std::cout << "[TEST]: B03. Assigns a Matrix with a value\n"
             << "        vec: vec& operator=(const elem_type& val)\n"
             << "        mat: mat& operator=(const elem_type& val)\n"
             << "        cube: cube& operator=(const elem_type& val)"
@@ -870,7 +870,36 @@ void matrix_test_assignment_b05(bool print = false) {
 }
 
 void matrix_test_assignment_b06(bool print = false) {
-  std::cout << "[TEST]: B06. Assignment with Sub-Matrix (IndirectMatrix)\n"
+  std::cout << "[TEST]: B06. Assignment with Sub-Matrix (MaskMatrix)\n"
+            << "        vec: vec& operator=(mask_vec)\n"
+            << "        mat: mat& operator=(mask_vec)" << std::endl;
+
+  const bool idx[4] = {false, true, false, true};
+  std::valarray<bool> bool_arr(idx, 4);
+
+  const double a[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d_a(a, 4);
+  Matrix<double, 1> mat1d_b;
+  mat1d_b = mat1d_a(bool_arr);
+  if (print) test_print(mat1d_b, "mat1d_b = ");
+  assert(mat1d_b.n_elem() == 2);
+  assert(mat1d_b.n_rows() == 2);
+  assert(mat1d_b.n_cols() == 1);
+  assert(mat1d_b(0) == 2);
+  assert(mat1d_b(1) == 4);
+
+  Matrix<double, 2> mat2d;
+  mat2d = mat1d_a(bool_arr);
+  if (print) test_print(mat2d, "mat2d = ");
+  assert(mat2d.n_elem() == 2);
+  assert(mat2d.n_rows() == 2);
+  assert(mat2d.n_cols() == 1);
+  assert(mat2d(0, 0) == 2);
+  assert(mat2d(1, 0) == 4);
+}
+
+void matrix_test_assignment_b07(bool print = false) {
+  std::cout << "[TEST]: B07. Assignment with Sub-Matrix (IndirectMatrix)\n"
             << "        vec: vec& operator=(indirect_vec)\n"
             << "        mat: mat& operator=(indirect_mat)\n"
             << "        cube: cube& operator=(indirect_cube)" << std::endl;
@@ -925,35 +954,6 @@ void matrix_test_assignment_b06(bool print = false) {
   assert(mat3d_b(0, 1, 0) == 22);
   assert(mat3d_b(1, 0, 0) == 16);
   assert(mat3d_b(1, 1, 0) == 24);
-}
-
-void matrix_test_assignment_b07(bool print = false) {
-  std::cout << "[TEST]: B07. Assignment with Sub-Matrix (MaskMatrix)\n"
-            << "        vec: vec& operator=(mask_vec)\n"
-            << "        mat: mat& operator=(mask_vec)" << std::endl;
-
-  const bool idx[4] = {false, true, false, true};
-  std::valarray<bool> bool_arr(idx, 4);
-
-  const double a[] = {1, 2, 3, 4};
-  Matrix<double, 1> mat1d_a(a, 4);
-  Matrix<double, 1> mat1d_b;
-  mat1d_b = mat1d_a(bool_arr);
-  if (print) test_print(mat1d_b, "mat1d_b = ");
-  assert(mat1d_b.n_elem() == 2);
-  assert(mat1d_b.n_rows() == 2);
-  assert(mat1d_b.n_cols() == 1);
-  assert(mat1d_b(0) == 2);
-  assert(mat1d_b(1) == 4);
-
-  Matrix<double, 2> mat2d;
-  mat2d = mat1d_a(bool_arr);
-  if (print) test_print(mat2d, "mat2d = ");
-  assert(mat2d.n_elem() == 2);
-  assert(mat2d.n_rows() == 2);
-  assert(mat2d.n_cols() == 1);
-  assert(mat2d(0, 0) == 2);
-  assert(mat2d(1, 0) == 4);
 }
 
 void matrix_test_assignment_4(bool print = false) {
