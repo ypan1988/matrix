@@ -380,7 +380,8 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
   Matrix(const         IndirectMatrix<Tp, 2>& x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(x.M_dims); }    // (10)
 #if defined(MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& x) = default;                                                                                 // (6)
-  Matrix(std::initializer_list<Tp> x, uword n1, uword n2) : Matrix_base<Tp>(x)         { M_init(n1, n2  ); }    // (11)
+  Matrix(std::initializer_list<Tp> x, uword n1, uword n2) : Matrix_base<Tp>(x)         { M_init(n1, n2  ); }    // (11a)
+  Matrix(std::initializer_list<std::initializer_list<Tp>> x);                                                   // (11b)
   Matrix(Matrix<Tp, 1>&& x);
 #endif
   Matrix(const std::valarray<Tp>&  x, uword n1, uword n2) : Matrix_base<Tp>(x)         { M_init(n1, n2  ); }    // (12)
@@ -402,6 +403,7 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
 
 #if defined(MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& x) = default;                                                                                                 // (2)
+  Matrix& operator=(std::initializer_list<std::initializer_list<Tp>> x);
   Matrix& operator=(Matrix<Tp, 1>&& x);
 #endif
   Matrix& operator=(const Matrix<Tp, 1>& x);
@@ -680,6 +682,47 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
 };
 
 //-----------------------------------------------------------------------------
+
+template <class Tp>
+Matrix<Tp, 2>::Matrix(std::initializer_list<std::initializer_list<Tp>> x)
+    : Matrix_base<Tp>() {
+  uword nr = x.size();
+  uword nc = x.begin()->size();
+
+  for (auto iter = x.begin(); iter != x.end(); ++iter)
+    if (iter->size() != nc) error("dimension mismatch");
+  this->M_elem.resize(nr * nc);
+  M_init(nr, nc);
+
+  uword r = 0;
+  for (auto riter = x.begin(); riter != x.end(); ++riter, ++r) {
+    uword c = 0;
+    for (auto citer = riter->begin(); citer != riter->end(); ++citer, ++c) {
+      (*this)(r, c) = *citer;
+    }
+  }
+}
+
+template <class Tp>
+Matrix<Tp, 2>& Matrix<Tp, 2>::operator=(
+    std::initializer_list<std::initializer_list<Tp>> x) {
+  uword nr = x.size();
+  uword nc = x.begin()->size();
+
+  for (auto iter = x.begin(); iter != x.end(); ++iter)
+    if (iter->size() != nc) error("dimension mismatch");
+  this->M_elem.resize(nr * nc);
+  M_init(nr, nc);
+
+  uword r = 0;
+  for (auto riter = x.begin(); riter != x.end(); ++riter, ++r) {
+    uword c = 0;
+    for (auto citer = riter->begin(); citer != riter->end(); ++citer, ++c) {
+      (*this)(r, c) = *citer;
+    }
+  }
+  return *this;
+}
 
 template <class Tp>
 Matrix<Tp, 1>::Matrix(const Matrix<Tp, 2>& x) : Matrix_base<Tp>(x.get_elem()) {
