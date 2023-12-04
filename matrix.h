@@ -1764,6 +1764,10 @@ typedef GsliceMatrix<float, 1> gslice_fvec;
 typedef GsliceMatrix<float, 2> gslice_fmat;
 typedef GsliceMatrix<float, 3> gslice_fcube;
 
+typedef MaskMatrix<double> mask_vec;
+typedef MaskMatrix<double> mask_dvec;
+typedef MaskMatrix<float> mask_fvec;
+
 typedef IndirectMatrix<double, 1> indirect_vec;
 typedef IndirectMatrix<double, 2> indirect_mat;
 typedef IndirectMatrix<double, 3> indirect_cube;
@@ -1775,10 +1779,6 @@ typedef IndirectMatrix<double, 3> indirect_dcube;
 typedef IndirectMatrix<float, 1> indirect_fvec;
 typedef IndirectMatrix<float, 2> indirect_fmat;
 typedef IndirectMatrix<float, 3> indirect_fcube;
-
-typedef MaskMatrix<double> mask_vec;
-typedef MaskMatrix<double> mask_dvec;
-typedef MaskMatrix<float> mask_fvec;
 
 }  // namespace matrix_lib
 
