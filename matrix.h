@@ -153,6 +153,7 @@ struct Matrix_base {
   void set_elem(const std::indirect_array<Tp>& x, uword sz) { M_elem.resize(sz); M_elem = x; }
 #if defined(MATRIX_LIB_USE_CPP11)
   void set_elem(std::initializer_list<Tp>    & x) { M_elem = x; }
+  std::valarray<Tp> make_2d_array(std::initializer_list<std::initializer_list<Tp>> x, uword nr, uword nc);
 #endif
   uword n_elem() const { return M_elem.size(); }
 
@@ -186,6 +187,22 @@ struct Matrix_base {
     for (uword i = 0; i < n_elem(); ++i) f(M_elem[i]);
   }
 };
+
+#if defined(MATRIX_LIB_USE_CPP11)
+template <class Tp>
+std::valarray<Tp> Matrix_base<Tp>::make_2d_array(
+    std::initializer_list<std::initializer_list<Tp>> x, uword nr, uword nc) {
+  std::valarray<Tp> res(nr * nc);
+  uword r = 0;
+  for (auto riter = x.begin(); riter != x.end(); ++riter, ++r) {
+    uword c = 0;
+    for (auto citer = riter->begin(); citer != riter->end(); ++citer, ++c) {
+      res[r + c * nr] = *citer;
+    }
+  }
+  return res;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 
@@ -683,46 +700,43 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
 
 //-----------------------------------------------------------------------------
 
+#if defined(MATRIX_LIB_USE_CPP11)
 template <class Tp>
 Matrix<Tp, 2>::Matrix(std::initializer_list<std::initializer_list<Tp>> x)
     : Matrix_base<Tp>() {
+  // init number of rows and columns
   uword nr = x.size();
   uword nc = x.begin()->size();
 
+  // check dimensions
   for (auto iter = x.begin(); iter != x.end(); ++iter)
     if (iter->size() != nc) error("dimension mismatch");
   this->M_elem.resize(nr * nc);
-  M_init(nr, nc);
 
-  uword r = 0;
-  for (auto riter = x.begin(); riter != x.end(); ++riter, ++r) {
-    uword c = 0;
-    for (auto citer = riter->begin(); citer != riter->end(); ++citer, ++c) {
-      (*this)(r, c) = *citer;
-    }
-  }
+  // init elements and dimensions
+  this->M_elem = this->make_2d_array(x, nr, nc);
+  M_init(nr, nc);
 }
 
 template <class Tp>
 Matrix<Tp, 2>& Matrix<Tp, 2>::operator=(
     std::initializer_list<std::initializer_list<Tp>> x) {
+  // init number of rows and columns
   uword nr = x.size();
   uword nc = x.begin()->size();
 
+  // check dimensions
   for (auto iter = x.begin(); iter != x.end(); ++iter)
     if (iter->size() != nc) error("dimension mismatch");
   this->M_elem.resize(nr * nc);
+
+  // init elements and dimensions
+  this->M_elem = this->make_2d_array(x, nr, nc);
   M_init(nr, nc);
 
-  uword r = 0;
-  for (auto riter = x.begin(); riter != x.end(); ++riter, ++r) {
-    uword c = 0;
-    for (auto citer = riter->begin(); citer != riter->end(); ++citer, ++c) {
-      (*this)(r, c) = *citer;
-    }
-  }
   return *this;
 }
+#endif
 
 template <class Tp>
 Matrix<Tp, 1>::Matrix(const Matrix<Tp, 2>& x) : Matrix_base<Tp>(x.get_elem()) {
