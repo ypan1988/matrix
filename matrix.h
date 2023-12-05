@@ -154,6 +154,7 @@ struct Matrix_base {
 #if defined(MATRIX_LIB_USE_CPP11)
   void set_elem(std::initializer_list<Tp>    & x) { M_elem = x; }
   std::valarray<Tp> make_2d_array(std::initializer_list<std::initializer_list<Tp>> x, uword nr, uword nc);
+  std::valarray<Tp> make_3d_array(std::initializer_list<std::initializer_list<std::initializer_list<Tp>>> x, uword nr, uword nc, uword ns);
 #endif
   uword n_elem() const { return M_elem.size(); }
 
@@ -202,6 +203,24 @@ std::valarray<Tp> Matrix_base<Tp>::make_2d_array(
   }
   return res;
 }
+template <class Tp>
+std::valarray<Tp> Matrix_base<Tp>::make_3d_array(
+    std::initializer_list<std::initializer_list<std::initializer_list<Tp>>> x,
+    uword nr, uword nc, uword ns) {
+  std::valarray<Tp> res(nr * nc * ns);
+  uword s = 0;
+  for (auto siter = x.begin(); siter != x.end(); ++siter, ++s) {
+    uword r = 0;
+    for (auto riter = siter->begin(); riter != siter->end(); ++riter, ++r) {
+      uword c = 0;
+      for (auto citer = riter->begin(); citer != riter->end(); ++citer, ++c) {
+        res[r + c * nr + s * nr * nc] = *citer;
+      }
+    }
+  }
+  return res;
+}
+
 #endif
 
 //-----------------------------------------------------------------------------
@@ -246,13 +265,12 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
   Matrix& operator=(const   GsliceMatrix<Tp, 1>& x) { this->set_elem(x.M_elem[x.M_desc], x.n_elem()); M_init();     return *this; }    // (5)
   Matrix& operator=(const     MaskMatrix<Tp   >& x) { this->set_elem(x.M_elem[x.M_desc], x.n_elem()); M_init(true); return *this; }    // (6)
   Matrix& operator=(const IndirectMatrix<Tp, 1>& x) { this->set_elem(x.M_elem[x.M_desc], x.n_elem()); M_init();     return *this; }    // (7)
-
 #if defined(MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& x) = default;                                                                                             // (2)
-  Matrix& operator=(std::initializer_list<Tp> x ) { this->M_elem =  x;        M_init(); return *this; }
-  Matrix& operator=(Matrix<Tp, 2>&& x);
+  Matrix& operator=(std::initializer_list<Tp>    x) { this->M_elem = x;                               M_init();     return *this; }    // (8)
+  Matrix& operator=(Matrix<Tp, 2>&& x);                                                                                                // (10)
 #endif
-  Matrix& operator=(const Matrix<Tp, 2>& x);
+  Matrix& operator=(const Matrix<Tp, 2>& x);                                                                                           // (9)
 
 #if defined(MATRIX_LIB_USE_R)
   // this operator enables implicit Rcpp::wrap
@@ -417,13 +435,12 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
   Matrix& operator=(const   GsliceMatrix<Tp, 2>& x) { this->set_elem(x.M_elem[x.M_desc], x.n_elem()); M_init(x.M_dims); return *this; }    // (5)
   Matrix& operator=(const     MaskMatrix<Tp   >& x) { this->set_elem(x.M_elem[x.M_desc], x.n_elem()); M_init(true    ); return *this; }    // (6)
   Matrix& operator=(const IndirectMatrix<Tp, 2>& x) { this->set_elem(x.M_elem[x.M_desc], x.n_elem()); M_init(x.M_dims); return *this; }    // (7)
-
 #if defined(MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& x) = default;                                                                                                 // (2)
-  Matrix& operator=(std::initializer_list<std::initializer_list<Tp>> x);
-  Matrix& operator=(Matrix<Tp, 1>&& x);
+  Matrix& operator=(std::initializer_list<std::initializer_list<Tp>> x);                                                                   // (8)
+  Matrix& operator=(Matrix<Tp, 1>&& x);                                                                                                    // (10)
 #endif
-  Matrix& operator=(const Matrix<Tp, 1>& x);
+  Matrix& operator=(const Matrix<Tp, 1>& x);                                                                                               // (9)
 
 #if defined(MATRIX_LIB_USE_R)
   // this operator enables implicit Rcpp::wrap
@@ -565,7 +582,9 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
   Matrix(const IndirectMatrix<Tp, 3>&                   x) : Matrix_base<Tp>(x.M_elem[x.M_desc]) { M_init(x.M_dims  ); }    // (10)
 #if defined(MATRIX_LIB_USE_CPP11)
   Matrix(Matrix&& x) = default;                                                                                             // (6)
-  Matrix(std::initializer_list<Tp> x, uword n1, uword n2, uword n3) : Matrix_base<Tp>(x)         { M_init(n1, n2, n3); }    // (11)
+  Matrix(std::initializer_list<Tp> x, uword n1, uword n2, uword n3) : Matrix_base<Tp>(x)         { M_init(n1, n2, n3); }    // (11a)
+  Matrix(std::initializer_list<std::initializer_list<std::initializer_list<Tp>>> x);                                        // (11b)
+
 #endif
   Matrix(const std::valarray<Tp>&  x, uword n1, uword n2, uword n3) : Matrix_base<Tp>(x)         { M_init(n1, n2, n3); }    // (12)
   Matrix(const std::valarray<Tp>&  x, const uword          dims[3]) : Matrix_base<Tp>(x)         { M_init(dims      ); }
@@ -580,9 +599,9 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
   Matrix& operator=(const       elem_type      & x) { this->M_elem = x                              ;                   return *this; }    // (3)
   Matrix& operator=(const   GsliceMatrix<Tp, 3>& x) { this->set_elem(x.M_elem[x.M_desc], x.n_elem()); M_init(x.M_dims); return *this; }    // (5)
   Matrix& operator=(const IndirectMatrix<Tp, 3>& x) { this->set_elem(x.M_elem[x.M_desc], x.n_elem()); M_init(x.M_dims); return *this; }    // (7)
-
 #if defined(MATRIX_LIB_USE_CPP11)
   Matrix& operator=(Matrix&& x) = default;                                                                                                 // (2)
+  Matrix& operator=(std::initializer_list<std::initializer_list<std::initializer_list<Tp>>> x);                                            // (8)
 #endif
 
 #if defined(MATRIX_LIB_USE_R)
@@ -711,7 +730,6 @@ Matrix<Tp, 2>::Matrix(std::initializer_list<std::initializer_list<Tp>> x)
   // check dimensions
   for (auto iter = x.begin(); iter != x.end(); ++iter)
     if (iter->size() != nc) error("dimension mismatch");
-  this->M_elem.resize(nr * nc);
 
   // init elements and dimensions
   this->M_elem = this->make_2d_array(x, nr, nc);
@@ -728,11 +746,55 @@ Matrix<Tp, 2>& Matrix<Tp, 2>::operator=(
   // check dimensions
   for (auto iter = x.begin(); iter != x.end(); ++iter)
     if (iter->size() != nc) error("dimension mismatch");
-  this->M_elem.resize(nr * nc);
 
   // init elements and dimensions
   this->M_elem = this->make_2d_array(x, nr, nc);
   M_init(nr, nc);
+
+  return *this;
+}
+
+template <class Tp>
+Matrix<Tp, 3>::Matrix(
+    std::initializer_list<std::initializer_list<std::initializer_list<Tp>>> x)
+    : Matrix_base<Tp>() {
+  // init number of rows, columns and slides
+  uword nr = x.begin()->size();
+  uword nc = x.begin()->begin()->size();
+  uword ns = x.size();
+
+  // check dimensions
+  for (auto siter = x.begin(); siter != x.end(); ++siter) {
+    if (siter->size() != nr) error("dimension mismatch");
+    for (auto riter = siter->begin(); riter != siter->end(); ++riter) {
+      if (riter->size() != nc) error("dimension mismatch");
+    }
+  }
+
+  // init elements and dimensions
+  this->M_elem = this->make_3d_array(x, nr, nc, ns);
+  M_init(nr, nc, ns);
+}
+
+template <class Tp>
+Matrix<Tp, 3>& Matrix<Tp, 3>::operator=(
+    std::initializer_list<std::initializer_list<std::initializer_list<Tp>>> x) {
+  // init number of rows, columns and slides
+  uword nr = x.begin()->size();
+  uword nc = x.begin()->begin()->size();
+  uword ns = x.size();
+
+  // check dimensions
+  for (auto siter = x.begin(); siter != x.end(); ++siter) {
+    if (siter->size() != nr) error("dimension mismatch");
+    for (auto riter = siter->begin(); riter != siter->end(); ++riter) {
+      if (riter->size() != nc) error("dimension mismatch");
+    }
+  }
+
+  // init elements and dimensions
+  this->M_elem = this->make_3d_array(x, nr, nc, ns);
+  M_init(nr, nc, ns);
 
   return *this;
 }

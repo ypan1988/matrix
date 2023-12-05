@@ -521,7 +521,8 @@ void matrix_test_constructor_a11a(bool print = false) {
 void matrix_test_constructor_a11b(bool print = false) {
   std::cout << "[TEST]: A11b. Nested initializer list\n"
             << "        vec: vec(initializer_list)\n"
-            << "        mat: mat(nested initializer_list)" << std::endl;
+            << "        mat: mat(nested initializer_list)\n"
+            << "        cube: cube(nested initializer_list)" << std::endl;
 
 #if defined MATRIX_LIB_USE_CPP11
   Matrix<double, 1> mat1d = {1, 2, 3, 4};
@@ -548,10 +549,9 @@ void matrix_test_constructor_a11b(bool print = false) {
   assert(mat2d(2, 2) == 11.0);
   assert(mat2d(3, 2) == 12.0);
 
-  /*
-  Matrix<double, 3> mat3d({1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-                           13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24},
-                          4, 3, 2);
+  Matrix<double, 3> mat3d = {
+      {{1, 5, 9}, {2, 6, 10}, {3, 7, 11}, {4, 8, 12}},
+      {{13, 17, 21}, {14, 18, 22}, {15, 19, 23}, {16, 20, 24}}};
   if (print) test_print(mat3d, "mat3d =");
   assert(mat3d.n_elem() == 24);
   assert(mat3d.n_rows() == 4);
@@ -565,7 +565,6 @@ void matrix_test_constructor_a11b(bool print = false) {
   assert(mat3d(1, 2, 1) == 22.0);
   assert(mat3d(2, 2, 1) == 23.0);
   assert(mat3d(3, 2, 1) == 24.0);
-  */
 #else
   std::cout << "[NOTE]: TEST A08 SKIPPED (C++11 NOT SUPPORTED)\n";
 #endif
@@ -1070,7 +1069,8 @@ void matrix_test_assignment_b07(bool print = false) {
 void matrix_test_assignment_b08(bool print = false) {
   std::cout << "[TEST]: B08. Nested initializer list\n"
             << "        vec: vec& operator=(initializer_list)\n"
-            << "        mat: mat& operator(nested initializer_list)"
+            << "        mat: mat& operator(nested initializer_list)\n"
+            << "        cube: cube& operator(nested initializer_list)"
             << std::endl;
 
 #if defined MATRIX_LIB_USE_CPP11
@@ -1100,10 +1100,9 @@ void matrix_test_assignment_b08(bool print = false) {
   assert(mat2d(2, 2) == 11.0);
   assert(mat2d(3, 2) == 12.0);
 
-  /*
-  Matrix<double, 3> mat3d({1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-                           13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24},
-                          4, 3, 2);
+  Matrix<double, 3> mat3d;
+  mat3d = {{{1, 5, 9}, {2, 6, 10}, {3, 7, 11}, {4, 8, 12}},
+           {{13, 17, 21}, {14, 18, 22}, {15, 19, 23}, {16, 20, 24}}};
   if (print) test_print(mat3d, "mat3d =");
   assert(mat3d.n_elem() == 24);
   assert(mat3d.n_rows() == 4);
@@ -1117,7 +1116,6 @@ void matrix_test_assignment_b08(bool print = false) {
   assert(mat3d(1, 2, 1) == 22.0);
   assert(mat3d(2, 2, 1) == 23.0);
   assert(mat3d(3, 2, 1) == 24.0);
-  */
 #else
   std::cout << "[NOTE]: TEST A08 SKIPPED (C++11 NOT SUPPORTED)\n";
 #endif
