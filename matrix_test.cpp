@@ -834,7 +834,7 @@ void matrix_test_assignment_b02(bool print = false) {
   assert(mat3d_b(2, 2, 1) == 23.0);
   assert(mat3d_b(3, 2, 1) == 24.0);
 #else
-  std::cout << "... TEST SKIPPED (C++11 NOT SUPPORTED)\n";
+  std::cout << "[NOTE]: TEST B02 SKIPPED (C++11 NOT SUPPORTED)\n";
 #endif
 }
 
@@ -1244,12 +1244,12 @@ void matrix_test_assignment_b10(bool print = false) {
   assert(mat2d_b2(0, 2) == 3.0);
   assert(mat2d_b2(0, 3) == 4.0);
 #else
-  std::cout << "... TEST SKIPPED (C++11 NOT SUPPORTED)\n";
+  std::cout << "[NOTE]: TEST B10 SKIPPED (C++11 NOT SUPPORTED)\n";
 #endif
 }
 
-void matrix_test_element_access(bool print = false) {
-  std::cout << "[TEST]: Access elements with operator[]\n";
+void matrix_test_element_access_c01(bool print = false) {
+  std::cout << "[TEST]: C01. Access elements with operator[]\n";
 
   const double a1[] = {1, 2, 3, 4};
   const std::valarray<double> va1(a1, 4);
@@ -2588,7 +2588,7 @@ int main() {
 
   std::cout << "\n----- C: Testing Matrix<T, N> Subscripting -----\n"
             << std::endl;
-  matrix_test_element_access(print_flag);
+  matrix_test_element_access_c01(print_flag);
 
   std::cout
       << "\n----- D: Testing Matrix<T, N> Slicing with SliceMatrix<T> -----\n"
