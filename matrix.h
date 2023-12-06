@@ -1276,11 +1276,23 @@ Tp dot(const Matrix<Tp, 1>& x, const Matrix<Tp, 1>& y) {
   return (x.get_elem() * y.get_elem()).sum();
 }
 
+template <class Tp>
+struct SubMatrix_base {
+ public:
+  typedef Tp elem_type;
+  virtual std::valarray<Tp> get_elem() const = 0;
+  virtual uword n_elem() const = 0;
+
+  elem_type sum() const { return get_elem().sum(); }
+  elem_type min() const { return get_elem().min(); }
+  elem_type max() const { return get_elem().max(); }
+};
+
 //----------------------------------------------------------------------
 // SliceMatrix
 
 template <class Tp>
-struct SliceMatrix {
+struct SliceMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
   std::valarray<Tp>& M_elem;
@@ -1295,17 +1307,13 @@ struct SliceMatrix {
     return std::valarray<Tp>(M_elem[M_desc]);
   }
   uword n_elem() const { return M_desc.size(); }
-
-  elem_type sum() const { return get_elem().sum(); }
-  elem_type min() const { return get_elem().min(); }
-  elem_type max() const { return get_elem().max(); }
 };
 
 //----------------------------------------------------------------------
 // GsliceMatrix
 
 template <class Tp, uword Size>
-struct GsliceMatrix {
+struct GsliceMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
   std::valarray<Tp>& M_elem;
@@ -1338,17 +1346,13 @@ struct GsliceMatrix {
     return std::valarray<Tp>(M_elem[M_desc]);
   }
   uword n_elem() const { return M_size; }
-
-  elem_type sum() const { return get_elem().sum(); }
-  elem_type min() const { return get_elem().min(); }
-  elem_type max() const { return get_elem().max(); }
 };
 
 //----------------------------------------------------------------------
 // MaskMatrix
 
 template <class Tp>
-struct MaskMatrix {
+struct MaskMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
   std::valarray<Tp>& M_elem;
@@ -1366,17 +1370,13 @@ struct MaskMatrix {
     return std::valarray<Tp>(M_elem[M_desc]);
   }
   uword n_elem() const { return M_size; }
-
-  elem_type sum() const { return get_elem().sum(); }
-  elem_type min() const { return get_elem().min(); }
-  elem_type max() const { return get_elem().max(); }
 };
 
 //----------------------------------------------------------------------
 // IndirectMatrix
 
 template <class Tp, uword Size>
-struct IndirectMatrix {
+struct IndirectMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
   std::valarray<Tp>& M_elem;
@@ -1395,10 +1395,6 @@ struct IndirectMatrix {
     return std::valarray<Tp>(M_elem[M_desc]);
   }
   uword n_elem() const { return M_desc.size(); }
-
-  elem_type sum() const { return get_elem().sum(); }
-  elem_type min() const { return get_elem().min(); }
-  elem_type max() const { return get_elem().max(); }
 };
 
 // Matrix member functions dealing with SliceMatrix
