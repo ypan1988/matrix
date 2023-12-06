@@ -1280,6 +1280,9 @@ template <class Tp>
 struct SubMatrix_base {
  public:
   typedef Tp elem_type;
+  std::valarray<Tp>& M_elem;
+  SubMatrix_base(std::valarray<Tp>& va) : M_elem(va) {}
+
   virtual std::valarray<Tp> get_elem() const = 0;
   virtual uword n_elem() const = 0;
 
@@ -1295,16 +1298,17 @@ template <class Tp>
 struct SliceMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
-  std::valarray<Tp>& M_elem;
   std::slice M_desc;
   bool is_column_vector;
   SliceMatrix(std::valarray<Tp>& va, uword start, uword size, uword stride,
               bool is_colvec = true)
-      : M_elem(va), M_desc(start, size, stride), is_column_vector(is_colvec) {}
-  void operator=(const Tp& value) { M_elem[M_desc] = value; }
+      : SubMatrix_base<Tp>(va),
+        M_desc(start, size, stride),
+        is_column_vector(is_colvec) {}
+  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
 
   std::valarray<Tp> get_elem() const {
-    return std::valarray<Tp>(M_elem[M_desc]);
+    return std::valarray<Tp>(this->M_elem[M_desc]);
   }
   uword n_elem() const { return M_desc.size(); }
 };
@@ -1316,13 +1320,12 @@ template <class Tp, uword Size>
 struct GsliceMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
-  std::valarray<Tp>& M_elem;
   std::gslice M_desc;
   uword M_dims[Size];
   uword M_size;
   GsliceMatrix(std::valarray<Tp>& va, uword start, const index_array& size,
                const index_array& stride)
-      : M_elem(va), M_desc(start, size, stride), M_size(1) {
+      : SubMatrix_base<Tp>(va), M_desc(start, size, stride), M_size(1) {
     uword n = size.size();
     for (uword idx = 0; idx < n; ++idx) {
       M_dims[idx] = size[n - idx - 1];
@@ -1331,7 +1334,7 @@ struct GsliceMatrix : public SubMatrix_base<Tp> {
   }
   GsliceMatrix(std::valarray<Tp>& va, uword start, const uword size[Size],
                const uword stride[Size])
-      : M_elem(va),
+      : SubMatrix_base<Tp>(va),
         M_desc(start, index_array(size, Size), index_array(stride, Size)),
         M_size(1) {
     uword n = Size;
@@ -1340,10 +1343,10 @@ struct GsliceMatrix : public SubMatrix_base<Tp> {
       M_size *= M_dims[idx];
     }
   }
-  void operator=(const Tp& value) { M_elem[M_desc] = value; }
+  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
 
   std::valarray<Tp> get_elem() const {
-    return std::valarray<Tp>(M_elem[M_desc]);
+    return std::valarray<Tp>(this->M_elem[M_desc]);
   }
   uword n_elem() const { return M_size; }
 };
@@ -1355,19 +1358,18 @@ template <class Tp>
 struct MaskMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
-  std::valarray<Tp>& M_elem;
   bool_array M_desc;
   uword M_size;
   MaskMatrix(std::valarray<Tp>& va, const bool_array& boolarr)
-      : M_elem(va), M_desc(boolarr), M_size(0) {
+      : SubMatrix_base<Tp>(va), M_desc(boolarr), M_size(0) {
     std::valarray<uword> tmp((uword)0, boolarr.size());
     tmp[boolarr] = 1;
     M_size = tmp.sum();
   }
-  void operator=(const Tp& value) { M_elem[M_desc] = value; }
+  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
 
   std::valarray<Tp> get_elem() const {
-    return std::valarray<Tp>(M_elem[M_desc]);
+    return std::valarray<Tp>(this->M_elem[M_desc]);
   }
   uword n_elem() const { return M_size; }
 };
@@ -1379,20 +1381,19 @@ template <class Tp, uword Size>
 struct IndirectMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
-  std::valarray<Tp>& M_elem;
   index_array M_desc;
   uword M_dims[Size];
   IndirectMatrix(std::valarray<Tp>& va, const index_array& ind_arr,
                  const uword dims[Size])
-      : M_elem(va), M_desc(ind_arr) {
+      : SubMatrix_base<Tp>(va), M_desc(ind_arr) {
     for (uword idx = 0; idx < Size; ++idx) {
       M_dims[idx] = dims[idx];
     }
   }
-  void operator=(const Tp& value) { M_elem[M_desc] = value; }
+  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
 
   std::valarray<Tp> get_elem() const {
-    return std::valarray<Tp>(M_elem[M_desc]);
+    return std::valarray<Tp>(this->M_elem[M_desc]);
   }
   uword n_elem() const { return M_desc.size(); }
 };
