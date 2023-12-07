@@ -1321,11 +1321,14 @@ struct GsliceMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
   std::gslice M_desc;
-  uword M_dims[Size];
+  index_array M_dims;
   uword M_size;
   GsliceMatrix(std::valarray<Tp>& va, uword start, const index_array& size,
                const index_array& stride)
-      : SubMatrix_base<Tp>(va), M_desc(start, size, stride), M_size(1) {
+      : SubMatrix_base<Tp>(va),
+        M_desc(start, size, stride),
+        M_dims(Size),
+        M_size(1) {
     uword n = size.size();
     for (uword idx = 0; idx < n; ++idx) {
       M_dims[idx] = size[n - idx - 1];
@@ -1336,6 +1339,7 @@ struct GsliceMatrix : public SubMatrix_base<Tp> {
                const uword stride[Size])
       : SubMatrix_base<Tp>(va),
         M_desc(start, index_array(size, Size), index_array(stride, Size)),
+        M_dims(Size),
         M_size(1) {
     uword n = Size;
     for (uword idx = 0; idx < n; ++idx) {
@@ -1382,10 +1386,10 @@ struct IndirectMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
   index_array M_desc;
-  uword M_dims[Size];
+  index_array M_dims;
   IndirectMatrix(std::valarray<Tp>& va, const index_array& ind_arr,
                  const uword dims[Size])
-      : SubMatrix_base<Tp>(va), M_desc(ind_arr) {
+      : SubMatrix_base<Tp>(va), M_desc(ind_arr), M_dims(Size) {
     for (uword idx = 0; idx < Size; ++idx) {
       M_dims[idx] = dims[idx];
     }
