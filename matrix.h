@@ -66,6 +66,22 @@ inline void error(const char* p) {
 #define matrix_assert(expr)
 #endif
 
+// remove parentheses
+#define UNPAREN(...) __VA_ARGS__
+
+// pre C++11:
+// uword a = {1, 2, 3, 4, 5};
+// index_array ia(a, 5);
+// C++11:
+// index_array ia = {1, 2, 3, 4, 5};
+#ifndef MATRIX_LIB_USE_CPP11
+#define INIT_ARR(VAR_NAME, ARR_DATA) uword VAR_NAME[] = {UNPAREN ARR_DATA}
+#define MAKE_IDXARR(VAR_NAME, SZ) index_array(VAR_NAME, SZ)
+#else
+#define INIT_ARR(VAR_NAME, ARR_DATA) index_array VAR_NAME = {UNPAREN ARR_DATA}
+#define MAKE_IDXARR(VAR_NAME, SZ) VAR_NAME
+#endif
+
 //-----------------------------------------------------------------------------
 
 typedef std::size_t uword;

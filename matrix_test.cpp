@@ -42,6 +42,26 @@ void test_print(const Matrix<T, 3>& m, std::string msg = "") {
   }
 }
 
+void macro_test_init_array(bool print = false) {
+  std::cout << "[TEST]: 01. Init Array" << std::endl;
+  INIT_ARR(arr, (1, 2, 3, 4));
+  assert(arr[0] == 1);
+  assert(arr[1] == 2);
+  assert(arr[2] == 3);
+  assert(arr[3] == 4);
+}
+
+void macro_test_make_index_array(bool print = false) {
+  std::cout << "[TEST]: 02. Make Index Array (i.e., valarray<size_t>)"
+            << std::endl;
+  INIT_ARR(arr, (1, 2, 3, 4));
+  index_array idx_arr = MAKE_IDXARR(arr, 4);
+  assert(idx_arr.size() == 4);
+  assert(idx_arr[0] == 1);
+  assert(idx_arr[1] == 2);
+  assert(idx_arr[2] == 3);
+  assert(idx_arr[3] == 4);
+}
 // ----- A: Testing Matrix<T, N> Constructions -----
 
 void matrix_test_constructor_a01(bool print = false) {
@@ -2554,6 +2574,8 @@ int main() {
   cube c;
 
   bool print_flag = false;
+  macro_test_init_array(print_flag);
+  macro_test_make_index_array(print_flag);
 
   std::cout << "\n----- A: Testing Matrix<T, N> Constructions -----\n"
             << std::endl;
