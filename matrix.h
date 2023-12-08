@@ -1311,7 +1311,6 @@ struct SubMatrix_base {
 template <class Tp>
 struct SliceMatrix : public SubMatrix_base<Tp> {
  public:
-  typedef Tp elem_type;
   std::slice M_desc;
   bool is_column_vector;
   SliceMatrix(std::valarray<Tp>& va, uword start, uword size, uword stride,
@@ -1333,7 +1332,6 @@ struct SliceMatrix : public SubMatrix_base<Tp> {
 template <class Tp>
 struct GsliceMatrix : public SubMatrix_base<Tp> {
  public:
-  typedef Tp elem_type;
   std::gslice M_desc;
   uword M_order;
   index_array M_dims;
@@ -1364,7 +1362,6 @@ struct GsliceMatrix : public SubMatrix_base<Tp> {
 template <class Tp>
 struct MaskMatrix : public SubMatrix_base<Tp> {
  public:
-  typedef Tp elem_type;
   bool_array M_desc;
   uword M_size;
   MaskMatrix(std::valarray<Tp>& va, const bool_array& boolarr)
@@ -1387,7 +1384,6 @@ struct MaskMatrix : public SubMatrix_base<Tp> {
 template <class Tp>
 struct IndirectMatrix : public SubMatrix_base<Tp> {
  public:
-  typedef Tp elem_type;
   index_array M_desc;
   index_array M_dims;
   uword M_order;
@@ -1819,48 +1815,6 @@ Matrix<Tp, 2> matmul(const Matrix<Tp, 2>& x, const Matrix<Tp, 2>& y) {
 typedef Matrix<double, 1> vec;
 typedef Matrix<double, 2> mat;
 typedef Matrix<double, 3> cube;
-
-typedef Matrix<double, 1> dvec;
-typedef Matrix<double, 2> dmat;
-typedef Matrix<double, 3> dcube;
-
-typedef Matrix<float, 1> fvec;
-typedef Matrix<float, 2> fmat;
-typedef Matrix<float, 3> fcube;
-
-/*
-typedef SliceMatrix<double> slice_vec;
-typedef SliceMatrix<double> slice_dvec;
-typedef SliceMatrix<float> slice_fvec;
-
-typedef GsliceMatrix<double, 1> gslice_vec;
-typedef GsliceMatrix<double, 2> gslice_mat;
-typedef GsliceMatrix<double, 3> gslice_cube;
-
-typedef GsliceMatrix<double, 1> gslice_dvec;
-typedef GsliceMatrix<double, 2> gslice_dmat;
-typedef GsliceMatrix<double, 3> gslice_dcube;
-
-typedef GsliceMatrix<float, 1> gslice_fvec;
-typedef GsliceMatrix<float, 2> gslice_fmat;
-typedef GsliceMatrix<float, 3> gslice_fcube;
-
-typedef MaskMatrix<double> mask_vec;
-typedef MaskMatrix<double> mask_dvec;
-typedef MaskMatrix<float> mask_fvec;
-
-typedef IndirectMatrix<double, 1> indirect_vec;
-typedef IndirectMatrix<double, 2> indirect_mat;
-typedef IndirectMatrix<double, 3> indirect_cube;
-
-typedef IndirectMatrix<double, 1> indirect_dvec;
-typedef IndirectMatrix<double, 2> indirect_dmat;
-typedef IndirectMatrix<double, 3> indirect_dcube;
-
-typedef IndirectMatrix<float, 1> indirect_fvec;
-typedef IndirectMatrix<float, 2> indirect_fmat;
-typedef IndirectMatrix<float, 3> indirect_fcube;
-*/
 
 }  // namespace matrix_lib
 
