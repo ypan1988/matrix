@@ -75,12 +75,12 @@ inline void error(const char* p) {
 // C++11:
 // index_array ia = {1, 2, 3, 4, 5};
 #ifndef MATRIX_LIB_USE_CPP11
-#define INIT_ARR(VAR_NAME, ARR_DATA, SZ)        \
-  uword carr_##VAR_NAME[] = {UNPAREN ARR_DATA}; \
-  index_array VAR_NAME(carr_##VAR_NAME, SZ)
+#define INIT_ARR(VAR_NAME, ARR_DATA, SZ)              \
+  const uword carr_##VAR_NAME[] = {UNPAREN ARR_DATA}; \
+  const index_array VAR_NAME(carr_##VAR_NAME, SZ)
 #else
 #define INIT_ARR(VAR_NAME, ARR_DATA, SZ) \
-  index_array VAR_NAME = {UNPAREN ARR_DATA}
+  const index_array VAR_NAME = {UNPAREN ARR_DATA}
 #endif
 
 //-----------------------------------------------------------------------------
@@ -398,13 +398,13 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
                                        index_array(stride, 1))]) {
     M_init(is_colvec);
   }
-  Matrix(const std::valarray<Tp>& va, const index_array& idx_arr,
-         const uword dims[1])
-      : Matrix_base<Tp>(va[idx_arr]) {
-    M_init();
-  }
   Matrix(const std::valarray<Tp>& va, const bool_array& bool_arr)
       : Matrix_base<Tp>(va[bool_arr]) {
+    M_init();
+  }
+  Matrix(const std::valarray<Tp>& va, const index_array& idx_arr,
+         const index_array& dims)
+      : Matrix_base<Tp>(va[idx_arr]) {
     M_init();
   }
   uword sub2ind(uword i) const { return i; }
@@ -574,9 +574,9 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
     M_init(size[1], size[0]);
   }
   Matrix(const std::valarray<Tp>& va, const index_array& idx_arr,
-         const uword dims[2])
+         const index_array& dims)
       : Matrix_base<Tp>(va[idx_arr]) {
-    M_init(dims[0], dims[1]);
+    M_init(dims);
   }
   uword sub2ind(uword i, uword j) const { return i + j * M_dims[0]; }
 };
@@ -725,9 +725,9 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
     M_init(size[2], size[1], size[0]);
   }
   Matrix(const std::valarray<Tp>& va, const index_array& idx_arr,
-         const uword dims[3])
+         const index_array& dims)
       : Matrix_base<Tp>(va[idx_arr]) {
-    M_init(dims[0], dims[1], dims[2]);
+    M_init(dims);
   }
   uword sub2ind(uword i, uword j, uword k) const {
     return i + j * M_dims[0] + k * _M_d1xd2;
@@ -1649,57 +1649,57 @@ inline MaskMatrix<Tp> Matrix<Tp, 3>::operator()(const bool_array& bool_arr) {
 
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 1>::elem(const index_array& idx_arr) const {
-  uword dims[1] = {idx_arr.size()};
+  INIT_ARR(dims, (idx_arr.size()), 1);
   return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 1>::elem(const index_array& idx_arr) {
-  uword dims[1] = {idx_arr.size()};
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, index_array(dims, 1));
+  INIT_ARR(dims, (idx_arr.size()), 1);
+  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
 }
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 2>::elem(const index_array& idx_arr) const {
-  uword dims[1] = {idx_arr.size()};
+  INIT_ARR(dims, (idx_arr.size()), 1);
   return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 2>::elem(const index_array& idx_arr) {
-  uword dims[1] = {idx_arr.size()};
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, index_array(dims, 1));
+  INIT_ARR(dims, (idx_arr.size()), 1);
+  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 3>::elem(const index_array& idx_arr) const {
-  uword dims[1] = {idx_arr.size()};
+  INIT_ARR(dims, (idx_arr.size()), 1);
   return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 3>::elem(const index_array& idx_arr) {
-  uword dims[1] = {idx_arr.size()};
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, index_array(dims, 1));
+  INIT_ARR(dims, (idx_arr.size()), 1);
+  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 1>::operator()(
     const index_array& idx_arr) const {
-  uword dims[1] = {idx_arr.size()};
+  INIT_ARR(dims, (idx_arr.size()), 1);
   return Matrix(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 1>::operator()(
     const index_array& idx_arr) {
-  uword dims[1] = {idx_arr.size()};
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, index_array(dims, 1));
+  INIT_ARR(dims, (idx_arr.size()), 1);
+  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline Matrix<Tp, 2> Matrix<Tp, 2>::operator()(
     const index_array& idx_arr1, const index_array& idx_arr2) const {
-  uword dims[2] = {idx_arr1.size(), idx_arr2.size()};
+  INIT_ARR(dims, (idx_arr1.size(), idx_arr2.size()), 2);
   index_array idx_arr(dims[0] * dims[1]);
   uword idx = 0;
   for (uword j = 0; j < idx_arr2.size(); ++j) {
@@ -1713,7 +1713,7 @@ inline Matrix<Tp, 2> Matrix<Tp, 2>::operator()(
 template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 2>::operator()(
     const index_array& idx_arr1, const index_array& idx_arr2) {
-  uword dims[2] = {idx_arr1.size(), idx_arr2.size()};
+  INIT_ARR(dims, (idx_arr1.size(), idx_arr2.size()), 2);
   index_array idx_arr(dims[0] * dims[1]);
   uword idx = 0;
   for (uword j = 0; j < idx_arr2.size(); ++j) {
@@ -1721,14 +1721,14 @@ inline IndirectMatrix<Tp> Matrix<Tp, 2>::operator()(
       idx_arr[idx++] = sub2ind(idx_arr1[i], idx_arr2[j]);
     }
   }
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, index_array(dims, 2));
+  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline Matrix<Tp, 3> Matrix<Tp, 3>::operator()(
     const index_array& idx_arr1, const index_array& idx_arr2,
     const index_array& idx_arr3) const {
-  uword dims[3] = {idx_arr1.size(), idx_arr2.size(), idx_arr3.size()};
+  INIT_ARR(dims, (idx_arr1.size(), idx_arr2.size(), idx_arr3.size()), 3);
   index_array idx_arr(dims[0] * dims[1] * dims[2]);
   uword idx = 0;
   for (uword k = 0; k < idx_arr3.size(); ++k) {
@@ -1745,7 +1745,7 @@ template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 3>::operator()(
     const index_array& idx_arr1, const index_array& idx_arr2,
     const index_array& idx_arr3) {
-  uword dims[3] = {idx_arr1.size(), idx_arr2.size(), idx_arr3.size()};
+  INIT_ARR(dims, (idx_arr1.size(), idx_arr2.size(), idx_arr3.size()), 3);
   index_array idx_arr(dims[0] * dims[1] * dims[2]);
   uword idx = 0;
   for (uword k = 0; k < idx_arr3.size(); ++k) {
@@ -1755,7 +1755,7 @@ inline IndirectMatrix<Tp> Matrix<Tp, 3>::operator()(
       }
     }
   }
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, index_array(dims, 3));
+  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
 }
 
 //----------------------------------------------------------------------
