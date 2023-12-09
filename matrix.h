@@ -1290,15 +1290,20 @@ Tp dot(const Matrix<Tp, 1>& x, const Matrix<Tp, 1>& y) {
   return (x.get_elem() * y.get_elem()).sum();
 }
 
-template <class Tp>
+template <class Tp, class Tpx>
 struct SubMatrix_base {
  public:
   typedef Tp elem_type;
   std::valarray<Tp>& M_elem;
   SubMatrix_base(std::valarray<Tp>& va) : M_elem(va) {}
 
-  virtual std::valarray<Tp> get_elem() const = 0;
   virtual uword n_elem() const = 0;
+  virtual Tpx& desc() = 0;
+  virtual const Tpx& desc() const = 0;
+
+  std::valarray<Tp> get_elem() const {
+    return std::valarray<Tp>(M_elem[this->desc()]);
+  }
 
   elem_type sum() const { return get_elem().sum(); }
   elem_type min() const { return get_elem().min(); }
@@ -1309,28 +1314,27 @@ struct SubMatrix_base {
 // SliceMatrix
 
 template <class Tp>
-struct SliceMatrix : public SubMatrix_base<Tp> {
+struct SliceMatrix : public SubMatrix_base<Tp, std::slice> {
  public:
   std::slice M_desc;
   bool is_column_vector;
   SliceMatrix(std::valarray<Tp>& va, uword start, uword size, uword stride,
               bool is_colvec = true)
-      : SubMatrix_base<Tp>(va),
+      : SubMatrix_base<Tp, std::slice>(va),
         M_desc(start, size, stride),
         is_column_vector(is_colvec) {}
-  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
-
-  std::valarray<Tp> get_elem() const {
-    return std::valarray<Tp>(this->M_elem[M_desc]);
-  }
   uword n_elem() const { return M_desc.size(); }
+  std::slice& desc() { return M_desc; }
+  const std::slice& desc() const { return M_desc; }
+
+  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
 };
 
 //----------------------------------------------------------------------
 // GsliceMatrix
 
 template <class Tp>
-struct GsliceMatrix : public SubMatrix_base<Tp> {
+struct GsliceMatrix : public SubMatrix_base<Tp, std::gslice> {
  public:
   std::gslice M_desc;
   uword M_order;
@@ -1338,7 +1342,7 @@ struct GsliceMatrix : public SubMatrix_base<Tp> {
   uword M_size;
   GsliceMatrix(std::valarray<Tp>& va, uword start, const index_array& size,
                const index_array& stride)
-      : SubMatrix_base<Tp>(va),
+      : SubMatrix_base<Tp, std::gslice>(va),
         M_desc(start, size, stride),
         M_order(size.size()),
         M_dims(M_order),
@@ -1348,57 +1352,54 @@ struct GsliceMatrix : public SubMatrix_base<Tp> {
       M_size *= M_dims[idx];
     }
   }
-  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
-
-  std::valarray<Tp> get_elem() const {
-    return std::valarray<Tp>(this->M_elem[M_desc]);
-  }
   uword n_elem() const { return M_size; }
+  std::gslice& desc() { return M_desc; }
+  const std::gslice& desc() const { return M_desc; }
+
+  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
 };
 
 //----------------------------------------------------------------------
 // MaskMatrix
 
 template <class Tp>
-struct MaskMatrix : public SubMatrix_base<Tp> {
+struct MaskMatrix : public SubMatrix_base<Tp, bool_array> {
  public:
   bool_array M_desc;
   uword M_size;
   MaskMatrix(std::valarray<Tp>& va, const bool_array& boolarr)
-      : SubMatrix_base<Tp>(va), M_desc(boolarr), M_size(0) {
+      : SubMatrix_base<Tp, bool_array>(va), M_desc(boolarr), M_size(0) {
     std::valarray<uword> tmp((uword)0, boolarr.size());
     tmp[boolarr] = 1;
     M_size = tmp.sum();
   }
-  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
-
-  std::valarray<Tp> get_elem() const {
-    return std::valarray<Tp>(this->M_elem[M_desc]);
-  }
   uword n_elem() const { return M_size; }
+  bool_array& desc() { return M_desc; }
+  const bool_array& desc() const { return M_desc; }
+
+  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
 };
 
 //----------------------------------------------------------------------
 // IndirectMatrix
 
 template <class Tp>
-struct IndirectMatrix : public SubMatrix_base<Tp> {
+struct IndirectMatrix : public SubMatrix_base<Tp, index_array> {
  public:
   index_array M_desc;
   index_array M_dims;
   uword M_order;
   IndirectMatrix(std::valarray<Tp>& va, const index_array& ind_arr,
                  const index_array& dims)
-      : SubMatrix_base<Tp>(va),
+      : SubMatrix_base<Tp, index_array>(va),
         M_desc(ind_arr),
         M_dims(dims),
         M_order(dims.size()) {}
-  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
-
-  std::valarray<Tp> get_elem() const {
-    return std::valarray<Tp>(this->M_elem[M_desc]);
-  }
   uword n_elem() const { return M_desc.size(); }
+  index_array& desc() { return M_desc; }
+  const index_array& desc() const { return M_desc; }
+
+  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
 };
 
 // Matrix member functions dealing with SliceMatrix

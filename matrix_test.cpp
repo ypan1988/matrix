@@ -52,10 +52,11 @@ void macro_test_init_array(bool print = false) {
   assert(idx_arr[2] == 3);
   assert(idx_arr[3] == 4);
 }
-// ----- A: Testing Matrix<T, N> Constructions -----
 
-void matrix_test_constructor_a01(bool print = false) {
-  std::cout << "[TEST]: A01. Default constructor\n"
+// ----- A1: Testing Matrix<T, N> Constructions -----
+
+void matrix_test_constructor_a1_01(bool print = false) {
+  std::cout << "[TEST]: A1_01. Default constructor\n"
             << "        vec: vec()\n"
             << "        mat: mat()\n"
             << "        cube: cube()" << std::endl;
@@ -80,8 +81,8 @@ void matrix_test_constructor_a01(bool print = false) {
   assert(mat3d.n_slices() == 0);
 }
 
-void matrix_test_constructor_a02(bool print = false) {
-  std::cout << "[TEST]: A02. Dimensions only\n"
+void matrix_test_constructor_a1_02(bool print = false) {
+  std::cout << "[TEST]: A1_02. Dimensions only\n"
             << "        vec: explicit vec(n_rows)\n"
             << "        mat: mat(n_rows, n_cols)\n"
             << "        cube: cube(n_rows, n_cols, n_slices)" << std::endl;
@@ -110,9 +111,9 @@ void matrix_test_constructor_a02(bool print = false) {
   assert(mat3d.n_slices() == 2);
 }
 
-void matrix_test_constructor_a03(bool print = false) {
+void matrix_test_constructor_a1_03(bool print = false) {
   std::cout
-      << "[TEST]: A03. Elements (single value) + Dimensions\n"
+      << "[TEST]: A1_03. Elements (single value) + Dimensions\n"
       << "        vec: vec(const elem_type& val, n_rows)\n"
       << "        mat: mat(const elem_type& val, n_rows, n_cols)\n"
       << "        cube: cube(const elem_type& val, n_rows, n_cols, n_slides)"
@@ -144,9 +145,9 @@ void matrix_test_constructor_a03(bool print = false) {
   assert(mat3d(3, 2, 1) == 3.0);
 }
 
-void matrix_test_constructor_a04(bool print = false) {
+void matrix_test_constructor_a1_04(bool print = false) {
   std::cout
-      << "[TEST]: A04. Elements (raw array) + Dimension\n"
+      << "[TEST]: A1_04. Elements (raw array) + Dimension\n"
       << "        vec: vec(const elem_type* vals, n_rows)\n"
       << "        mat: mat(const elem_type* vals, n_rows, n_cols)\n"
       << "        cube: cube(const elem_type* vals, n_rows, n_cols, n_slides)"
@@ -196,8 +197,8 @@ void matrix_test_constructor_a04(bool print = false) {
   assert(mat3d(3, 2, 1) == 24.0);
 }
 
-void matrix_test_constructor_a05(bool print = false) {
-  std::cout << "[TEST]: A05. Copy constructor\n"
+void matrix_test_constructor_a1_05(bool print = false) {
+  std::cout << "[TEST]: A1_05. Copy constructor\n"
             << "        vec: vec(const vec& other)\n"
             << "        mat: mat(const mat& other)\n"
             << "        cube: cube(const cube& other)" << std::endl;
@@ -249,8 +250,8 @@ void matrix_test_constructor_a05(bool print = false) {
   assert(mat3d_b(3, 2, 1) == 24.0);
 }
 
-void matrix_test_constructor_a06(bool print = false) {
-  std::cout << "[TEST]: A06. Move constructor\n"
+void matrix_test_constructor_a1_06(bool print = false) {
+  std::cout << "[TEST]: A1_06. Move constructor\n"
             << "        vec: vec(vec&& other) noexcept\n"
             << "        mat: mat(mat&& other) noexcept\n"
             << "        cube: cube(cube&& other) noexcept" << std::endl;
@@ -306,8 +307,8 @@ void matrix_test_constructor_a06(bool print = false) {
 #endif
 }
 
-void matrix_test_constructor_a07(bool print = false) {
-  std::cout << "[TEST]: A07. Constructor with Sub-Matrix (SliceMatrix)\n"
+void matrix_test_constructor_a1_07(bool print = false) {
+  std::cout << "[TEST]: A1_07. Constructor with Sub-Matrix (SliceMatrix)\n"
             << "        vec: vec(slice_vec)\n"
             << "        mat: mat(slice_vec)" << std::endl;
 
@@ -351,8 +352,8 @@ void matrix_test_constructor_a07(bool print = false) {
   assert(mat2d_col(3, 0) == 12);
 }
 
-void matrix_test_constructor_a08(bool print = false) {
-  std::cout << "[TEST]: A08. Constructor with Sub-Matrix (GsliceMatrix)\n"
+void matrix_test_constructor_a1_08(bool print = false) {
+  std::cout << "[TEST]: A1_08. Constructor with Sub-Matrix (GsliceMatrix)\n"
             << "        vec: vec(gslice_vec)\n"
             << "        mat: mat(gslice_mat)\n"
             << "        cube: cube(gslice_cube)" << std::endl;
@@ -393,8 +394,8 @@ void matrix_test_constructor_a08(bool print = false) {
   assert(mat3d_b(1, 1, 0) == 24.0);
 }
 
-void matrix_test_constructor_a09(bool print = false) {
-  std::cout << "[TEST]: A09. Constructor with Sub-Matrix (MaskMatrix)\n"
+void matrix_test_constructor_a1_09(bool print = false) {
+  std::cout << "[TEST]: A1_09. Constructor with Sub-Matrix (MaskMatrix)\n"
             << "        vec: vec(mask_vec)\n"
             << "        mat: mat(mask_vec)" << std::endl;
 
@@ -420,8 +421,8 @@ void matrix_test_constructor_a09(bool print = false) {
   assert(mat2d(1, 0) == 4);
 }
 
-void matrix_test_constructor_a10(bool print = false) {
-  std::cout << "[TEST]: A10. Constructor with Sub-Matrix (IndirectMatrix)\n"
+void matrix_test_constructor_a1_10(bool print = false) {
+  std::cout << "[TEST]: A1_10. Constructor with Sub-Matrix (IndirectMatrix)\n"
             << "        vec: vec(indirect_vec)\n"
             << "        mat: mat(indirect_mat)\n"
             << "        cube: cube(indirect_cube)" << std::endl;
@@ -475,8 +476,8 @@ void matrix_test_constructor_a10(bool print = false) {
   assert(mat3d_b(1, 1, 0) == 24);
 }
 
-void matrix_test_constructor_a11a(bool print = false) {
-  std::cout << "[TEST]: A11a. Elements (initializer list) + Dimension\n"
+void matrix_test_constructor_a1_11a(bool print = false) {
+  std::cout << "[TEST]: A1_11a. Elements (initializer list) + Dimension\n"
             << "        vec: vec(initializer_list)\n"
             << "        mat: mat(initializer_list, n_rows, n_cols)\n"
             << "        cube: cube(initializer_list, n_rows, n_cols, n_slices)"
@@ -528,8 +529,8 @@ void matrix_test_constructor_a11a(bool print = false) {
 #endif
 }
 
-void matrix_test_constructor_a11b(bool print = false) {
-  std::cout << "[TEST]: A11b. Nested initializer list\n"
+void matrix_test_constructor_a1_11b(bool print = false) {
+  std::cout << "[TEST]: A1_11b. Nested initializer list\n"
             << "        vec: vec(initializer_list)\n"
             << "        mat: mat(nested initializer_list)\n"
             << "        cube: cube(nested initializer_list)" << std::endl;
@@ -580,8 +581,8 @@ void matrix_test_constructor_a11b(bool print = false) {
 #endif
 }
 
-void matrix_test_constructor_a12(bool print = false) {
-  std::cout << "[TEST]: A12. Elements (valarray) + Dimension\n"
+void matrix_test_constructor_a1_12(bool print = false) {
+  std::cout << "[TEST]: A1_12. Elements (valarray) + Dimension\n"
             << "        vec: vec(valarray)\n"
             << "        mat: mat(valarray, n_rows, n_cols)\n"
             << "        cube: cube(valarray, n_rows, n_cols, n_slices)"
@@ -634,8 +635,8 @@ void matrix_test_constructor_a12(bool print = false) {
   assert(mat3d(3, 2, 1) == 24.0);
 }
 
-void matrix_test_constructor_a13(bool print = false) {
-  std::cout << "[TEST]: A13. Constructs a Matrix <- from -> a Vector\n"
+void matrix_test_constructor_a1_13(bool print = false) {
+  std::cout << "[TEST]: A1_13. Constructs a Matrix <- from -> a Vector\n"
             << "        vec: vec(const mat&)\n"
             << "        mat: mat(const vec&)" << std::endl;
 
@@ -691,8 +692,8 @@ void matrix_test_constructor_a13(bool print = false) {
   assert(mat2d_b2(0, 3) == 4.0);
 }
 
-void matrix_test_constructor_a14(bool print = false) {
-  std::cout << "[TEST]: A14. Constructs a Matrix <- from -> a Vector (move)\n"
+void matrix_test_constructor_a1_14(bool print = false) {
+  std::cout << "[TEST]: A1_14. Constructs a Matrix <- from -> a Vector (move)\n"
             << "        vec: vec(mat&&)\n"
             << "        mat: mat(vec&&)" << std::endl;
 
@@ -752,10 +753,10 @@ void matrix_test_constructor_a14(bool print = false) {
 #endif
 }
 
-// ----- B: Testing Matrix<T, N> Assignments -----
+// ----- A2: Testing Matrix<T, N> Assignments -----
 
-void matrix_test_assignment_b01(bool print = false) {
-  std::cout << "[TEST]: B01. Copy assignment operator\n"
+void matrix_test_assignment_a2_01(bool print = false) {
+  std::cout << "[TEST]: A2_01. Copy assignment operator\n"
             << "        vec: vec& operator=(const vec&)\n"
             << "        mat: mat& operator=(const mat&)\n"
             << "        cube: cube& operator=(const cube&)" << std::endl;
@@ -799,8 +800,8 @@ void matrix_test_assignment_b01(bool print = false) {
   assert(mat3d_b(3, 2, 1) == 24.0);
 }
 
-void matrix_test_assignment_b02(bool print = false) {
-  std::cout << "[TEST]: B02. Move assignment operator\n"
+void matrix_test_assignment_a2_02(bool print = false) {
+  std::cout << "[TEST]: A2_02. Move assignment operator\n"
             << "        vec: vec& operator=(vec&&)\n"
             << "        mat: mat& operator=(mat&&)\n"
             << "        cube: cube& operator=(cube&&)" << std::endl;
@@ -848,8 +849,8 @@ void matrix_test_assignment_b02(bool print = false) {
 #endif
 }
 
-void matrix_test_assignment_b03(bool print = false) {
-  std::cout << "[TEST]: B03. Assigns a Matrix with a value\n"
+void matrix_test_assignment_a2_03(bool print = false) {
+  std::cout << "[TEST]: A2_03. Assigns a Matrix with a value\n"
             << "        vec: vec& operator=(const elem_type& val)\n"
             << "        mat: mat& operator=(const elem_type& val)\n"
             << "        cube: cube& operator=(const elem_type& val)"
@@ -895,8 +896,8 @@ void matrix_test_assignment_b03(bool print = false) {
   assert(mat3d(3, 2, 1) == 3.0);
 }
 
-void matrix_test_assignment_b04(bool print = false) {
-  std::cout << "[TEST]: B04. Assignment with Sub-Matrix (SliceMatrix)\n"
+void matrix_test_assignment_a2_04(bool print = false) {
+  std::cout << "[TEST]: A2_04. Assignment with Sub-Matrix (SliceMatrix)\n"
             << "        vec: vec& operator=(slice_vec)\n"
             << "        mat: mat& operator=(slice_vec)" << std::endl;
 
@@ -944,8 +945,8 @@ void matrix_test_assignment_b04(bool print = false) {
   assert(mat2d_col(3, 0) == 12);
 }
 
-void matrix_test_assignment_b05(bool print = false) {
-  std::cout << "[TEST]: B05. Assignment with Sub-Matrix (GsliceMatrix)\n"
+void matrix_test_assignment_a2_05(bool print = false) {
+  std::cout << "[TEST]: A2_05. Assignment with Sub-Matrix (GsliceMatrix)\n"
             << "        vec: vec& operator=(gslice_vec)\n"
             << "        mat: mat& operator=(gslice_mat)\n"
             << "        cube: cube& operator=(gslice_cube)" << std::endl;
@@ -989,8 +990,8 @@ void matrix_test_assignment_b05(bool print = false) {
   assert(mat3d_b(1, 1, 0) == 24.0);
 }
 
-void matrix_test_assignment_b06(bool print = false) {
-  std::cout << "[TEST]: B06. Assignment with Sub-Matrix (MaskMatrix)\n"
+void matrix_test_assignment_a2_06(bool print = false) {
+  std::cout << "[TEST]: A2_06. Assignment with Sub-Matrix (MaskMatrix)\n"
             << "        vec: vec& operator=(mask_vec)\n"
             << "        mat: mat& operator=(mask_vec)" << std::endl;
 
@@ -1018,8 +1019,8 @@ void matrix_test_assignment_b06(bool print = false) {
   assert(mat2d(1, 0) == 4);
 }
 
-void matrix_test_assignment_b07(bool print = false) {
-  std::cout << "[TEST]: B07. Assignment with Sub-Matrix (IndirectMatrix)\n"
+void matrix_test_assignment_a2_07(bool print = false) {
+  std::cout << "[TEST]: A2_07. Assignment with Sub-Matrix (IndirectMatrix)\n"
             << "        vec: vec& operator=(indirect_vec)\n"
             << "        mat: mat& operator=(indirect_mat)\n"
             << "        cube: cube& operator=(indirect_cube)" << std::endl;
@@ -1076,8 +1077,8 @@ void matrix_test_assignment_b07(bool print = false) {
   assert(mat3d_b(1, 1, 0) == 24);
 }
 
-void matrix_test_assignment_b08(bool print = false) {
-  std::cout << "[TEST]: B08. Nested initializer list\n"
+void matrix_test_assignment_a2_08(bool print = false) {
+  std::cout << "[TEST]: A2_08. Nested initializer list\n"
             << "        vec: vec& operator=(initializer_list)\n"
             << "        mat: mat& operator(nested initializer_list)\n"
             << "        cube: cube& operator(nested initializer_list)"
@@ -1131,8 +1132,8 @@ void matrix_test_assignment_b08(bool print = false) {
 #endif
 }
 
-void matrix_test_assignment_b09(bool print = false) {
-  std::cout << "[TEST]: B09. Assigns a Matrix <- with -> a Vector\n"
+void matrix_test_assignment_a2_09(bool print = false) {
+  std::cout << "[TEST]: A2_09. Assigns a Matrix <- with -> a Vector\n"
             << "        vec: vec& operator=(const mat&)\n"
             << "        mat: mat& operator=(const vec&)" << std::endl;
 
@@ -1192,8 +1193,8 @@ void matrix_test_assignment_b09(bool print = false) {
   assert(mat2d_b2(0, 3) == 4.0);
 }
 
-void matrix_test_assignment_b10(bool print = false) {
-  std::cout << "[TEST]: B10. Assigns a Matrix <- with -> a Vector (move)\n"
+void matrix_test_assignment_a2_10(bool print = false) {
+  std::cout << "[TEST]: A2_10. Assigns a Matrix <- with -> a Vector (move)\n"
             << "        vec: vec& operator=(mat&&)\n"
                "        mat: mat& operator=(vec&&)"
             << std::endl;
@@ -1258,8 +1259,8 @@ void matrix_test_assignment_b10(bool print = false) {
 #endif
 }
 
-void matrix_test_element_access_c01(bool print = false) {
-  std::cout << "[TEST]: C01. Access elements with operator[]\n";
+void matrix_test_element_access_b1_01(bool print = false) {
+  std::cout << "[TEST]: B1_01. Access elements with operator[]\n";
 
   const double a1[] = {1, 2, 3, 4};
   const std::valarray<double> va1(a1, 4);
@@ -2566,47 +2567,51 @@ int main() {
   bool print_flag = false;
   macro_test_init_array(print_flag);
 
-  std::cout << "\n----- A: Testing Matrix<T, N> Constructions -----\n"
-            << std::endl;
-  matrix_test_constructor_a01(print_flag);
-  matrix_test_constructor_a02(print_flag);
-  matrix_test_constructor_a03(print_flag);
-  matrix_test_constructor_a04(print_flag);
-  matrix_test_constructor_a05(print_flag);
-  matrix_test_constructor_a06(print_flag);
-  matrix_test_constructor_a07(print_flag);
-  matrix_test_constructor_a08(print_flag);
-  matrix_test_constructor_a09(print_flag);
-  matrix_test_constructor_a10(print_flag);
-  matrix_test_constructor_a11a(print_flag);
-  matrix_test_constructor_a11b(print_flag);
-  matrix_test_constructor_a12(print_flag);
-  matrix_test_constructor_a13(print_flag);
-  matrix_test_constructor_a14(print_flag);
+  std::cout << "\n----- A: Constructions and Assignments-----\n" << std::endl;
 
-  std::cout << "\n----- B: Testing Matrix<T, N> Assignments -----\n"
+  std::cout << "\n----- A1: Testing Matrix<T, N> Constructions -----\n"
             << std::endl;
-  matrix_test_assignment_b01(print_flag);
-  matrix_test_assignment_b02(print_flag);
-  matrix_test_assignment_b03(print_flag);
-  matrix_test_assignment_b04(print_flag);
-  matrix_test_assignment_b05(print_flag);
-  matrix_test_assignment_b06(print_flag);
-  matrix_test_assignment_b07(print_flag);
-  matrix_test_assignment_b08(print_flag);
-  matrix_test_assignment_b09(print_flag);
-  matrix_test_assignment_b10(print_flag);
+  matrix_test_constructor_a1_01(print_flag);
+  matrix_test_constructor_a1_02(print_flag);
+  matrix_test_constructor_a1_03(print_flag);
+  matrix_test_constructor_a1_04(print_flag);
+  matrix_test_constructor_a1_05(print_flag);
+  matrix_test_constructor_a1_06(print_flag);
+  matrix_test_constructor_a1_07(print_flag);
+  matrix_test_constructor_a1_08(print_flag);
+  matrix_test_constructor_a1_09(print_flag);
+  matrix_test_constructor_a1_10(print_flag);
+  matrix_test_constructor_a1_11a(print_flag);
+  matrix_test_constructor_a1_11b(print_flag);
+  matrix_test_constructor_a1_12(print_flag);
+  matrix_test_constructor_a1_13(print_flag);
+  matrix_test_constructor_a1_14(print_flag);
 
-  std::cout << "\n----- C: Testing Matrix<T, N> Subscripting -----\n"
+  std::cout << "\n----- A2: Testing Matrix<T, N> Assignments -----\n"
             << std::endl;
-  matrix_test_element_access_c01(print_flag);
+  matrix_test_assignment_a2_01(print_flag);
+  matrix_test_assignment_a2_02(print_flag);
+  matrix_test_assignment_a2_03(print_flag);
+  matrix_test_assignment_a2_04(print_flag);
+  matrix_test_assignment_a2_05(print_flag);
+  matrix_test_assignment_a2_06(print_flag);
+  matrix_test_assignment_a2_07(print_flag);
+  matrix_test_assignment_a2_08(print_flag);
+  matrix_test_assignment_a2_09(print_flag);
+  matrix_test_assignment_a2_10(print_flag);
+
+  std::cout << "\n----- B: Subscripting and Slicing -----\n" << std::endl;
+
+  std::cout << "\n----- B1: Testing Matrix<T, N> Subscripting -----\n"
+            << std::endl;
+  matrix_test_element_access_b1_01(print_flag);
 
   std::cout
-      << "\n----- D: Testing Matrix<T, N> Slicing with SliceMatrix<T> -----\n"
+      << "\n----- B2: Testing Matrix<T, N> Slicing with SliceMatrix<T> -----\n"
       << std::endl;
   matrix_2d_test_slice_array(print_flag);
 
-  std::cout << "\n----- E: Testing Matrix<T, N> Slicing with GsliceMatrix<T, "
+  std::cout << "\n----- B3: Testing Matrix<T, N> Slicing with GsliceMatrix<T, "
                "N> -----\n"
             << std::endl;
   matrix_1d_test_slice_array(print_flag);
@@ -2621,15 +2626,16 @@ int main() {
   matrix_3d_test_slice_on_each_dim(print_flag);
 
   std::cout
-      << "\n----- F: Testing Matrix<T, N> Slicing with MaskMatrix<T> -----\n"
+      << "\n----- B4: Testing Matrix<T, N> Slicing with MaskMatrix<T> -----\n"
       << std::endl;
   matrix_1d_test_bool_elem(print_flag);
   matrix_2d_test_bool_elem(print_flag);
   matrix_3d_test_bool_elem(print_flag);
 
-  std::cout << "\n----- G: Testing Matrix<T, N> Slicing with IndirectMatrix<T, "
-               "N> -----\n"
-            << std::endl;
+  std::cout
+      << "\n----- B5: Testing Matrix<T, N> Slicing with IndirectMatrix<T, "
+         "N> -----\n"
+      << std::endl;
   matrix_1d_test_ind_elem(print_flag);
   matrix_2d_test_ind_elem(print_flag);
   matrix_3d_test_ind_elem(print_flag);
