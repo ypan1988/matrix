@@ -66,21 +66,20 @@ inline void error(const char* p) {
 #define matrix_assert(expr)
 #endif
 
-// remove parentheses
-#define UNPAREN(...) __VA_ARGS__
-
-// pre C++11:
-// uword a = {1, 2, 3, 4, 5};
-// index_array ia(a, 5);
-// C++11:
-// index_array ia = {1, 2, 3, 4, 5};
 #ifndef MATRIX_LIB_USE_CPP11
-#define INIT_ARR(VAR_NAME, ARR_DATA, SZ)              \
-  const uword carr_##VAR_NAME[] = {UNPAREN ARR_DATA}; \
-  const index_array VAR_NAME(carr_##VAR_NAME, SZ)
+#define INIT_ARR1E(VAR_NAME, X1) \
+  index_array VAR_NAME(1);       \
+  VAR_NAME[0] = X1
+#define INIT_ARR2E(VAR_NAME, X1, X2) \
+  index_array VAR_NAME(2);           \
+  VAR_NAME[0] = X1, VAR_NAME[1] = X2
+#define INIT_ARR3E(VAR_NAME, X1, X2, X3) \
+  index_array VAR_NAME(3);               \
+  VAR_NAME[0] = X1, VAR_NAME[1] = X2, VAR_NAME[2] = X3
 #else
-#define INIT_ARR(VAR_NAME, ARR_DATA, SZ) \
-  const index_array VAR_NAME = {UNPAREN ARR_DATA}
+#define INIT_ARR1E(VAR_NAME, X1) index_array VAR_NAME = {X1}
+#define INIT_ARR2E(VAR_NAME, X1, X2) index_array VAR_NAME = {X1, X2}
+#define INIT_ARR3E(VAR_NAME, X1, X2, X3) index_array VAR_NAME = {X1, X2, X3}
 #endif
 
 //-----------------------------------------------------------------------------
@@ -275,7 +274,7 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
   Matrix(const Matrix<Tp, 2>& x);
   ~Matrix() {}
 
-  // assignment：
+  // assignment:
   Matrix& operator=(const         Matrix    & x) { this->set_elem(x.M_elem                      ); M_init();     return *this; }    // (1)
   Matrix& operator=(const       elem_type   & x) { this->M_elem = x                              ;               return *this; }    // (3)
   Matrix& operator=(const    SliceMatrix<Tp>& x) { this->set_elem(x.M_elem[x.M_desc], x.n_elem()); M_init(x.is_column_vector); return *this; }    // (4)
@@ -444,7 +443,7 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
   Matrix(const Matrix<Tp, 1>& x);
   ~Matrix() {}
 
-  // assignment
+  // assignment:
   Matrix& operator=(const         Matrix    & x) { this->set_elem(x.M_elem                      ); M_init(x.M_dims); return *this; }    // (1)
   Matrix& operator=(const       elem_type   & x) { this->M_elem = x                              ;                   return *this; }    // (3)
   Matrix& operator=(const    SliceMatrix<Tp>& x) { this->set_elem(x.M_elem[x.M_desc], x.n_elem()); M_init(x.is_column_vector); return *this; }    // (4)
@@ -609,7 +608,7 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
 #endif
   ~Matrix() {}
 
-  // assignment
+  // assignment:
   Matrix& operator=(const         Matrix    & x) { this->set_elem(x.M_elem                      ); M_init(x.M_dims); return *this; }    // (1)
   Matrix& operator=(const       elem_type   & x) { this->M_elem = x                              ;                   return *this; }    // (3)
   Matrix& operator=(const   GsliceMatrix<Tp>& x) { this->set_elem(x.M_elem[x.M_desc], x.n_elem()); M_init(x.M_dims); return *this; }    // (5)
@@ -1445,16 +1444,16 @@ inline SliceMatrix<Tp> Matrix<Tp, 2>::col(uword c) {
 template <class Tp>
 inline Matrix<Tp, 2> Matrix<Tp, 3>::slice(uword s) const {
   const uword start = s * _M_d1xd2;
-  INIT_ARR(size, (n_cols(), n_rows()), 2);
-  INIT_ARR(stride, (n_rows(), 1), 2);
+  INIT_ARR2E(size, n_cols(), n_rows());
+  INIT_ARR2E(stride, n_rows(), 1);
   return Matrix<Tp, 2>(this->M_elem, start, size, stride);
 }
 
 template <class Tp>
 inline GsliceMatrix<Tp> Matrix<Tp, 3>::slice(uword s) {
   const uword start = s * _M_d1xd2;
-  INIT_ARR(size, (n_cols(), n_rows()), 2);
-  INIT_ARR(stride, (n_rows(), 1), 2);
+  INIT_ARR2E(size, n_cols(), n_rows());
+  INIT_ARR2E(stride, n_rows(), 1);
   return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
 }
 
@@ -1492,8 +1491,8 @@ template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 1>::subvec(uword i, uword j) const {
   if (i > j || j >= M_dims[0]) error("1D subscription error");
   const uword start = i;
-  INIT_ARR(size, (j - i + 1), 1);
-  INIT_ARR(stride, (1), 1);
+  INIT_ARR1E(size, j - i + 1);
+  INIT_ARR1E(stride, 1);
   return Matrix<Tp, 1>(this->M_elem, start, size, stride);
 }
 
@@ -1501,8 +1500,8 @@ template <class Tp>
 inline GsliceMatrix<Tp> Matrix<Tp, 1>::subvec(uword i, uword j) {
   if (i > j || j >= M_dims[0]) error("1D subscription error");
   const uword start = i;
-  INIT_ARR(size, (j - i + 1), 1);
-  INIT_ARR(stride, (1), 1);
+  INIT_ARR1E(size, j - i + 1);
+  INIT_ARR1E(stride, 1);
   return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
 }
 
@@ -1510,8 +1509,8 @@ template <class Tp>
 inline Matrix<Tp, 2> Matrix<Tp, 2>::submat(uword fr, uword fc, uword lr,
                                            uword lc) const {
   const uword start = n_rows() * fc + fr;
-  INIT_ARR(size, (lc - fc + 1, lr - fr + 1), 2);
-  INIT_ARR(stride, (n_rows(), 1), 2);
+  INIT_ARR2E(size, lc - fc + 1, lr - fr + 1);
+  INIT_ARR2E(stride, n_rows(), 1);
   return Matrix<Tp, 2>(this->M_elem, start, size, stride);
 }
 
@@ -1519,8 +1518,8 @@ template <class Tp>
 inline GsliceMatrix<Tp> Matrix<Tp, 2>::submat(uword fr, uword fc, uword lr,
                                               uword lc) {
   const uword start = n_rows() * fc + fr;
-  INIT_ARR(size, (lc - fc + 1, lr - fr + 1), 2);
-  INIT_ARR(stride, (n_rows(), 1), 2);
+  INIT_ARR2E(size, lc - fc + 1, lr - fr + 1);
+  INIT_ARR2E(stride, n_rows(), 1);
   return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
 }
 
@@ -1529,8 +1528,8 @@ inline Matrix<Tp, 3> Matrix<Tp, 3>::subcube(uword fr, uword fc, uword fs,
                                             uword lr, uword lc,
                                             uword ls) const {
   const uword start = sub2ind(fr, fc, fs);
-  INIT_ARR(size, (ls - fs + 1, lc - fc + 1, lr - fr + 1), 3);
-  INIT_ARR(stride, (_M_d1xd2, n_rows(), 1), 3);
+  INIT_ARR3E(size, ls - fs + 1, lc - fc + 1, lr - fr + 1);
+  INIT_ARR3E(stride, _M_d1xd2, n_rows(), 1);
   return Matrix<Tp, 3>(this->M_elem, start, size, stride);
 }
 
@@ -1538,24 +1537,24 @@ template <class Tp>
 inline GsliceMatrix<Tp> Matrix<Tp, 3>::subcube(uword fr, uword fc, uword fs,
                                                uword lr, uword lc, uword ls) {
   const uword start = sub2ind(fr, fc, fs);
-  INIT_ARR(size, (ls - fs + 1, lc - fc + 1, lr - fr + 1), 3);
-  INIT_ARR(stride, (_M_d1xd2, n_rows(), 1), 3);
+  INIT_ARR3E(size, ls - fs + 1, lc - fc + 1, lr - fr + 1);
+  INIT_ARR3E(stride, _M_d1xd2, n_rows(), 1);
   return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
 }
 
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 1>::operator()(std::slice s) const {
   const uword start = s.start();
-  INIT_ARR(size, (s.size()), 1);
-  INIT_ARR(stride, (s.stride()), 1);
+  INIT_ARR1E(size, s.size());
+  INIT_ARR1E(stride, s.stride());
   return Matrix<Tp, 1>(this->M_elem, start, size, stride);
 }
 
 template <class Tp>
 inline GsliceMatrix<Tp> Matrix<Tp, 1>::operator()(std::slice s) {
   const uword start = s.start();
-  INIT_ARR(size, (s.size()), 1);
-  INIT_ARR(stride, (s.stride()), 1);
+  INIT_ARR1E(size, s.size());
+  INIT_ARR1E(stride, s.stride());
   return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
 }
 
@@ -1563,8 +1562,8 @@ template <class Tp>
 inline Matrix<Tp, 2> Matrix<Tp, 2>::operator()(std::slice s1,
                                                std::slice s2) const {
   const uword start = sub2ind(s1.start(), s2.start());
-  INIT_ARR(size, (s2.size(), s1.size()), 2);
-  INIT_ARR(stride, (n_rows() * s2.stride(), 1 * s1.stride()), 2);
+  INIT_ARR2E(size, s2.size(), s1.size());
+  INIT_ARR2E(stride, n_rows() * s2.stride(), 1 * s1.stride());
   return Matrix<Tp, 2>(this->M_elem, start, size, stride);
 }
 
@@ -1572,8 +1571,8 @@ template <class Tp>
 inline GsliceMatrix<Tp> Matrix<Tp, 2>::operator()(std::slice s1,
                                                   std::slice s2) {
   const uword start = sub2ind(s1.start(), s2.start());
-  INIT_ARR(size, (s2.size(), s1.size()), 2);
-  INIT_ARR(stride, (n_rows() * s2.stride(), 1 * s1.stride()), 2);
+  INIT_ARR2E(size, s2.size(), s1.size());
+  INIT_ARR2E(stride, n_rows() * s2.stride(), 1 * s1.stride());
   return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
 }
 
@@ -1581,10 +1580,9 @@ template <class Tp>
 inline Matrix<Tp, 3> Matrix<Tp, 3>::operator()(std::slice s1, std::slice s2,
                                                std::slice s3) const {
   const uword start = sub2ind(s1.start(), s2.start(), s3.start());
-  INIT_ARR(size, (s3.size(), s2.size(), s1.size()), 3);
-  INIT_ARR(stride,
-           (_M_d1xd2 * s3.stride(), n_rows() * s2.stride(), 1 * s1.stride()),
-           3);
+  INIT_ARR3E(size, s3.size(), s2.size(), s1.size());
+  INIT_ARR3E(stride, _M_d1xd2 * s3.stride(), n_rows() * s2.stride(),
+             s1.stride());
   return Matrix<Tp, 3>(this->M_elem, start, size, stride);
 }
 
@@ -1592,10 +1590,9 @@ template <class Tp>
 inline GsliceMatrix<Tp> Matrix<Tp, 3>::operator()(std::slice s1, std::slice s2,
                                                   std::slice s3) {
   const uword start = sub2ind(s1.start(), s2.start(), s3.start());
-  INIT_ARR(size, (s3.size(), s2.size(), s1.size()), 3);
-  INIT_ARR(stride,
-           (_M_d1xd2 * s3.stride(), n_rows() * s2.stride(), 1 * s1.stride()),
-           3);
+  INIT_ARR3E(size, s3.size(), s2.size(), s1.size());
+  INIT_ARR3E(stride, _M_d1xd2 * s3.stride(), n_rows() * s2.stride(),
+             s1.stride());
   return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
 }
 
@@ -1638,57 +1635,57 @@ inline MaskMatrix<Tp> Matrix<Tp, 3>::operator()(const bool_array& bool_arr) {
 
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 1>::elem(const index_array& idx_arr) const {
-  INIT_ARR(dims, (idx_arr.size()), 1);
+  INIT_ARR1E(dims, idx_arr.size());
   return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 1>::elem(const index_array& idx_arr) {
-  INIT_ARR(dims, (idx_arr.size()), 1);
+  INIT_ARR1E(dims, idx_arr.size());
   return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
 }
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 2>::elem(const index_array& idx_arr) const {
-  INIT_ARR(dims, (idx_arr.size()), 1);
+  INIT_ARR1E(dims, idx_arr.size());
   return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 2>::elem(const index_array& idx_arr) {
-  INIT_ARR(dims, (idx_arr.size()), 1);
+  INIT_ARR1E(dims, idx_arr.size());
   return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 3>::elem(const index_array& idx_arr) const {
-  INIT_ARR(dims, (idx_arr.size()), 1);
+  INIT_ARR1E(dims, idx_arr.size());
   return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 3>::elem(const index_array& idx_arr) {
-  INIT_ARR(dims, (idx_arr.size()), 1);
+  INIT_ARR1E(dims, idx_arr.size());
   return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 1>::operator()(
     const index_array& idx_arr) const {
-  INIT_ARR(dims, (idx_arr.size()), 1);
+  INIT_ARR1E(dims, idx_arr.size());
   return Matrix(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 1>::operator()(
     const index_array& idx_arr) {
-  INIT_ARR(dims, (idx_arr.size()), 1);
+  INIT_ARR1E(dims, idx_arr.size());
   return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline Matrix<Tp, 2> Matrix<Tp, 2>::operator()(
     const index_array& idx_arr1, const index_array& idx_arr2) const {
-  INIT_ARR(dims, (idx_arr1.size(), idx_arr2.size()), 2);
+  INIT_ARR2E(dims, idx_arr1.size(), idx_arr2.size());
   index_array idx_arr(dims[0] * dims[1]);
   uword idx = 0;
   for (uword j = 0; j < idx_arr2.size(); ++j) {
@@ -1702,7 +1699,7 @@ inline Matrix<Tp, 2> Matrix<Tp, 2>::operator()(
 template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 2>::operator()(
     const index_array& idx_arr1, const index_array& idx_arr2) {
-  INIT_ARR(dims, (idx_arr1.size(), idx_arr2.size()), 2);
+  INIT_ARR2E(dims, idx_arr1.size(), idx_arr2.size());
   index_array idx_arr(dims[0] * dims[1]);
   uword idx = 0;
   for (uword j = 0; j < idx_arr2.size(); ++j) {
@@ -1717,7 +1714,7 @@ template <class Tp>
 inline Matrix<Tp, 3> Matrix<Tp, 3>::operator()(
     const index_array& idx_arr1, const index_array& idx_arr2,
     const index_array& idx_arr3) const {
-  INIT_ARR(dims, (idx_arr1.size(), idx_arr2.size(), idx_arr3.size()), 3);
+  INIT_ARR3E(dims, idx_arr1.size(), idx_arr2.size(), idx_arr3.size());
   index_array idx_arr(dims[0] * dims[1] * dims[2]);
   uword idx = 0;
   for (uword k = 0; k < idx_arr3.size(); ++k) {
@@ -1734,7 +1731,7 @@ template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 3>::operator()(
     const index_array& idx_arr1, const index_array& idx_arr2,
     const index_array& idx_arr3) {
-  INIT_ARR(dims, (idx_arr1.size(), idx_arr2.size(), idx_arr3.size()), 3);
+  INIT_ARR3E(dims, idx_arr1.size(), idx_arr2.size(), idx_arr3.size());
   index_array idx_arr(dims[0] * dims[1] * dims[2]);
   uword idx = 0;
   for (uword k = 0; k < idx_arr3.size(); ++k) {

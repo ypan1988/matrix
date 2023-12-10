@@ -45,12 +45,20 @@ void test_print(const Matrix<T, 3>& m, std::string msg = "") {
 void macro_test_init_array(bool print = false) {
   std::cout << "[TEST]: 01. Init Index Array (i.e., valarray<size_t>)"
             << std::endl;
-  INIT_ARR(idx_arr, (1, 2, 3, 4), 4);
-  assert(idx_arr.size() == 4);
-  assert(idx_arr[0] == 1);
-  assert(idx_arr[1] == 2);
-  assert(idx_arr[2] == 3);
-  assert(idx_arr[3] == 4);
+  INIT_ARR1E(idx_arr1, 1);
+  assert(idx_arr1.size() == 1);
+  assert(idx_arr1[0] == 1);
+
+  INIT_ARR2E(idx_arr2, 1, 2);
+  assert(idx_arr2.size() == 2);
+  assert(idx_arr2[0] == 1);
+  assert(idx_arr2[1] == 2);
+
+  INIT_ARR3E(idx_arr3, 1, 2, 3);
+  assert(idx_arr3.size() == 3);
+  assert(idx_arr3[0] == 1);
+  assert(idx_arr3[1] == 2);
+  assert(idx_arr3[2] == 3);
 }
 
 // ----- A1: Testing Matrix<T, N> Constructions -----
