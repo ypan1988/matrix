@@ -309,11 +309,11 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
         elem_type& operator()(uword n1)       { _M_range_check(n1); return this->M_elem[n1]; }
   const elem_type& operator()(uword n1) const { _M_range_check(n1); return this->M_elem[n1]; }
 
-  // GsliceMatrix related member functions
-          Matrix<Tp, 1> subvec(uword first_index, uword last_index) const;
-    GsliceMatrix<Tp   > subvec(uword first_index, uword last_index);
+  // SliceMatrix related member functions
           Matrix<Tp, 1> operator()(std::slice s) const;
-    GsliceMatrix<Tp   > operator()(std::slice s);
+     SliceMatrix<Tp   > operator()(std::slice s);
+          Matrix<Tp, 1> subvec(uword first_index, uword last_index) const;
+     SliceMatrix<Tp   > subvec(uword first_index, uword last_index);
 
   // MaskMatrix related member functions
           Matrix<Tp, 1> operator()(const bool_array& bool_arr) const;
@@ -1404,6 +1404,40 @@ struct IndirectMatrix : public SubMatrix_base<Tp, index_array> {
 // Matrix member functions dealing with SliceMatrix
 
 template <class Tp>
+inline Matrix<Tp, 1> Matrix<Tp, 1>::operator()(std::slice s) const {
+  const uword start = s.start();
+  const uword size = s.size();
+  const uword stride = s.stride();
+  return Matrix<Tp, 1>(this->M_elem, start, size, stride, is_column_vector);
+}
+
+template <class Tp>
+inline SliceMatrix<Tp> Matrix<Tp, 1>::operator()(std::slice s) {
+  const uword start = s.start();
+  const uword size = s.size();
+  const uword stride = s.stride();
+  return SliceMatrix<Tp>(this->M_elem, start, size, stride, is_column_vector);
+}
+
+template <class Tp>
+inline Matrix<Tp, 1> Matrix<Tp, 1>::subvec(uword i, uword j) const {
+  if (i > j || j >= M_dims[0]) error("1D subscription error");
+  const uword start = i;
+  const uword size = j - i + 1;
+  const uword stride = 1;
+  return Matrix<Tp, 1>(this->M_elem, start, size, stride, is_column_vector);
+}
+
+template <class Tp>
+inline SliceMatrix<Tp> Matrix<Tp, 1>::subvec(uword i, uword j) {
+  if (i > j || j >= M_dims[0]) error("1D subscription error");
+  const uword start = i;
+  const uword size = j - i + 1;
+  const uword stride = 1;
+  return SliceMatrix<Tp>(this->M_elem, start, size, stride, is_column_vector);
+}
+
+template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 2>::row(uword r) const {
   _M_range_check(r, 0);
   const uword start = r;
@@ -1488,24 +1522,6 @@ inline GsliceMatrix<Tp> Matrix<Tp, 3>::slices(uword fs, uword ls) {
 }
 
 template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 1>::subvec(uword i, uword j) const {
-  if (i > j || j >= M_dims[0]) error("1D subscription error");
-  const uword start = i;
-  INIT_ARR1E(size, j - i + 1);
-  INIT_ARR1E(stride, 1);
-  return Matrix<Tp, 1>(this->M_elem, start, size, stride);
-}
-
-template <class Tp>
-inline GsliceMatrix<Tp> Matrix<Tp, 1>::subvec(uword i, uword j) {
-  if (i > j || j >= M_dims[0]) error("1D subscription error");
-  const uword start = i;
-  INIT_ARR1E(size, j - i + 1);
-  INIT_ARR1E(stride, 1);
-  return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
-}
-
-template <class Tp>
 inline Matrix<Tp, 2> Matrix<Tp, 2>::submat(uword fr, uword fc, uword lr,
                                            uword lc) const {
   const uword start = n_rows() * fc + fr;
@@ -1539,22 +1555,6 @@ inline GsliceMatrix<Tp> Matrix<Tp, 3>::subcube(uword fr, uword fc, uword fs,
   const uword start = sub2ind(fr, fc, fs);
   INIT_ARR3E(size, ls - fs + 1, lc - fc + 1, lr - fr + 1);
   INIT_ARR3E(stride, _M_d1xd2, n_rows(), 1);
-  return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
-}
-
-template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 1>::operator()(std::slice s) const {
-  const uword start = s.start();
-  INIT_ARR1E(size, s.size());
-  INIT_ARR1E(stride, s.stride());
-  return Matrix<Tp, 1>(this->M_elem, start, size, stride);
-}
-
-template <class Tp>
-inline GsliceMatrix<Tp> Matrix<Tp, 1>::operator()(std::slice s) {
-  const uword start = s.start();
-  INIT_ARR1E(size, s.size());
-  INIT_ARR1E(stride, s.stride());
   return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
 }
 

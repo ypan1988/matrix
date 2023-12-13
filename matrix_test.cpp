@@ -1267,8 +1267,8 @@ void matrix_test_assignment_a2_10(bool print = false) {
 #endif
 }
 
-void matrix_test_element_access_b1_01(bool print = false) {
-  std::cout << "[TEST]: B1_01. Access elements with operator[]\n";
+void matrix_test_element_access_b1_02(bool print = false) {
+  std::cout << "[TEST]: B1_02. Access elements with operator[]\n";
 
   const double a1[] = {1, 2, 3, 4};
   const std::valarray<double> va1(a1, 4);
@@ -1309,7 +1309,64 @@ void matrix_test_element_access_b1_01(bool print = false) {
 }
 
 void matrix_test_slicing_with_slicematrix_b2_01(bool print = false) {
-  std::cout << "[TEST]: B2_01. Matrix<T, 2>::row()/col()\n";
+  std::cout << "[TEST]: B2_01. Matrix<T, 1>::operator()(std::slice)\n";
+  const double arr[] = {1, 2, 3, 4, 5};
+
+  Matrix<double, 1> mat1d_a(arr, 5);
+  mat1d_a(std::slice(1, 3, 1)) = 0;
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a.n_elem() == 5);
+  assert(mat1d_a.n_rows() == 5);
+  assert(mat1d_a.n_cols() == 1);
+  assert(mat1d_a(0) == 1);
+  assert(mat1d_a(1) == 0);
+  assert(mat1d_a(2) == 0);
+  assert(mat1d_a(3) == 0);
+  assert(mat1d_a(4) == 5);
+
+  const Matrix<double, 1> mat1d_b(arr, 5);
+  Matrix<double, 1> mat1d_c = mat1d_b(std::slice(0, 3, 2));
+  if (print) test_print(mat1d_c, "mat1d_c = ");
+  assert(mat1d_c.n_elem() == 3);
+  assert(mat1d_c.n_rows() == 3);
+  assert(mat1d_c.n_cols() == 1);
+  assert(mat1d_c(0) == 1);
+  assert(mat1d_c(1) == 3);
+  assert(mat1d_c(2) == 5);
+}
+
+void matrix_test_slicing_with_slicematrix_b2_02(bool print = false) {
+  std::cout << "[TEST]: B2_02. Matrix<T, 1>::subvec(i, j)\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d(a1, 4);
+  if (print) test_print(mat1d, "mat1d =");
+  mat1d.subvec(2, 3) = 5.0;
+  if (print) std::cout << "Apply mat1d.subvec(2, 3) = 5\n";
+  if (print) test_print(mat1d, "mat1d =");
+  assert(mat1d(0) == 1.0);
+  assert(mat1d(1) == 2.0);
+  assert(mat1d(2) == 5.0);
+  assert(mat1d(3) == 5.0);
+
+  // mat1d.subvec(0, 2) is a SliceMatrix<double>
+  const Matrix<double, 1> mat1d_a(mat1d.subvec(0, 2));
+  if (print) test_print(mat1d_a, "mat1d_a =");
+  assert(mat1d_a.n_elem() == 3);
+  assert(mat1d_a(0) == 1.0);
+  assert(mat1d_a(1) == 2.0);
+  assert(mat1d_a(2) == 5.0);
+
+  // mat1d_a.subvec(0, 2) is a Matrix<T, 1>
+  Matrix<double, 1> mat1d_b(mat1d_a.subvec(0, 1));
+  if (print) test_print(mat1d_a, "mat1d_b =");
+  assert(mat1d_b.n_elem() == 2);
+  assert(mat1d_b(0) == 1.0);
+  assert(mat1d_b(1) == 2.0);
+}
+
+void matrix_test_slicing_with_slicematrix_b2_03(bool print = false) {
+  std::cout << "[TEST]: B2_03. Matrix<T, 2>::row()/col()\n";
 
   const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
   Matrix<double, 2> mat2d_a(arr, 4, 3);
@@ -1739,37 +1796,6 @@ void matrix_test_member_function_for_each(bool print = false) {
   assert(mat3d(3, 2, 1) == 34.0);
 }
 
-void matrix_1d_test_slice_array(bool print = false) {
-  std::cout
-      << "[TEST]: 1D Matrix's std::slice_array related member functions\n";
-
-  const double a1[] = {1, 2, 3, 4};
-  Matrix<double, 1> mat1d(a1, 4);
-  if (print) test_print(mat1d, "mat1d =");
-  mat1d.subvec(2, 3) = 5.0;
-  if (print) std::cout << "Apply mat1d.subvec(2, 3) = 5\n";
-  if (print) test_print(mat1d, "mat1d =");
-  assert(mat1d(0) == 1.0);
-  assert(mat1d(1) == 2.0);
-  assert(mat1d(2) == 5.0);
-  assert(mat1d(3) == 5.0);
-
-  // mat1d.subvec(0, 2) is a std::slice_arrary
-  const Matrix<double, 1> mat1d_a(mat1d.subvec(0, 2));
-  if (print) test_print(mat1d_a, "mat1d_a =");
-  assert(mat1d_a.n_elem() == 3);
-  assert(mat1d_a(0) == 1.0);
-  assert(mat1d_a(1) == 2.0);
-  assert(mat1d_a(2) == 5.0);
-
-  // mat1d_a.subvec(0, 2) is a std::valarray
-  Matrix<double, 1> mat1d_b(mat1d_a.subvec(0, 1));
-  if (print) test_print(mat1d_a, "mat1d_b =");
-  assert(mat1d_b.n_elem() == 2);
-  assert(mat1d_b(0) == 1.0);
-  assert(mat1d_b(1) == 2.0);
-}
-
 void matrix_2d_test_gslice_array(bool print = false) {
   std::cout
       << "[TEST]: 2D Matrix's std::gslice_array related member functions\n";
@@ -2041,27 +2067,6 @@ void matrix_3d_test_subcube(bool print = false) {
   assert(mat3d_d(1, 0, 2) == 28);
   assert(mat3d_d(1, 1, 2) == 32);
   assert(mat3d_d(1, 2, 2) == 36);
-}
-
-void matrix_1d_test_slice_on_each_dim(bool print = false) {
-  std::cout << "[TEST]: 1D Matrix's member functions m(slice)\n";
-  const double arr[] = {1, 2, 3, 4, 5};
-
-  Matrix<double, 1> mat1d_a(arr, 5);
-  mat1d_a(std::slice(1, 3, 1)) = 0;
-  if (print) test_print(mat1d_a, "mat1d_a = ");
-  assert(mat1d_a(0) == 1);
-  assert(mat1d_a(1) == 0);
-  assert(mat1d_a(2) == 0);
-  assert(mat1d_a(3) == 0);
-  assert(mat1d_a(4) == 5);
-
-  const Matrix<double, 1> mat1d_b(arr, 5);
-  Matrix<double, 1> mat1d_c = mat1d_b(std::slice(0, 3, 2));
-  if (print) test_print(mat1d_c, "mat1d_c = ");
-  assert(mat1d_c(0) == 1);
-  assert(mat1d_c(1) == 3);
-  assert(mat1d_c(2) == 5);
 }
 
 void matrix_2d_test_slice_on_each_dim(bool print = false) {
@@ -2635,24 +2640,25 @@ int main() {
 
   std::cout << "\n----- B1: Testing Matrix<T, N> Subscripting -----\n"
             << std::endl;
-  matrix_test_element_access_b1_01(print_flag);
+  // test b1_01 (subscripting m(i, j, k)) is skipped
+  matrix_test_element_access_b1_02(print_flag);
 
   std::cout
       << "\n----- B2: Testing Matrix<T, N> Slicing with SliceMatrix<T> -----\n"
       << std::endl;
   matrix_test_slicing_with_slicematrix_b2_01(print_flag);
+  matrix_test_slicing_with_slicematrix_b2_02(print_flag);
+  matrix_test_slicing_with_slicematrix_b2_03(print_flag);
 
   std::cout << "\n----- B3: Testing Matrix<T, N> Slicing with GsliceMatrix<T, "
                "N> -----\n"
             << std::endl;
-  matrix_1d_test_slice_array(print_flag);
   matrix_2d_test_gslice_array(print_flag);
   matrix_2d_test_rows(print_flag);
   matrix_2d_test_cols(print_flag);
   matrix_2d_test_submat(print_flag);
   matrix_3d_test_slices(print_flag);
   matrix_3d_test_subcube(print_flag);
-  matrix_1d_test_slice_on_each_dim(print_flag);
   matrix_2d_test_slice_on_each_dim(print_flag);
   matrix_3d_test_slice_on_each_dim(print_flag);
 
