@@ -267,7 +267,7 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
   Matrix(const std::valarray<Tp>  & x) : Matrix_base<Tp>(x                 ) { M_init(); }    // (12)
 
 #if defined(MATRIX_LIB_USE_R)
-  Matrix(SEXP                         x) : Matrix_base<Tp>(x                 ) { M_init(); }
+  Matrix(SEXP                         x) : Matrix_base<Tp>(x               ) { M_init(); }
 #endif
   Matrix(const std::valarray<Tp>& x, const uword        dims[1]) : Matrix_base<Tp>(x) { M_init(dims); }
   Matrix(const std::valarray<Tp>& x, const index_array& dims   ) : Matrix_base<Tp>(x) { M_init(dims); }

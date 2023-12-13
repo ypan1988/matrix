@@ -2595,6 +2595,10 @@ void matrix_test_dot(bool print = false) {
   assert(res == 30);
 }
 
+void print_msg(const std::string& msg) {
+  std::cout << "\n----- " << msg << " -----\n" << std::endl;
+}
+
 int main() {
   vec a;
   mat b;
@@ -2603,10 +2607,9 @@ int main() {
   bool print_flag = false;
   macro_test_init_array(print_flag);
 
-  std::cout << "\n----- A: Constructions and Assignments-----\n" << std::endl;
+  print_msg("A: Constructions and Assignments");
 
-  std::cout << "\n----- A1: Testing Matrix<T, N> Constructions -----\n"
-            << std::endl;
+  print_msg("A1: Testing Matrix<T, N> Constructions");
   matrix_test_constructor_a1_01(print_flag);
   matrix_test_constructor_a1_02(print_flag);
   matrix_test_constructor_a1_03(print_flag);
@@ -2623,8 +2626,7 @@ int main() {
   matrix_test_constructor_a1_13(print_flag);
   matrix_test_constructor_a1_14(print_flag);
 
-  std::cout << "\n----- A2: Testing Matrix<T, N> Assignments -----\n"
-            << std::endl;
+  print_msg("A2: Testing Matrix<T, N> Assignments");
   matrix_test_assignment_a2_01(print_flag);
   matrix_test_assignment_a2_02(print_flag);
   matrix_test_assignment_a2_03(print_flag);
@@ -2636,23 +2638,17 @@ int main() {
   matrix_test_assignment_a2_09(print_flag);
   matrix_test_assignment_a2_10(print_flag);
 
-  std::cout << "\n----- B: Subscripting and Slicing -----\n" << std::endl;
-
-  std::cout << "\n----- B1: Testing Matrix<T, N> Subscripting -----\n"
-            << std::endl;
-  // test b1_01 (subscripting m(i, j, k)) is skipped
+  print_msg("B: Subscripting and Slicing");
+  print_msg("B1: Testing Matrix<T, N> Subscripting");
+  // test for b1_01 (subscripting m(i, j, k)) is skipped
   matrix_test_element_access_b1_02(print_flag);
 
-  std::cout
-      << "\n----- B2: Testing Matrix<T, N> Slicing with SliceMatrix<T> -----\n"
-      << std::endl;
+  print_msg("B2: Testing Matrix<T, N> Slicing with SliceMatrix<T>");
   matrix_test_slicing_with_slicematrix_b2_01(print_flag);
   matrix_test_slicing_with_slicematrix_b2_02(print_flag);
   matrix_test_slicing_with_slicematrix_b2_03(print_flag);
 
-  std::cout << "\n----- B3: Testing Matrix<T, N> Slicing with GsliceMatrix<T, "
-               "N> -----\n"
-            << std::endl;
+  print_msg("B3: Testing Matrix<T, N> Slicing with GSliceMatrix<T>");
   matrix_2d_test_gslice_array(print_flag);
   matrix_2d_test_rows(print_flag);
   matrix_2d_test_cols(print_flag);
@@ -2662,17 +2658,12 @@ int main() {
   matrix_2d_test_slice_on_each_dim(print_flag);
   matrix_3d_test_slice_on_each_dim(print_flag);
 
-  std::cout
-      << "\n----- B4: Testing Matrix<T, N> Slicing with MaskMatrix<T> -----\n"
-      << std::endl;
+  print_msg("B4: Testing Matrix<T, N> Slicing with MaskMatrix<T>");
   matrix_1d_test_bool_elem(print_flag);
   matrix_2d_test_bool_elem(print_flag);
   matrix_3d_test_bool_elem(print_flag);
 
-  std::cout
-      << "\n----- B5: Testing Matrix<T, N> Slicing with IndirectMatrix<T, "
-         "N> -----\n"
-      << std::endl;
+  print_msg("B5: Testing Matrix<T, N> Slicing with IndirectMatrix<T>");
   matrix_1d_test_ind_elem(print_flag);
   matrix_2d_test_ind_elem(print_flag);
   matrix_3d_test_ind_elem(print_flag);
