@@ -495,14 +495,14 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
      SliceMatrix<Tp   > col(uword col_number);
 
   // GsliceMatrix related member functions
-          Matrix<Tp, 2> rows(uword first_row, uword last_row) const;
-    GsliceMatrix<Tp   > rows(uword first_row, uword last_row);
-          Matrix<Tp, 2> cols(uword first_col, uword last_col) const;
-    GsliceMatrix<Tp   > cols(uword first_col, uword last_col);
-          Matrix<Tp, 2> submat(uword first_row, uword first_col, uword last_row, uword last_col) const;
-    GsliceMatrix<Tp   > submat(uword first_row, uword first_col, uword last_row, uword last_col);
           Matrix<Tp, 2> operator()(std::slice s1, std::slice s2) const;
     GsliceMatrix<Tp   > operator()(std::slice s1, std::slice s2);
+          Matrix<Tp, 2> submat(uword first_row, uword first_col, uword last_row, uword last_col) const;
+    GsliceMatrix<Tp   > submat(uword first_row, uword first_col, uword last_row, uword last_col);
+          Matrix<Tp, 2> rows(uword fr, uword lr) const { return submat(fr, 0, lr, n_cols() - 1); }
+    GsliceMatrix<Tp   > rows(uword fr, uword lr)       { return submat(fr, 0, lr, n_cols() - 1); }
+          Matrix<Tp, 2> cols(uword fc, uword lc) const { return submat(0, fc, n_rows() - 1, lc); }
+    GsliceMatrix<Tp   > cols(uword fc, uword lc)       { return submat(0, fc, n_rows() - 1, lc); }
 
   // MaskMatrix related member functions
           Matrix<Tp, 1> operator()(const bool_array& bool_arr) const;
@@ -643,16 +643,16 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
   { _M_range_check(n1, n2, n3); return this->M_elem[sub2ind(n1, n2, n3)]; }
 
   // GsliceMatrix related member functions
-          Matrix<Tp, 2> slice(uword slice_number) const;
-    GsliceMatrix<Tp   > slice(uword slice_number);
-          Matrix<Tp, 3> slices(uword first_slice, uword last_slice) const;
-    GsliceMatrix<Tp   > slices(uword first_slice, uword last_slice);
+          Matrix<Tp, 3> operator()(std::slice s1, std::slice s2, std::slice s3) const;
+    GsliceMatrix<Tp   > operator()(std::slice s1, std::slice s2, std::slice s3);
           Matrix<Tp, 3> subcube(uword first_row, uword first_col, uword first_slice,
                                 uword  last_row, uword  last_col, uword  last_slice) const;
     GsliceMatrix<Tp   > subcube(uword first_row, uword first_col, uword first_slice,
-                                uword  last_row, uword  last_col, uword  last_slice);
-          Matrix<Tp, 3> operator()(std::slice s1, std::slice s2, std::slice s3) const;
-    GsliceMatrix<Tp   > operator()(std::slice s1, std::slice s2, std::slice s3);
+                      uword  last_row, uword  last_col, uword  last_slice);
+          Matrix<Tp, 2> slice(uword slice_number) const;
+    GsliceMatrix<Tp   > slice(uword slice_number);
+          Matrix<Tp, 3> slices(uword fs, uword ls) const { return subcube(0, 0, fs, n_rows() - 1, n_cols() - 1, ls); }
+    GsliceMatrix<Tp   > slices(uword fs, uword ls)       { return subcube(0, 0, fs, n_rows() - 1, n_cols() - 1, ls); }
 
   // MaskMatrix related member functions
           Matrix<Tp, 1> operator()(const bool_array& bool_arr) const;
@@ -1474,51 +1474,42 @@ inline SliceMatrix<Tp> Matrix<Tp, 2>::col(uword c) {
 }
 
 // Matrix member functions dealing with GsliceMatrix
-
 template <class Tp>
-inline Matrix<Tp, 2> Matrix<Tp, 3>::slice(uword s) const {
-  const uword start = s * _M_d1xd2;
-  INIT_ARR2E(size, n_cols(), n_rows());
-  INIT_ARR2E(stride, n_rows(), 1);
+inline Matrix<Tp, 2> Matrix<Tp, 2>::operator()(std::slice s1,
+                                               std::slice s2) const {
+  const uword start = sub2ind(s1.start(), s2.start());
+  INIT_ARR2E(size, s2.size(), s1.size());
+  INIT_ARR2E(stride, n_rows() * s2.stride(), 1 * s1.stride());
   return Matrix<Tp, 2>(this->M_elem, start, size, stride);
 }
 
 template <class Tp>
-inline GsliceMatrix<Tp> Matrix<Tp, 3>::slice(uword s) {
-  const uword start = s * _M_d1xd2;
-  INIT_ARR2E(size, n_cols(), n_rows());
-  INIT_ARR2E(stride, n_rows(), 1);
+inline GsliceMatrix<Tp> Matrix<Tp, 2>::operator()(std::slice s1,
+                                                  std::slice s2) {
+  const uword start = sub2ind(s1.start(), s2.start());
+  INIT_ARR2E(size, s2.size(), s1.size());
+  INIT_ARR2E(stride, n_rows() * s2.stride(), 1 * s1.stride());
   return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
 }
 
 template <class Tp>
-inline Matrix<Tp, 2> Matrix<Tp, 2>::rows(uword fr, uword lr) const {
-  return submat(fr, 0, lr, n_cols() - 1);
+inline Matrix<Tp, 3> Matrix<Tp, 3>::operator()(std::slice s1, std::slice s2,
+                                               std::slice s3) const {
+  const uword start = sub2ind(s1.start(), s2.start(), s3.start());
+  INIT_ARR3E(size, s3.size(), s2.size(), s1.size());
+  INIT_ARR3E(stride, _M_d1xd2 * s3.stride(), n_rows() * s2.stride(),
+             s1.stride());
+  return Matrix<Tp, 3>(this->M_elem, start, size, stride);
 }
 
 template <class Tp>
-inline GsliceMatrix<Tp> Matrix<Tp, 2>::rows(uword fr, uword lr) {
-  return submat(fr, 0, lr, n_cols() - 1);
-}
-
-template <class Tp>
-inline Matrix<Tp, 2> Matrix<Tp, 2>::cols(uword fc, uword lc) const {
-  return submat(0, fc, n_rows() - 1, lc);
-}
-
-template <class Tp>
-inline GsliceMatrix<Tp> Matrix<Tp, 2>::cols(uword fc, uword lc) {
-  return submat(0, fc, n_rows() - 1, lc);
-}
-
-template <class Tp>
-inline Matrix<Tp, 3> Matrix<Tp, 3>::slices(uword fs, uword ls) const {
-  return subcube(0, 0, fs, n_rows() - 1, n_cols() - 1, ls);
-}
-
-template <class Tp>
-inline GsliceMatrix<Tp> Matrix<Tp, 3>::slices(uword fs, uword ls) {
-  return subcube(0, 0, fs, n_rows() - 1, n_cols() - 1, ls);
+inline GsliceMatrix<Tp> Matrix<Tp, 3>::operator()(std::slice s1, std::slice s2,
+                                                  std::slice s3) {
+  const uword start = sub2ind(s1.start(), s2.start(), s3.start());
+  INIT_ARR3E(size, s3.size(), s2.size(), s1.size());
+  INIT_ARR3E(stride, _M_d1xd2 * s3.stride(), n_rows() * s2.stride(),
+             s1.stride());
+  return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
 }
 
 template <class Tp>
@@ -1559,40 +1550,18 @@ inline GsliceMatrix<Tp> Matrix<Tp, 3>::subcube(uword fr, uword fc, uword fs,
 }
 
 template <class Tp>
-inline Matrix<Tp, 2> Matrix<Tp, 2>::operator()(std::slice s1,
-                                               std::slice s2) const {
-  const uword start = sub2ind(s1.start(), s2.start());
-  INIT_ARR2E(size, s2.size(), s1.size());
-  INIT_ARR2E(stride, n_rows() * s2.stride(), 1 * s1.stride());
+inline Matrix<Tp, 2> Matrix<Tp, 3>::slice(uword s) const {
+  const uword start = s * _M_d1xd2;
+  INIT_ARR2E(size, n_cols(), n_rows());
+  INIT_ARR2E(stride, n_rows(), 1);
   return Matrix<Tp, 2>(this->M_elem, start, size, stride);
 }
 
 template <class Tp>
-inline GsliceMatrix<Tp> Matrix<Tp, 2>::operator()(std::slice s1,
-                                                  std::slice s2) {
-  const uword start = sub2ind(s1.start(), s2.start());
-  INIT_ARR2E(size, s2.size(), s1.size());
-  INIT_ARR2E(stride, n_rows() * s2.stride(), 1 * s1.stride());
-  return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
-}
-
-template <class Tp>
-inline Matrix<Tp, 3> Matrix<Tp, 3>::operator()(std::slice s1, std::slice s2,
-                                               std::slice s3) const {
-  const uword start = sub2ind(s1.start(), s2.start(), s3.start());
-  INIT_ARR3E(size, s3.size(), s2.size(), s1.size());
-  INIT_ARR3E(stride, _M_d1xd2 * s3.stride(), n_rows() * s2.stride(),
-             s1.stride());
-  return Matrix<Tp, 3>(this->M_elem, start, size, stride);
-}
-
-template <class Tp>
-inline GsliceMatrix<Tp> Matrix<Tp, 3>::operator()(std::slice s1, std::slice s2,
-                                                  std::slice s3) {
-  const uword start = sub2ind(s1.start(), s2.start(), s3.start());
-  INIT_ARR3E(size, s3.size(), s2.size(), s1.size());
-  INIT_ARR3E(stride, _M_d1xd2 * s3.stride(), n_rows() * s2.stride(),
-             s1.stride());
+inline GsliceMatrix<Tp> Matrix<Tp, 3>::slice(uword s) {
+  const uword start = s * _M_d1xd2;
+  INIT_ARR2E(size, n_cols(), n_rows());
+  INIT_ARR2E(stride, n_rows(), 1);
   return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
 }
 
