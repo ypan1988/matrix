@@ -161,11 +161,13 @@ The table above provides ways to replace the contents of the matrix:
 | Matrix<T, N>'s member functions  (with T = double, N = 1/2/3) |      |
 |:--------------------------------------------------------------|------|
 | vec : `vec operator()(std::slice s1) const`                   | (1a) |
-| vec : `submat_slice operator()(std::slice s1) const`          | (1b) |
+| vec : `submat_slice operator()(std::slice s1)`                | (1b) |
 | vec : `vec subvec(first_row, last_row) const`                 | (2a) |
-| vec : `submat_slice subvec(first_row, last_row) const`        | (2b) |
-| mat : `vec row(i) const / vec col(i) const`                   | (3a) |
-| mat : `submat_slice row(i) / submat_slice col(i)`             | (ab) |
+| vec : `submat_slice subvec(first_row, last_row)`              | (2b) |
+| vec : `vec head(n) const /  vec tail(n) const`                | (3a) |
+| vec : `submat_slice head(n) / submat_slice tail(n)`           | (3b) |
+| mat : `vec row(i) const / vec col(i) const`                   | (4a) |
+| mat : `submat_slice row(i) / submat_slice col(i)`             | (4b) |
 
 ### Matrix Slicing with GsliceMatrix
 | Matrix<T, N>'s member functions  (with T = double, N = 1/2/3)                                                                                                                |      |

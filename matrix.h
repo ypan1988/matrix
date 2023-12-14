@@ -314,6 +314,10 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
      SliceMatrix<Tp   > operator()(std::slice s);
           Matrix<Tp, 1> subvec(uword first_index, uword last_index) const;
      SliceMatrix<Tp   > subvec(uword first_index, uword last_index);
+          Matrix<Tp, 1> head(uword n) const { return subvec(0, n-1); }
+     SliceMatrix<Tp   > head(uword n)       { return subvec(0, n-1);}
+          Matrix<Tp, 1> tail(uword n) const { return subvec(this->n_elem()-n, this->n_elem()-1); }
+     SliceMatrix<Tp   > tail(uword n)       { return subvec(this->n_elem()-n, this->n_elem()-1); }
 
   // MaskMatrix related member functions
           Matrix<Tp, 1> operator()(const bool_array& bool_arr) const;

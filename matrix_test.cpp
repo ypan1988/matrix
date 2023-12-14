@@ -1366,7 +1366,45 @@ void matrix_test_slicing_with_slicematrix_b2_02(bool print = false) {
 }
 
 void matrix_test_slicing_with_slicematrix_b2_03(bool print = false) {
-  std::cout << "[TEST]: B2_03. Matrix<T, 2>::row()/col()\n";
+  std::cout << "[TEST]: B2_03. Matrix<T, 1>::head(n)/tail(n)\n";
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d(a1, 4);
+  if (print) test_print(mat1d, "mat1d =");
+  mat1d.head(2) = 0;
+  mat1d.tail(2) = 1;
+  if (print) std::cout << "Apply mat1d.head(2) = 0 & mat1d.tail(2) = 1\n";
+  if (print) test_print(mat1d, "mat1d =");
+  assert(mat1d.n_elem() == 4);
+  assert(mat1d.n_rows() == 4);
+  assert(mat1d.n_cols() == 1);
+  assert(mat1d(0) == 0.0);
+  assert(mat1d(1) == 0.0);
+  assert(mat1d(2) == 1.0);
+  assert(mat1d(3) == 1.0);
+
+  // mat1d.head(3) is a SliceMatrix<double>
+  const Matrix<double, 1> mat1d_a(mat1d.head(3));
+  if (print) test_print(mat1d_a, "mat1d_a =");
+  assert(mat1d_a.n_elem() == 3);
+  assert(mat1d_a.n_rows() == 3);
+  assert(mat1d_a.n_cols() == 1);
+  assert(mat1d_a(0) == 0.0);
+  assert(mat1d_a(1) == 0.0);
+  assert(mat1d_a(2) == 1.0);
+
+  // mat1d_a.tail(3) is a Matrix<T, 1>
+  Matrix<double, 1> mat1d_b(mat1d_a.tail(2));
+  if (print) test_print(mat1d_b, "mat1d_b =");
+  assert(mat1d_b.n_elem() == 2);
+  assert(mat1d_b.n_rows() == 2);
+  assert(mat1d_b.n_cols() == 1);
+  assert(mat1d_b(0) == 0.0);
+  assert(mat1d_b(1) == 1.0);
+}
+
+void matrix_test_slicing_with_slicematrix_b2_04(bool print = false) {
+  std::cout << "[TEST]: B2_04. Matrix<T, 2>::row()/col()\n";
 
   const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
   Matrix<double, 2> mat2d_a(arr, 4, 3);
@@ -2647,6 +2685,7 @@ int main() {
   matrix_test_slicing_with_slicematrix_b2_01(print_flag);
   matrix_test_slicing_with_slicematrix_b2_02(print_flag);
   matrix_test_slicing_with_slicematrix_b2_03(print_flag);
+  matrix_test_slicing_with_slicematrix_b2_04(print_flag);
 
   print_msg("B3: Testing Matrix<T, N> Slicing with GSliceMatrix<T>");
   matrix_2d_test_gslice_array(print_flag);
