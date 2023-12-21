@@ -26,8 +26,8 @@ This single header matrix library can be viewed as a wrapper of `std::valarray` 
 
 + **Dimensions** of `Matrix<T, N>` can be accessed similarly by `get_dims()` while total size and size on each dimension can be obtained through the following member functions (all the returned values have type `std::size_t`):
 
-+ | `Matrix<T, 1>` | `Matrix<T, 2>` | `Matrix<T, 3>` | Description |
-  | :------------: | :------------: | :------------: | :---------- |
+  | `Matrix<T, 1>` | `Matrix<T, 2>` | `Matrix<T, 3>` | Description                   |
+  | :------------: | :------------: | :------------: |:------------------------------|
   | `x.n_elem()`   | `x.n_elem()`   | `x.n_elem()`   | total number of elements in x |
   | `x.n_rows()`   | `x.n_rows()`   | `x.n_rows()`   | number of rows in x           |
   | `x.n_cols()`   | `x.n_cols()`   | `x.n_cols()`   | number of columns in x        |
@@ -72,12 +72,12 @@ Similar to `Matrix<T, N>`, four wrappers for the corresponding helper classes of
 
 These wrapper classes behave just like the `Matrix` except they refer to a `Matrix`, rather than owning their own elements. They can be viewed as a reference to a sub-`Matrix` which will be discussed in more detail in section **Subscripting and Slicing**. Most of the time, it is safe to ignore the existence of these three helper classes when dealing with sub-Matrix. But for better readability of this doc, we provide following typedefs for 1D/2D/3D sub-Matrix:
 
-  |       type  T       |      double       |
-  |:-------------------:|:-----------------:|
-  |  `SliceMatrix<T>`   |  `submat_slice`   |
-  |  `GsliceMatrix<T>`  |  `submat_gslice`  |
-  |   `MaskMatrix<T>`   |   `submat_mask`   |
-  | `IndirectMatrix<T>` | `submat_indirect` |
+  |       type  T       | <div style="width:290px">double</div> |
+  |:-------------------:|:-------------------------------------:|
+  |  `SliceMatrix<T>`   |            `submat_slice`             |
+  |  `GsliceMatrix<T>`  |            `submat_gslice`            |
+  |   `MaskMatrix<T>`   |             `submat_mask`             |
+  | `IndirectMatrix<T>` |           `submat_indirect`           |
 
 
 
@@ -144,8 +144,8 @@ The table above provides ways to replace the contents of the matrix:
   6) Assignment with Sub-Matrix (MaskMatrix).
   7) Assignment with Sub-Matrix (IndirectMatrix).
   8) Assignment with nested initializer list.
-  9) Copy assignment operator for the assignment between a `vec` and a **n x 1** `mat`.
-  10) Move assignment operator for the assignment between a `vec` and a **n x 1** `mat`.
+  9) Copy assignment operator for the assignment between a `vec` and a n x 1 or 1 x n `mat`.
+  10) Move assignment operator for the assignment between a `vec` and a n x 1 or 1 x n `mat`.
 
 ## Subscripting and Slicing
 ### Matrix Subscripting
@@ -158,19 +158,17 @@ The table above provides ways to replace the contents of the matrix:
 
 
 ### Matrix Slicing with SliceMatrix
-| Matrix<T, N>'s member functions  (with T = double, N = 1/2/3) |      |
-|:--------------------------------------------------------------|------|
-| vec : `vec operator()(std::slice s1) const`                   | (1a) |
-| vec : `submat_slice operator()(std::slice s1)`                | (1b) |
-| vec : `vec subvec(first_row, last_row) const`                 | (2a) |
-| vec : `submat_slice subvec(first_row, last_row)`              | (2b) |
-| vec : `vec head(n) const /  vec tail(n) const`                | (3a) |
-| vec : `submat_slice head(n) / submat_slice tail(n)`           | (3b) |
-| mat : `vec row(i) const / vec col(i) const`                   | (4a) |
-| mat : `submat_slice row(i) / submat_slice col(i)`             | (4b) |
+| <div style="width:750px">member function</div>    |      |
+|:--------------------------------------------------|------|
+| vec : `vec operator()(std::slice s1) const`       | (1a) |
+| vec : `submat_slice operator()(std::slice s1)`    | (1b) |
+| vec : `vec subvec(first_row, last_row) const`     | (2a) |
+| vec : `submat_slice subvec(first_row, last_row)`  | (2b) |
+| mat : `vec row(i) const / vec col(i) const`       | (3a) |
+| mat : `submat_slice row(i) / submat_slice col(i)` | (3b) |
 
 ### Matrix Slicing with GsliceMatrix
-| Matrix<T, N>'s member functions  (with T = double, N = 1/2/3)                                                                                                                |      |
+| <div style="width:750px">member function</div>                                                                                                                               |      |
 |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
 | mat : `mat operator()(std::slice s1, std::slice s2) const`             <br> cube: `cube operator()(std::slice s1, std::slice s2, std::slice s3) const`                       | (1a) |
 | mat : `submat_gslice operator()(std::slice s1, std::slice s2)`         <br> cube: `submat_gslice operator()(std::slice s1, std::slice s2, std::slice s3)`                    | (1b) |
@@ -178,17 +176,19 @@ The table above provides ways to replace the contents of the matrix:
 | mat : `submat_gslice submat(first_row, first_col, last_row, last_col)` <br> cube: `submat_gslice subcube(first_row, first_col, first_slice, last_row, last_col, last_slice)` | (2b) |
 | mat : `mat rows(first_row, last_row) const / mat cols(first_col, last_col) const`                                                                                            | (3a) |
 | mat : `submat_gslice rows(first_row, last_row) / submat_gslice cols(first_col, last_col)`                                                                                    | (3b) |
-| cube: `mat slice(i) const` / `cube slices(first_slice, last_slice) const`                                                                                                    | (4a) |
-| cube: `submat_gslice slice(i)` / `submat_gslice slices(first_slice, last_slice)`                                                                                             | (4b) |
+| cube: `mat row(i) const` <br> cube: `mat col(i) const` <br> cube: `mat slice(i) const`                                                                                       | (4a) |
+| cube: `submat_gslice row(i)` <br> cube: `submat_gslice col(i)` <br> cube: `submat_gslice slice(i)`                                                                           | (4b) |
+| cube: `cube rows(first_slice, last_slice) const` <br> cube: `cube cols(first_slice, last_slice) const` <br> cube: `cube slices(first_slice, last_slice) const`               | (5a) |
+| cube: `submat_cube rows(first_slice, last_slice)` <br> cube: `submat_cube cols(first_slice, last_slice)` <br> cube: `submat_cube slices(first_slice, last_slice)`            | (5a) |
 
 ### Matrix Slicing with MaskMatrix
-| Matrix<T, N>'s member functions  (with T = double, N = 1/2/3)                                                                                                            |   |
+| <div style="width:750px">member function</div>                                                                                                                           |   |
 |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---|
 | vec : `vec operator()(const bool_array& ba) const`   <br> mat: `vec operator()(const bool_array& ba) const` <br> cube: `vec operator()(const bool_array& ba) const`      |(1)|
 | vec : `submat_mask operator()(const bool_array& ba)` <br> mat: `submat_mask operator()(const bool_array& ba)`  <br> cube: `submat_mask operator()(const bool_array& ba)` |(2)|
 
 ### Matrix Slicing with IndirectMatrix
-| Matrix<T, N>'s member functions  (with T = do  uble, N = 1/2/3)                                                                                                                                                                                                |   |
+| <div style="width:750px">member function</div>                                                                                                                                                                                                                 |   |
 |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---|
 | vec : `vec elem(const index_array& ia) const`            <br> mat: `vec elem(const index_array& ia) const`                                     <br> cube: `vec elem(const index_array& ia) const`                                                              |(1)|
 | vec : `submat_indirect elem(const index_array& ia)`      <br> mat: `submat_indirect elem(const index_array& ia)`                               <br> cube: `submat_indirect elem(const index_array& ia)`                                                        |(2)|
