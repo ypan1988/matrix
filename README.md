@@ -161,14 +161,16 @@ The table above provides ways to replace the contents of the matrix:
 One subset of a `std::valarray` is a `std::slice`, which selects every nth element of a `std::valarray` for some integer n. As we shall see, this in turn makes it possible to select elements from a row/col/diag of 2D matrix.
 A declaration of a `std::slice` has the form `std::slice s(start, size, stride);` which specifies the indices `start, start + stride, start + 2*stride, ...` in a `std::valarray`.
 
-| <div style="width:750px">member function</div>                                                                                                                               |      |
+| `SliceMatrix<T>-related member function                                                                                                                                    ` |      |
 |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
 | vec : `vec operator()(std::slice s1) const`                                                                                                                                  | (1)  |
 | vec : `submat_slice operator()(std::slice s1)`                                                                                                                               | (2)  |
 | vec : `vec subvec(first_row, last_row) const`                                                                                                                                | (3)  |
 | vec : `submat_slice subvec(first_row, last_row)`                                                                                                                             | (4)  |
-| mat : `vec row(i) const / vec col(i) const / vec diag(i)`                                                                                                                    | (5)  |
-| mat : `submat_slice row(i) / submat_slice col(i) / submat_slice diag(i)`                                                                                                     | (6)  |
+| mat : `vec row(i) const`     <br> mat: `vec col(i) const`                                                                                                                    | (5)  |
+| mat : `submat_slice row(i)`  <br> mat: `submat_slice col(i)`                                                                                                                 | (6)  |
+| mat : `vec diag(int k) const`                                                                                                                                                | (7)  |
+| mat : `submat_slice diag(int k)`                                                                                                                                             | (8)  |
 
 ### Matrix Slicing with GsliceMatrix
 | <div style="width:750px">member function</div>                                                                                                                               |      |

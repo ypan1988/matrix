@@ -1428,7 +1428,7 @@ void matrix_test_slicing_with_slicematrix_b2_04(bool print = false) {
   assert(mat1d_b(1) == 2.0);
 }
 
-void matrix_test_slicing_with_slicematrix_b2_05_row_col(bool print = false) {
+void matrix_test_slicing_with_slicematrix_b2_05(bool print = false) {
   std::cout << "[TEST]: B2_05. Matrix<T, 2>::row()/col()"
             << " Non-const version\n";
 
@@ -1475,8 +1475,36 @@ void matrix_test_slicing_with_slicematrix_b2_05_row_col(bool print = false) {
   assert(mat2d_a(3, 2) == 0);
 }
 
-void matrix_test_slicing_with_slicematrix_b2_05_diag(bool print = false) {
-  std::cout << "[TEST]: B2_05. Matrix<T, 2>::diag()"
+void matrix_test_slicing_with_slicematrix_b2_06(bool print = false) {
+  std::cout << "[TEST]: B2_06. Matrix<T, 2>::row()/col()"
+            << " Const version\n";
+
+  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  const Matrix<double, 2> mat2d_b(arr, 4, 3);
+  if (print) test_print(mat2d_b, "mat2d_b =");
+
+  Matrix<double, 1> mat1d_a(mat2d_b.row(3));
+  if (print) test_print(mat1d_a, "mat1d_a (mat2d_b.row(3)) =");
+  assert(mat1d_a.n_elem() == 3);
+  assert(mat1d_a.n_rows() == 1);
+  assert(mat1d_a.n_cols() == 3);
+  assert(mat1d_a(0) == 4.0);
+  assert(mat1d_a(1) == 8.0);
+  assert(mat1d_a(2) == 12.0);
+
+  Matrix<double, 1> mat1d_b(mat2d_b.col(1));
+  if (print) test_print(mat1d_b, "mat1d_b (mat2d_b.col(1)) =");
+  assert(mat1d_b.n_elem() == 4);
+  assert(mat1d_b.n_rows() == 4);
+  assert(mat1d_b.n_cols() == 1);
+  assert(mat1d_b(0) == 5.0);
+  assert(mat1d_b(1) == 6.0);
+  assert(mat1d_b(2) == 7.0);
+  assert(mat1d_b(3) == 8.0);
+}
+
+void matrix_test_slicing_with_slicematrix_b2_07(bool print = false) {
+  std::cout << "[TEST]: B2_07. Matrix<T, 2>::diag()"
             << " Non-const version\n";
 
   const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
@@ -1524,36 +1552,8 @@ void matrix_test_slicing_with_slicematrix_b2_05_diag(bool print = false) {
   assert(mat2d_b(3, 2) == -1);
 }
 
-void matrix_test_slicing_with_slicematrix_b2_06_row_col(bool print = false) {
-  std::cout << "[TEST]: B2_06. Matrix<T, 2>::row()/col()"
-            << " Const version\n";
-
-  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-  const Matrix<double, 2> mat2d_b(arr, 4, 3);
-  if (print) test_print(mat2d_b, "mat2d_b =");
-
-  Matrix<double, 1> mat1d_a(mat2d_b.row(3));
-  if (print) test_print(mat1d_a, "mat1d_a (mat2d_b.row(3)) =");
-  assert(mat1d_a.n_elem() == 3);
-  assert(mat1d_a.n_rows() == 1);
-  assert(mat1d_a.n_cols() == 3);
-  assert(mat1d_a(0) == 4.0);
-  assert(mat1d_a(1) == 8.0);
-  assert(mat1d_a(2) == 12.0);
-
-  Matrix<double, 1> mat1d_b(mat2d_b.col(1));
-  if (print) test_print(mat1d_b, "mat1d_b (mat2d_b.col(1)) =");
-  assert(mat1d_b.n_elem() == 4);
-  assert(mat1d_b.n_rows() == 4);
-  assert(mat1d_b.n_cols() == 1);
-  assert(mat1d_b(0) == 5.0);
-  assert(mat1d_b(1) == 6.0);
-  assert(mat1d_b(2) == 7.0);
-  assert(mat1d_b(3) == 8.0);
-}
-
-void matrix_test_slicing_with_slicematrix_b2_06_diag(bool print = false) {
-  std::cout << "[TEST]: B2_06. Matrix<T, 2>::diag()"
+void matrix_test_slicing_with_slicematrix_b2_08(bool print = false) {
+  std::cout << "[TEST]: B2_08. Matrix<T, 2>::diag()"
             << " Const version\n";
 
   const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -2797,10 +2797,10 @@ int main() {
   matrix_test_slicing_with_slicematrix_b2_02(print_flag);
   matrix_test_slicing_with_slicematrix_b2_03(print_flag);
   matrix_test_slicing_with_slicematrix_b2_04(print_flag);
-  matrix_test_slicing_with_slicematrix_b2_05_row_col(print_flag);
-  matrix_test_slicing_with_slicematrix_b2_05_diag(print_flag);
-  matrix_test_slicing_with_slicematrix_b2_06_row_col(print_flag);
-  matrix_test_slicing_with_slicematrix_b2_06_diag(print_flag);
+  matrix_test_slicing_with_slicematrix_b2_05(print_flag);
+  matrix_test_slicing_with_slicematrix_b2_06(print_flag);
+  matrix_test_slicing_with_slicematrix_b2_07(print_flag);
+  matrix_test_slicing_with_slicematrix_b2_08(print_flag);
 
   print_msg("B3: Testing Matrix<T, N> Slicing with GSliceMatrix<T>");
   matrix_2d_test_gslice_array(print_flag);
