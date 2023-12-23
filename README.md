@@ -97,8 +97,8 @@ These wrapper classes behave just like the `Matrix` except they refer to a `Matr
 | vec: `vec(submat_gslice)`                 <br> mat: `mat(submat_gslice)`                         <br> cube: `cube(submat_gslice)`                                   | (8)          |
 | vec: `vec(submat_mask)`                   <br> mat: `mat(submat_mask)`                           <br>                                                               | (9)          |
 | vec: `vec(submat_indirect)`               <br> mat: `mat(submat_indirect)`                       <br> cube: `cube(submat_indirect)`                                 | (10)         |
-| vec: `vec(initializer_list)`              <br> mat: `mat(initializer_list, n_rows, n_cols)`      <br> cube: `cube(initializer_list, n_rows, n_cols, n_slices)`      | (11.1) C++11 |
-| vec: `vec(initializer_list)`              <br> mat: `mat(nested initializer_list)`               <br> cube: `cube(nested initializer_list)`                         | (11.2) C++11 |
+| vec: `vec(initializer_list)`              <br> mat: `mat(initializer_list, n_rows, n_cols)`      <br> cube: `cube(initializer_list, n_rows, n_cols, n_slices)`      | (11v1) C++11 |
+| vec: `vec(initializer_list)`              <br> mat: `mat(nested initializer_list)`               <br> cube: `cube(nested initializer_list)`                         | (11v2) C++11 |
 | vec: `vec(valarray)`                      <br> mat: `mat(valarray, n_rows, n_cols)`              <br> cube: `cube(valarray, n_rows, n_cols, n_slides)`              | (12)         |
 | vec: `vec(const mat&)`                    <br> mat: `mat(const vec&)`                            <br>                                                               | (13)         |
 | vec: `vec(mat&&)`                         <br> mat: `mat(vec&&)`                                 <br>                                                               | (14) C++11   |
@@ -158,14 +158,17 @@ The table above provides ways to replace the contents of the matrix:
 
 
 ### Matrix Slicing with SliceMatrix
-| <div style="width:750px">member function</div>    |      |
-|:--------------------------------------------------|------|
-| vec : `vec operator()(std::slice s1) const`       | (1a) |
-| vec : `submat_slice operator()(std::slice s1)`    | (1b) |
-| vec : `vec subvec(first_row, last_row) const`     | (2a) |
-| vec : `submat_slice subvec(first_row, last_row)`  | (2b) |
-| mat : `vec row(i) const / vec col(i) const`       | (3a) |
-| mat : `submat_slice row(i) / submat_slice col(i)` | (3b) |
+One subset of a `std::valarray` is a `std::slice`, which selects every nth element of a `std::valarray` for some integer n. As we shall see, this in turn makes it possible to select elements from a row/col/diag of 2D matrix.
+A declaration of a `std::slice` has the form `std::slice s(start, size, stride);` which specifies the indices `start, start + stride, start + 2*stride, ...` in a `std::valarray`.
+
+| <div style="width:750px">member function</div>                           |     |
+|:-------------------------------------------------------------------------|-----|
+| vec : `vec operator()(std::slice s1) const`                              | (1) |
+| vec : `submat_slice operator()(std::slice s1)`                           | (2) |
+| vec : `vec subvec(first_row, last_row) const`                            | (3) |
+| vec : `submat_slice subvec(first_row, last_row)`                         | (4) |
+| mat : `vec row(i) const / vec col(i) const / vec diag(i)`                | (5) |
+| mat : `submat_slice row(i) / submat_slice col(i) / submat_slice diag(i)` | (6) |
 
 ### Matrix Slicing with GsliceMatrix
 | <div style="width:750px">member function</div>                                                                                                                               |      |

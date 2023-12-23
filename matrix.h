@@ -479,20 +479,13 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
   const elem_type& operator()(uword n1, uword n2) const
   { _M_range_check(n1, n2); return this->M_elem[sub2ind(n1, n2)]; }
 
-  std::valarray<Tp> diag() const {
-    return this->M_elem[std::slice(0, std::min(M_dims[0], M_dims[1]),
-                                    M_dims[0] + 1)];
-  }
-  std::slice_array<Tp> diag() {
-    return this->M_elem[std::slice(0, std::min(M_dims[0], M_dims[1]),
-                                    M_dims[0] + 1)];
-  }
-
   // SliceMatrix related member functions
           Matrix<Tp, 1> row(uword row_number) const;
      SliceMatrix<Tp   > row(uword row_number);
           Matrix<Tp, 1> col(uword col_number) const;
      SliceMatrix<Tp   > col(uword col_number);
+          Matrix<Tp, 1> diag(int k = 0) const;
+     SliceMatrix<Tp   > diag(int k = 0);
 
   // GsliceMatrix related member functions
           Matrix<Tp, 2> operator()(std::slice s1, std::slice s2) const;
@@ -1470,6 +1463,34 @@ inline SliceMatrix<Tp> Matrix<Tp, 2>::col(uword c) {
   const uword start = c * M_dims[0];
   const uword size = M_dims[0];
   const uword stride = 1;
+  return SliceMatrix<Tp>(this->M_elem, start, size, stride);
+}
+
+template <class Tp>
+inline Matrix<Tp, 1> Matrix<Tp, 2>::diag(int k) const {
+  uword start = 0, size = 0;
+  if (k == 0) {
+    start = 0, size = std::min(M_dims[0], M_dims[1]);
+  } else if (k < 0) {
+    start = -k, size = std::min(M_dims[0] + k, M_dims[1]);
+  } else {
+    start = k * M_dims[0], size = std::min(M_dims[0], M_dims[1] - k);
+  }
+  const uword stride = M_dims[0] + 1;
+  return Matrix<Tp, 1>(this->M_elem, start, size, stride);
+}
+
+template <class Tp>
+inline SliceMatrix<Tp> Matrix<Tp, 2>::diag(int k) {
+  uword start = 0, size = 0;
+  if (k == 0) {
+    start = 0, size = std::min(M_dims[0], M_dims[1]);
+  } else if (k < 0) {
+    start = -k, size = std::min(M_dims[0] + k, M_dims[1]);
+  } else {
+    start = k * M_dims[0], size = std::min(M_dims[0], M_dims[1] - k);
+  }
+  const uword stride = M_dims[0] + 1;
   return SliceMatrix<Tp>(this->M_elem, start, size, stride);
 }
 

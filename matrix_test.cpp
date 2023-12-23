@@ -484,8 +484,8 @@ void matrix_test_constructor_a1_10(bool print = false) {
   assert(mat3d_b(1, 1, 0) == 24);
 }
 
-void matrix_test_constructor_a1_11a(bool print = false) {
-  std::cout << "[TEST]: A1_11a. Elements (initializer list) + Dimension\n"
+void matrix_test_constructor_a1_11v1(bool print = false) {
+  std::cout << "[TEST]: A1_11v1. Elements (initializer list) + Dimension\n"
             << "        vec: vec(initializer_list)\n"
             << "        mat: mat(initializer_list, n_rows, n_cols)\n"
             << "        cube: cube(initializer_list, n_rows, n_cols, n_slices)"
@@ -537,8 +537,8 @@ void matrix_test_constructor_a1_11a(bool print = false) {
 #endif
 }
 
-void matrix_test_constructor_a1_11b(bool print = false) {
-  std::cout << "[TEST]: A1_11b. Nested initializer list\n"
+void matrix_test_constructor_a1_11v2(bool print = false) {
+  std::cout << "[TEST]: A1_11v2. Nested initializer list\n"
             << "        vec: vec(initializer_list)\n"
             << "        mat: mat(nested initializer_list)\n"
             << "        cube: cube(nested initializer_list)" << std::endl;
@@ -1309,7 +1309,8 @@ void matrix_test_element_access_b1_02(bool print = false) {
 }
 
 void matrix_test_slicing_with_slicematrix_b2_01(bool print = false) {
-  std::cout << "[TEST]: B2_01. Matrix<T, 1>::operator()(std::slice)\n";
+  std::cout << "[TEST]: B2_01. Matrix<T, 1>::operator()(std::slice)"
+            << " Non-const version\n";
   const double arr[] = {1, 2, 3, 4, 5};
 
   Matrix<double, 1> mat1d_a(arr, 5);
@@ -1324,7 +1325,7 @@ void matrix_test_slicing_with_slicematrix_b2_01(bool print = false) {
   assert(mat1d_a(3) == 0);
   assert(mat1d_a(4) == 5);
 
-  const Matrix<double, 1> mat1d_b(arr, 5);
+  Matrix<double, 1> mat1d_b(arr, 5);
   Matrix<double, 1> mat1d_c = mat1d_b(std::slice(0, 3, 2));
   if (print) test_print(mat1d_c, "mat1d_c = ");
   assert(mat1d_c.n_elem() == 3);
@@ -1336,7 +1337,37 @@ void matrix_test_slicing_with_slicematrix_b2_01(bool print = false) {
 }
 
 void matrix_test_slicing_with_slicematrix_b2_02(bool print = false) {
-  std::cout << "[TEST]: B2_02. Matrix<T, 1>::subvec(i, j)\n";
+  std::cout << "[TEST]: B2_02. Matrix<T, 1>::operator()(std::slice)"
+            << " Const version\n";
+  ;
+  const double arr[] = {1, 2, 3, 4, 5};
+
+  const Matrix<double, 1> mat1d_a(arr, 5);
+  mat1d_a(std::slice(1, 3, 1)) = 0;  // Will Do Nothing!
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a.n_elem() == 5);
+  assert(mat1d_a.n_rows() == 5);
+  assert(mat1d_a.n_cols() == 1);
+  assert(mat1d_a(0) == 1);
+  assert(mat1d_a(1) == 2);
+  assert(mat1d_a(2) == 3);
+  assert(mat1d_a(3) == 4);
+  assert(mat1d_a(4) == 5);
+
+  const Matrix<double, 1> mat1d_b(arr, 5);
+  Matrix<double, 1> mat1d_c = mat1d_b(std::slice(0, 3, 2));
+  if (print) test_print(mat1d_c, "mat1d_c = ");
+  assert(mat1d_c.n_elem() == 3);
+  assert(mat1d_c.n_rows() == 3);
+  assert(mat1d_c.n_cols() == 1);
+  assert(mat1d_c(0) == 1);
+  assert(mat1d_c(1) == 3);
+  assert(mat1d_c(2) == 5);
+}
+
+void matrix_test_slicing_with_slicematrix_b2_03(bool print = false) {
+  std::cout << "[TEST]: B2_03. Matrix<T, 1>::subvec(i, j)"
+            << " Non-const version\n";
 
   const double a1[] = {1, 2, 3, 4};
   Matrix<double, 1> mat1d(a1, 4);
@@ -1365,8 +1396,41 @@ void matrix_test_slicing_with_slicematrix_b2_02(bool print = false) {
   assert(mat1d_b(1) == 2.0);
 }
 
-void matrix_test_slicing_with_slicematrix_b2_03(bool print = false) {
-  std::cout << "[TEST]: B2_03. Matrix<T, 2>::row()/col()\n";
+void matrix_test_slicing_with_slicematrix_b2_04(bool print = false) {
+  std::cout << "[TEST]: B2_04. Matrix<T, 1>::subvec(i, j)"
+            << " Const version\n";
+  ;
+
+  const double a1[] = {1, 2, 3, 4};
+  Matrix<double, 1> mat1d(a1, 4);
+  if (print) test_print(mat1d, "mat1d =");
+  mat1d.subvec(2, 3) = 5.0;
+  if (print) std::cout << "Apply mat1d.subvec(2, 3) = 5\n";
+  if (print) test_print(mat1d, "mat1d =");
+  assert(mat1d(0) == 1.0);
+  assert(mat1d(1) == 2.0);
+  assert(mat1d(2) == 5.0);
+  assert(mat1d(3) == 5.0);
+
+  // mat1d.subvec(0, 2) is a SliceMatrix<double>
+  const Matrix<double, 1> mat1d_a(mat1d.subvec(0, 2));
+  if (print) test_print(mat1d_a, "mat1d_a =");
+  assert(mat1d_a.n_elem() == 3);
+  assert(mat1d_a(0) == 1.0);
+  assert(mat1d_a(1) == 2.0);
+  assert(mat1d_a(2) == 5.0);
+
+  // mat1d_a.subvec(0, 2) is a Matrix<T, 1>
+  Matrix<double, 1> mat1d_b(mat1d_a.subvec(0, 1));
+  if (print) test_print(mat1d_a, "mat1d_b =");
+  assert(mat1d_b.n_elem() == 2);
+  assert(mat1d_b(0) == 1.0);
+  assert(mat1d_b(1) == 2.0);
+}
+
+void matrix_test_slicing_with_slicematrix_b2_05_row_col(bool print = false) {
+  std::cout << "[TEST]: B2_05. Matrix<T, 2>::row()/col()"
+            << " Non-const version\n";
 
   const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
   Matrix<double, 2> mat2d_a(arr, 4, 3);
@@ -1409,7 +1473,62 @@ void matrix_test_slicing_with_slicematrix_b2_03(bool print = false) {
   assert(mat2d_a(1, 2) == 10);
   assert(mat2d_a(2, 2) == 11);
   assert(mat2d_a(3, 2) == 0);
+}
 
+void matrix_test_slicing_with_slicematrix_b2_05_diag(bool print = false) {
+  std::cout << "[TEST]: B2_05. Matrix<T, 2>::diag()"
+            << " Non-const version\n";
+
+  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+
+  Matrix<double, 2> mat2d_a(arr, 3, 4);
+  mat2d_a.diag(0) = 0;
+  mat2d_a.diag(1) = 1;
+  mat2d_a.diag(-1) = -1;
+  if (print) test_print(mat2d_a, "mat2d_a =");
+  assert(mat2d_a.n_elem() == 12);
+  assert(mat2d_a.n_rows() == 3);
+  assert(mat2d_a.n_cols() == 4);
+  assert(mat2d_a(0, 0) == 0);
+  assert(mat2d_a(1, 0) == -1);
+  assert(mat2d_a(2, 0) == 3);
+  assert(mat2d_a(0, 1) == 1);
+  assert(mat2d_a(1, 1) == 0);
+  assert(mat2d_a(2, 1) == -1);
+  assert(mat2d_a(0, 2) == 7);
+  assert(mat2d_a(1, 2) == 1);
+  assert(mat2d_a(2, 2) == 0);
+  assert(mat2d_a(0, 3) == 10);
+  assert(mat2d_a(1, 3) == 11);
+  assert(mat2d_a(2, 3) == 1);
+
+  Matrix<double, 2> mat2d_b(arr, 4, 3);
+  mat2d_b.diag(0) = 0;
+  mat2d_b.diag(1) = 1;
+  mat2d_b.diag(-1) = -1;
+  if (print) test_print(mat2d_b, "mat2d_b =");
+  assert(mat2d_b.n_elem() == 12);
+  assert(mat2d_b.n_rows() == 4);
+  assert(mat2d_b.n_cols() == 3);
+  assert(mat2d_b(0, 0) == 0);
+  assert(mat2d_b(1, 0) == -1);
+  assert(mat2d_b(2, 0) == 3);
+  assert(mat2d_b(3, 0) == 4);
+  assert(mat2d_b(0, 1) == 1);
+  assert(mat2d_b(1, 1) == 0);
+  assert(mat2d_b(2, 1) == -1);
+  assert(mat2d_b(3, 1) == 8);
+  assert(mat2d_b(0, 2) == 9);
+  assert(mat2d_b(1, 2) == 1);
+  assert(mat2d_b(2, 2) == 0);
+  assert(mat2d_b(3, 2) == -1);
+}
+
+void matrix_test_slicing_with_slicematrix_b2_06_row_col(bool print = false) {
+  std::cout << "[TEST]: B2_06. Matrix<T, 2>::row()/col()"
+            << " Const version\n";
+
+  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
   const Matrix<double, 2> mat2d_b(arr, 4, 3);
   if (print) test_print(mat2d_b, "mat2d_b =");
 
@@ -1431,6 +1550,36 @@ void matrix_test_slicing_with_slicematrix_b2_03(bool print = false) {
   assert(mat1d_b(1) == 6.0);
   assert(mat1d_b(2) == 7.0);
   assert(mat1d_b(3) == 8.0);
+}
+
+void matrix_test_slicing_with_slicematrix_b2_06_diag(bool print = false) {
+  std::cout << "[TEST]: B2_06. Matrix<T, 2>::diag()"
+            << " Const version\n";
+
+  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+  const Matrix<double, 2> mat2d(arr, 3, 3);
+  const Matrix<double, 1> mat1d_a = mat2d.diag(0);
+  assert(mat1d_a.n_elem() == 3);
+  assert(mat1d_a.n_rows() == 3);
+  assert(mat1d_a.n_cols() == 1);
+  assert(mat1d_a(0) == 1);
+  assert(mat1d_a(1) == 5);
+  assert(mat1d_a(2) == 9);
+
+  const Matrix<double, 1> mat1d_b = mat2d.diag(1);
+  assert(mat1d_b.n_elem() == 2);
+  assert(mat1d_b.n_rows() == 2);
+  assert(mat1d_b.n_cols() == 1);
+  assert(mat1d_b(0) == 4);
+  assert(mat1d_b(1) == 8);
+
+  const Matrix<double, 1> mat1d_c = mat2d.diag(-1);
+  assert(mat1d_c.n_elem() == 2);
+  assert(mat1d_c.n_rows() == 2);
+  assert(mat1d_c.n_cols() == 1);
+  assert(mat1d_c(0) == 2);
+  assert(mat1d_c(1) == 6);
 }
 
 void matrix_test_unary_add_minus_operator(bool print = false) {
@@ -2620,8 +2769,8 @@ int main() {
   matrix_test_constructor_a1_08(print_flag);
   matrix_test_constructor_a1_09(print_flag);
   matrix_test_constructor_a1_10(print_flag);
-  matrix_test_constructor_a1_11a(print_flag);
-  matrix_test_constructor_a1_11b(print_flag);
+  matrix_test_constructor_a1_11v1(print_flag);
+  matrix_test_constructor_a1_11v2(print_flag);
   matrix_test_constructor_a1_12(print_flag);
   matrix_test_constructor_a1_13(print_flag);
   matrix_test_constructor_a1_14(print_flag);
@@ -2647,6 +2796,11 @@ int main() {
   matrix_test_slicing_with_slicematrix_b2_01(print_flag);
   matrix_test_slicing_with_slicematrix_b2_02(print_flag);
   matrix_test_slicing_with_slicematrix_b2_03(print_flag);
+  matrix_test_slicing_with_slicematrix_b2_04(print_flag);
+  matrix_test_slicing_with_slicematrix_b2_05_row_col(print_flag);
+  matrix_test_slicing_with_slicematrix_b2_05_diag(print_flag);
+  matrix_test_slicing_with_slicematrix_b2_06_row_col(print_flag);
+  matrix_test_slicing_with_slicematrix_b2_06_diag(print_flag);
 
   print_msg("B3: Testing Matrix<T, N> Slicing with GSliceMatrix<T>");
   matrix_2d_test_gslice_array(print_flag);
