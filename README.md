@@ -149,26 +149,26 @@ The table above provides ways to replace the contents of the matrix:
 
 ## Subscripting and Slicing
 ### Matrix Subscripting
-| Matrix<T, N>::operator()  (with T = double, N = 1/2/3)                                                                                                    |      |
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| vec : `const elem_type& operator()(i) const` <br> mat : `const elem_type& operator()(i, j) const` <br> cube: `const elem_type& operator()(i, j, k) const` | (1a) |
-| vec : `elem_type& operator()(i)`             <br> mat : `elem_type& operator()(i, j)`             <br> cube: `elem_type& operator()(i, j, k)`             | (1b) |
-| vec : `const elem_type& operator[](i) const` <br> mat : `const elem_type& operator[](i) const`    <br> cube: `const elem_type& operator[](i) const`       | (2a) |
-| vec : `elem_type& operator[](i)`             <br> mat : `elem_type& operator[](i)`                <br> cube: `elem_type& operator[](i)`                   | (2b) |
+| Matrix<T, N>::operator()  (with T = double, N = 1/2/3)                                                                                                                       |      |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
+| vec : `const elem_type& operator()(i) const` <br> mat : `const elem_type& operator()(i, j) const` <br> cube: `const elem_type& operator()(i, j, k) const`                    | (1)  |
+| vec : `elem_type& operator()(i)`             <br> mat : `elem_type& operator()(i, j)`             <br> cube: `elem_type& operator()(i, j, k)`                                | (2)  |
+| vec : `const elem_type& operator[](i) const` <br> mat : `const elem_type& operator[](i) const`    <br> cube: `const elem_type& operator[](i) const`                          | (3)  |
+| vec : `elem_type& operator[](i)`             <br> mat : `elem_type& operator[](i)`                <br> cube: `elem_type& operator[](i)`                                      | (4)  |
 
 
 ### Matrix Slicing with SliceMatrix
 One subset of a `std::valarray` is a `std::slice`, which selects every nth element of a `std::valarray` for some integer n. As we shall see, this in turn makes it possible to select elements from a row/col/diag of 2D matrix.
 A declaration of a `std::slice` has the form `std::slice s(start, size, stride);` which specifies the indices `start, start + stride, start + 2*stride, ...` in a `std::valarray`.
 
-| <div style="width:750px">member function</div>                           |     |
-|:-------------------------------------------------------------------------|-----|
-| vec : `vec operator()(std::slice s1) const`                              | (1) |
-| vec : `submat_slice operator()(std::slice s1)`                           | (2) |
-| vec : `vec subvec(first_row, last_row) const`                            | (3) |
-| vec : `submat_slice subvec(first_row, last_row)`                         | (4) |
-| mat : `vec row(i) const / vec col(i) const / vec diag(i)`                | (5) |
-| mat : `submat_slice row(i) / submat_slice col(i) / submat_slice diag(i)` | (6) |
+| <div style="width:750px">member function</div>                                                                                                                               |      |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
+| vec : `vec operator()(std::slice s1) const`                                                                                                                                  | (1)  |
+| vec : `submat_slice operator()(std::slice s1)`                                                                                                                               | (2)  |
+| vec : `vec subvec(first_row, last_row) const`                                                                                                                                | (3)  |
+| vec : `submat_slice subvec(first_row, last_row)`                                                                                                                             | (4)  |
+| mat : `vec row(i) const / vec col(i) const / vec diag(i)`                                                                                                                    | (5)  |
+| mat : `submat_slice row(i) / submat_slice col(i) / submat_slice diag(i)`                                                                                                     | (6)  |
 
 ### Matrix Slicing with GsliceMatrix
 | <div style="width:750px">member function</div>                                                                                                                               |      |
@@ -185,10 +185,10 @@ A declaration of a `std::slice` has the form `std::slice s(start, size, stride);
 | cube: `submat_cube rows(first_slice, last_slice)` <br> cube: `submat_cube cols(first_slice, last_slice)` <br> cube: `submat_cube slices(first_slice, last_slice)`            | (5a) |
 
 ### Matrix Slicing with MaskMatrix
-| <div style="width:750px">member function</div>                                                                                                                           |   |
-|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---|
-| vec : `vec operator()(const bool_array& ba) const`   <br> mat: `vec operator()(const bool_array& ba) const` <br> cube: `vec operator()(const bool_array& ba) const`      |(1)|
-| vec : `submat_mask operator()(const bool_array& ba)` <br> mat: `submat_mask operator()(const bool_array& ba)`  <br> cube: `submat_mask operator()(const bool_array& ba)` |(2)|
+| <div style="width:750px">member function</div>                                                                                                                               |      |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
+| vec : `vec operator()(const bool_array& ba) const`   <br> mat: `vec operator()(const bool_array& ba) const` <br> cube: `vec operator()(const bool_array& ba) const`          | (1)  |
+| vec : `submat_mask operator()(const bool_array& ba)` <br> mat: `submat_mask operator()(const bool_array& ba)`  <br> cube: `submat_mask operator()(const bool_array& ba)`     | (2)  |
 
 ### Matrix Slicing with IndirectMatrix
 | <div style="width:750px">member function</div>                                                                                                                                                                                                                 |   |
