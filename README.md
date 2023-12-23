@@ -167,13 +167,13 @@ A declaration of a `std::slice` has the form `std::slice s(start, size, stride);
 | vec : `submat_slice operator()(std::slice s1)`                                             | (2)  |
 | vec : `vec subvec(first_row, last_row) const`                                              | (3)  |
 | vec : `submat_slice subvec(first_row, last_row)`                                           | (4)  |
-| mat : `vec row(i) const`     <br> mat: `vec col(i) const`                                  | (5)  |
-| mat : `submat_slice row(i)`  <br> mat: `submat_slice col(i)`                               | (6)  |
+| mat : `vec row(i) const / vec col(i) const`                                                | (5)  |
+| mat : `submat_slice row(i) / submat_slice col(i)`                                          | (6)  |
 | mat : `vec diag(int k) const`                                                              | (7)  |
 | mat : `submat_slice diag(int k)`                                                           | (8)  |
 
 ### Matrix Slicing with GsliceMatrix
-| <div style="width:750px">member function</div>                                                                                                                               |      |
+| `GsliceMatrix<T>-related member function                                                 `                                                                                   |      |
 |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
 | mat : `mat operator()(std::slice s1, std::slice s2) const`             <br> cube: `cube operator()(std::slice s1, std::slice s2, std::slice s3) const`                       | (1a) |
 | mat : `submat_gslice operator()(std::slice s1, std::slice s2)`         <br> cube: `submat_gslice operator()(std::slice s1, std::slice s2, std::slice s3)`                    | (1b) |
@@ -187,13 +187,13 @@ A declaration of a `std::slice` has the form `std::slice s(start, size, stride);
 | cube: `submat_cube rows(first_slice, last_slice)` <br> cube: `submat_cube cols(first_slice, last_slice)` <br> cube: `submat_cube slices(first_slice, last_slice)`            | (5a) |
 
 ### Matrix Slicing with MaskMatrix
-| <div style="width:750px">member function</div>                                                                                                                               |      |
+| `MaskMatrix<T>-related member function                                                   `                                                                                   |      |
 |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
 | vec : `vec operator()(const bool_array& ba) const`   <br> mat: `vec operator()(const bool_array& ba) const` <br> cube: `vec operator()(const bool_array& ba) const`          | (1)  |
 | vec : `submat_mask operator()(const bool_array& ba)` <br> mat: `submat_mask operator()(const bool_array& ba)`  <br> cube: `submat_mask operator()(const bool_array& ba)`     | (2)  |
 
 ### Matrix Slicing with IndirectMatrix
-| <div style="width:750px">member function</div>                                                                                                                                                                                                                 |   |
+| `IndirectMatrix<T>-related member function                                               `                                                                                                                                                                     |   |
 |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---|
 | vec : `vec elem(const index_array& ia) const`            <br> mat: `vec elem(const index_array& ia) const`                                     <br> cube: `vec elem(const index_array& ia) const`                                                              |(1)|
 | vec : `submat_indirect elem(const index_array& ia)`      <br> mat: `submat_indirect elem(const index_array& ia)`                               <br> cube: `submat_indirect elem(const index_array& ia)`                                                        |(2)|
