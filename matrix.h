@@ -488,6 +488,8 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
      SliceMatrix<Tp   > diag(int k = 0);
 
   // GsliceMatrix related member functions
+          Matrix<Tp, 2> operator()(std::gslice gs) const;
+    GsliceMatrix<Tp   > operator()(std::gslice gs);
           Matrix<Tp, 2> operator()(std::slice s1, std::slice s2) const;
     GsliceMatrix<Tp   > operator()(std::slice s1, std::slice s2);
           Matrix<Tp, 2> submat(uword first_row, uword first_col, uword last_row, uword last_col) const;
@@ -636,6 +638,8 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
   { _M_range_check(n1, n2, n3); return this->M_elem[sub2ind(n1, n2, n3)]; }
 
   // GsliceMatrix related member functions
+          Matrix<Tp, 3> operator()(std::gslice gs) const;
+    GsliceMatrix<Tp   > operator()(std::gslice gs);
           Matrix<Tp, 3> operator()(std::slice s1, std::slice s2, std::slice s3) const;
     GsliceMatrix<Tp   > operator()(std::slice s1, std::slice s2, std::slice s3);
           Matrix<Tp, 3> subcube(uword first_row, uword first_col, uword first_slice,
@@ -1495,6 +1499,26 @@ inline SliceMatrix<Tp> Matrix<Tp, 2>::diag(int k) {
 }
 
 // Matrix member functions dealing with GsliceMatrix
+template <class Tp>
+inline Matrix<Tp, 2> Matrix<Tp, 2>::operator()(std::gslice gs) const {
+  return Matrix<Tp, 2>(this->M_elem, gs.start(), gs.size(), gs.stride());
+}
+
+template <class Tp>
+inline GsliceMatrix<Tp> Matrix<Tp, 2>::operator()(std::gslice gs) {
+  return GsliceMatrix<Tp>(this->M_elem, gs.start(), gs.size(), gs.stride());
+}
+
+template <class Tp>
+inline Matrix<Tp, 3> Matrix<Tp, 3>::operator()(std::gslice gs) const {
+  return Matrix<Tp, 3>(this->M_elem, gs.start(), gs.size(), gs.stride());
+}
+
+template <class Tp>
+inline GsliceMatrix<Tp> Matrix<Tp, 3>::operator()(std::gslice gs) {
+  return GsliceMatrix<Tp>(this->M_elem, gs.start(), gs.size(), gs.stride());
+}
+
 template <class Tp>
 inline Matrix<Tp, 2> Matrix<Tp, 2>::operator()(std::slice s1,
                                                std::slice s2) const {

@@ -1524,6 +1524,68 @@ void matrix_test_slicing_with_slicematrix_b2_08(bool print = false) {
   assert(mat1d_c(1) == 6);
 }
 
+void matrix_test_slicing_with_gslicematrix_b3_01(bool print = false) {
+  std::cout << "[TEST]: B3_01. m(slice, slice) / m(slice, slice, slice)"
+            << " Non-const version\n";
+
+  Matrix<double, 2> mat2d_a(arr_2d, 4, 3);
+  mat2d_a(std::slice(1, 2, 1), std::slice(0, 2, 2)) = 0;
+  if (print) test_print(mat2d_a, "mat2d_a = ");
+  assert(mat2d_a.n_elem() == 12);
+  assert(mat2d_a.n_rows() == 4);
+  assert(mat2d_a.n_cols() == 3);
+  assert(mat2d_a(0, 0) == 1);
+  assert(mat2d_a(1, 0) == 0);
+  assert(mat2d_a(2, 0) == 0);
+  assert(mat2d_a(3, 0) == 4);
+  assert(mat2d_a(0, 1) == 5);
+  assert(mat2d_a(1, 1) == 6);
+  assert(mat2d_a(2, 1) == 7);
+  assert(mat2d_a(3, 1) == 8);
+  assert(mat2d_a(0, 2) == 9);
+  assert(mat2d_a(1, 2) == 0);
+  assert(mat2d_a(2, 2) == 0);
+  assert(mat2d_a(3, 2) == 12);
+
+  Matrix<double, 3> mat3d_a(arr_3d, 4, 3, 2);
+  mat3d_a(std::slice(1, 2, 2), std::slice(0, 2, 2), std::slice(0, 2, 1)) = 0;
+  if (print) test_print(mat3d_a, "mat3d_a = ");
+  assert(mat3d_a(3, 0, 0) == 0);
+  assert(mat3d_a(3, 1, 0) == 8);
+  assert(mat3d_a(3, 2, 0) == 0);
+  assert(mat3d_a(3, 0, 1) == 0);
+  assert(mat3d_a(3, 1, 1) == 20);
+  assert(mat3d_a(3, 2, 1) == 0);
+}
+
+void matrix_test_slicing_with_gslicematrix_b3_02(bool print = false) {
+  std::cout << "[TEST]: B3_02. m(slice, slice) / m(slice, slice, slice)"
+            << " Const version\n";
+  const Matrix<double, 2> mat2d_b(arr_2d, 4, 3);
+  Matrix<double, 2> mat2d_c = mat2d_b(std::slice(1, 2, 1), std::slice(0, 2, 2));
+  if (print) test_print(mat2d_c, "mat2d_c = ");
+  assert(mat2d_c.n_elem() == 4);
+  assert(mat2d_c.n_rows() == 2);
+  assert(mat2d_c.n_cols() == 2);
+  assert(mat2d_c(0, 0) == 2);
+  assert(mat2d_c(1, 0) == 3);
+  assert(mat2d_c(0, 1) == 10);
+  assert(mat2d_c(1, 1) == 11);
+
+  const Matrix<double, 3> mat3d_b(arr_3d, 4, 3, 2);
+  Matrix<double, 3> mat3d_c =
+      mat3d_b(std::slice(1, 2, 2), std::slice(0, 2, 2), std::slice(0, 2, 1));
+  if (print) test_print(mat3d_c, "mat3d_c = ");
+  assert(mat3d_c.n_elem() == 8);
+  assert(mat3d_c.n_rows() == 2);
+  assert(mat3d_c.n_cols() == 2);
+  assert(mat3d_c.n_slices() == 2);
+  assert(mat3d_c(1, 0, 0) == 4);
+  assert(mat3d_c(1, 1, 0) == 12);
+  assert(mat3d_c(1, 0, 1) == 16);
+  assert(mat3d_c(1, 1, 1) == 24);
+}
+
 void matrix_test_unary_add_minus_operator(bool print = false) {
   std::cout << "[TEST]: Applies unary add/minus operators to each element\n";
 
@@ -2160,66 +2222,6 @@ void matrix_3d_test_subcube(bool print = false) {
   assert(mat3d_d(1, 2, 2) == 36);
 }
 
-void matrix_2d_test_slice_on_each_dim(bool print = false) {
-  std::cout << "[TEST]: 2D Matrix's member functions m(slice, slice)\n";
-
-  const double arr[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
-                        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
-
-  Matrix<double, 2> mat2d_a(arr, 5, 4);
-  mat2d_a(std::slice(0, 3, 2), std::slice(1, 2, 1)) = 0;
-  if (print) test_print(mat2d_a, "mat2d_a = ");
-  assert(mat2d_a(0, 0) == 1);
-  assert(mat2d_a(0, 1) == 0);
-  assert(mat2d_a(0, 2) == 0);
-  assert(mat2d_a(0, 3) == 16);
-  assert(mat2d_a(4, 0) == 5);
-  assert(mat2d_a(4, 1) == 0);
-  assert(mat2d_a(4, 2) == 0);
-  assert(mat2d_a(4, 3) == 20);
-
-  const Matrix<double, 2> mat2d_b(arr, 5, 4);
-  Matrix<double, 2> mat2d_c = mat2d_b(std::slice(0, 3, 2), std::slice(1, 2, 1));
-  if (print) test_print(mat2d_c, "mat2d_c = ");
-  assert(mat2d_c.n_elem() == 6);
-  assert(mat2d_c.n_rows() == 3);
-  assert(mat2d_c.n_cols() == 2);
-  assert(mat2d_c(0, 0) == 6);
-  assert(mat2d_c(0, 1) == 11);
-  assert(mat2d_c(2, 0) == 10);
-  assert(mat2d_c(2, 1) == 15);
-}
-
-void matrix_3d_test_slice_on_each_dim(bool print = false) {
-  std::cout << "[TEST]: 3D Matrix's member functions m(slice, slice, slice)\n";
-
-  const double arr[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-                        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-
-  Matrix<double, 3> mat3d_a(arr, 4, 3, 2);
-  mat3d_a(std::slice(1, 2, 2), std::slice(0, 2, 2), std::slice(0, 2, 1)) = 0;
-  if (print) test_print(mat3d_a, "mat3d_a = ");
-  assert(mat3d_a(3, 0, 0) == 0);
-  assert(mat3d_a(3, 1, 0) == 8);
-  assert(mat3d_a(3, 2, 0) == 0);
-  assert(mat3d_a(3, 0, 1) == 0);
-  assert(mat3d_a(3, 1, 1) == 20);
-  assert(mat3d_a(3, 2, 1) == 0);
-
-  const Matrix<double, 3> mat3d_b(arr, 4, 3, 2);
-  Matrix<double, 3> mat3d_c =
-      mat3d_b(std::slice(1, 2, 2), std::slice(0, 2, 2), std::slice(0, 2, 1));
-  if (print) test_print(mat3d_c, "mat3d_c = ");
-  assert(mat3d_c.n_elem() == 8);
-  assert(mat3d_c.n_rows() == 2);
-  assert(mat3d_c.n_cols() == 2);
-  assert(mat3d_c.n_slices() == 2);
-  assert(mat3d_c(1, 0, 0) == 4);
-  assert(mat3d_c(1, 1, 0) == 12);
-  assert(mat3d_c(1, 0, 1) == 16);
-  assert(mat3d_c(1, 1, 1) == 24);
-}
-
 void matrix_nd_test_elem(bool print = false) {
   std::cout << "[TEST]: 1/2/3D Matrix's member functions elem()\n";
 
@@ -2745,14 +2747,15 @@ int main() {
   matrix_test_slicing_with_slicematrix_b2_08(print_flag);
 
   print_msg("B3: Testing Matrix<T, N> Slicing with GSliceMatrix<T>");
+  matrix_test_slicing_with_gslicematrix_b3_01(print_flag);
+  matrix_test_slicing_with_gslicematrix_b3_02(print_flag);
+
   matrix_2d_test_gslice_array(print_flag);
   matrix_2d_test_rows(print_flag);
   matrix_2d_test_cols(print_flag);
   matrix_2d_test_submat(print_flag);
   matrix_3d_test_slices(print_flag);
   matrix_3d_test_subcube(print_flag);
-  matrix_2d_test_slice_on_each_dim(print_flag);
-  matrix_3d_test_slice_on_each_dim(print_flag);
 
   print_msg("B4: Testing Matrix<T, N> Slicing with MaskMatrix<T>");
   matrix_1d_test_bool_elem(print_flag);

@@ -1,15 +1,37 @@
 `matrix.h`: A small multidimensional matrix library
 ==
 
-## Introduction
+## 1. Introduction
 
-**C++** does not come with its own matrix library. This is partially true -- the **Standard Template Library (STL)** has introduced [`std::valarray`](https://en.cppreference.com/w/cpp/numeric/valarray) for fast mathematical computations since **C++98**. The `std::valarray` by itself only acts like a 1D array, but it can be used to simulate a **N**-dimensional matrix quite easily with its helper classes (i.e., [`std::slice_array`](https://en.cppreference.com/w/cpp/numeric/valarray/slice_array), [`std::gslice_array`](https://en.cppreference.com/w/cpp/numeric/valarray/gslice_array), [`std::mask_array`](https://en.cppreference.com/w/cpp/numeric/valarray/mask_array) and [`std::indirect_array`](https://en.cppreference.com/w/cpp/numeric/valarray/mask_array)) which have the reference semantics to a subset of the array.
+The **C++** language does not come with its own matrix library. This
+is partially true -- the **Standard Template Library (STL)** has
+introduced
+[`std::valarray`](https://en.cppreference.com/w/cpp/numeric/valarray)
+for fast mathematical computations since **C++98**. The
+`std::valarray` by itself only acts like a 1D array, but it can be
+used to simulate a **N**-dimensional matrix quite easily with its
+helper classes (i.e.,
+[`std::slice_array`](https://en.cppreference.com/w/cpp/numeric/valarray/slice_array),
+[`std::gslice_array`](https://en.cppreference.com/w/cpp/numeric/valarray/gslice_array),
+[`std::mask_array`](https://en.cppreference.com/w/cpp/numeric/valarray/mask_array)
+and
+[`std::indirect_array`](https://en.cppreference.com/w/cpp/numeric/valarray/mask_array))
+which have the reference semantics to a subset of the array.
 
-This single header matrix library can be viewed as a wrapper of `std::valarray` and its helper classes, and an extension of Bjarne Stroustrup's [matrix](https://www.stroustrup.com/Programming/Matrix/Matrix.h) implementation. It provides standard building blocks for performing basic vector, matrix and cube operations. Most of the APIs are coming from **Armadillo** (a popular **C++** library for linear algebra with syntax similar to **MATLAB**), but note that it will not be compatible for sure. While other APIs have their origins in a few different programming languages (e.g., **Fortran**).
+This single header matrix library can be viewed as a wrapper of
+`std::valarray` and an extension of Bjarne Stroustrup's
+[matrix](https://www.stroustrup.com/Programming/Matrix/Matrix.h)
+implementation. It provides standard building blocks for performing
+basic vector, matrix and cube operations. Most of the APIs are coming
+from [**Armadillo**](https://arma.sourceforge.net/docs.html) (a
+popular **C++** library for linear algebra with syntax similar to
+**MATLAB**), but note that it will not be compatible for sure. While
+other APIs have their origins in a few different programming languages
+(e.g., **Fortran**).
 
-## A Matrix Template
+## 2. A Matrix Template
 
-### Matrix<T, N>
+### 2.1 Matrix<T, N>
 
 `Matrix<T, N>` is an **N**-dimensional dense matrix of some value type **T** (**YP**: currently only 1D/2D/3D matrix are implemented). Internally it consists of a `std::valarray<T>` for storing its elements in [column-major ordering](https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order) (like **Fortran**) and a `std::size_t` array of size **N** to record its sizes on each dimension:
 
@@ -173,18 +195,20 @@ A declaration of a `std::slice` has the form `std::slice s(start, size, stride);
 | mat : `submat_slice diag(int k)`                                                           | (8)  |
 
 ### Matrix Slicing with GsliceMatrix
-| `GsliceMatrix<T>-related member function                                                 `                                                                                   |      |
-|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| mat : `mat operator()(std::slice s1, std::slice s2) const`             <br> cube: `cube operator()(std::slice s1, std::slice s2, std::slice s3) const`                       | (1a) |
-| mat : `submat_gslice operator()(std::slice s1, std::slice s2)`         <br> cube: `submat_gslice operator()(std::slice s1, std::slice s2, std::slice s3)`                    | (1b) |
-| mat : `mat submat(first_row, first_col, last_row, last_col) const`     <br> cube: `cube subcube(first_row, first_col, first_slice, last_row, last_col, last_slice) const`    | (2a) |
-| mat : `submat_gslice submat(first_row, first_col, last_row, last_col)` <br> cube: `submat_gslice subcube(first_row, first_col, first_slice, last_row, last_col, last_slice)` | (2b) |
-| mat : `mat rows(first_row, last_row) const / mat cols(first_col, last_col) const`                                                                                            | (3a) |
-| mat : `submat_gslice rows(first_row, last_row) / submat_gslice cols(first_col, last_col)`                                                                                    | (3b) |
-| cube: `mat row(i) const` <br> cube: `mat col(i) const` <br> cube: `mat slice(i) const`                                                                                       | (4a) |
-| cube: `submat_gslice row(i)` <br> cube: `submat_gslice col(i)` <br> cube: `submat_gslice slice(i)`                                                                           | (4b) |
-| cube: `cube rows(first_slice, last_slice) const` <br> cube: `cube cols(first_slice, last_slice) const` <br> cube: `cube slices(first_slice, last_slice) const`               | (5a) |
-| cube: `submat_cube rows(first_slice, last_slice)` <br> cube: `submat_cube cols(first_slice, last_slice)` <br> cube: `submat_cube slices(first_slice, last_slice)`            | (5a) |
+| `GsliceMatrix<T>-related member function                                                 `                                                                |       |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------|-------|
+| mat : `mat operator()(std::gslice gs) const`                           <br> cube: `cube operator()(std::gslice gs) const`                                 | (1v1) |
+| mat : `mat operator()(std::slice s1, std::slice s2) const`             <br> cube: `cube operator()(std::slice s1, std::slice s2, std::slice s3) const`    | (1v2) |
+| mat : `submat_gslice operator()(std::gslice gs)`                       <br> cube: `submat_gslice operator()(std::gslice gs)`                              | (2v1) |
+| mat : `submat_gslice operator()(std::slice s1, std::slice s2)`         <br> cube: `submat_gslice operator()(std::slice s1, std::slice s2, std::slice s3)` | (2v2) |
+| mat : `mat submat(fr, fc, lr, lc) const`     <br> cube: `cube subcube(fr, fc, fs, lr, lc, ls) const`                                                      | (3)   |
+| mat : `submat_gslice submat(fr, fc, lr, lc)` <br> cube: `submat_gslice subcube(fr, fc, fs, lr, lc, ls)`                                                   | (4)   |
+| mat : `mat rows(fr, lr) const / mat cols(fc, lc) const`                                                                                                   | (5)   |
+| mat : `submat_gslice rows(fr, lr) / submat_gslice cols(fc, lc)`                                                                                           | (6)   |
+| cube: `mat row(i) const`     <br> cube: `mat col(i) const`     <br> cube: `mat slice(i) const`                                                            | (7)   |
+| cube: `submat_gslice row(i)` <br> cube: `submat_gslice col(i)` <br> cube: `submat_gslice slice(i)`                                                        | (8)   |
+| cube: `cube rows(fr, lr) const`  <br> cube: `cube cols(fc, lc) const`  <br> cube: `cube slices(fs, ls) const`                                             | (9)   |
+| cube: `submat_cube rows(fr, lr)` <br> cube: `submat_cube cols(fc, lc)` <br> cube: `submat_cube slices(fs, ls)`                                            | (10)  |
 
 ### Matrix Slicing with MaskMatrix
 | `MaskMatrix<T>-related member function                                                   `                                                                                   |      |
