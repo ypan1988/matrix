@@ -1615,7 +1615,7 @@ inline GsliceMatrix<Tp> Matrix<Tp, 3>::slice(uword s) {
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 1>::operator()(
     const bool_array& bool_arr) const {
-  return Matrix<Tp>(this->M_elem, bool_arr);
+  return Matrix<Tp, 1>(this->M_elem, bool_arr);
 }
 
 template <class Tp>
@@ -1626,7 +1626,7 @@ inline MaskMatrix<Tp> Matrix<Tp, 1>::operator()(const bool_array& bool_arr) {
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 2>::operator()(
     const bool_array& bool_arr) const {
-  return Matrix<Tp>(this->M_elem, bool_arr);
+  return Matrix<Tp, 1>(this->M_elem, bool_arr);
 }
 
 template <class Tp>
@@ -1637,7 +1637,7 @@ inline MaskMatrix<Tp> Matrix<Tp, 2>::operator()(const bool_array& bool_arr) {
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 3>::operator()(
     const bool_array& bool_arr) const {
-  return Matrix<Tp>(this->M_elem, bool_arr);
+  return Matrix<Tp, 1>(this->M_elem, bool_arr);
 }
 
 template <class Tp>
