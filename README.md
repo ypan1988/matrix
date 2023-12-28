@@ -107,24 +107,23 @@ These wrapper classes behave just like the `Matrix` except they refer to a `Matr
 
 ### Constructors and Destructors
 
-| Matrix<T, N>::Matrix /  Matrix<T, N>::~Matrix <br> (with T = double, N = 1/2/3)                                                                                     |              |
-|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------|
-| vec: `vec()`                              <br> mat: `mat()`                                      <br> cube: `cube()`                                                | (1)          |
-| vec: `explicit vec(n_rows)`               <br> mat: `mat(n_rows, n_cols)`                        <br> cube: `cube(n_rows, n_cols, n_slices)`                        | (2)          |
-| vec: `vec(const elem_type& val, n_rows)`  <br> mat: `mat(const elem_type& val, n_rows, n_cols)`  <br> cube: `cube(const elem_type& val, n_rows, n_cols, n_slides)`  | (3)          |
-| vec: `vec(const elem_type* vals, n_rows)` <br> mat: `mat(const elem_type* vals, n_rows, n_cols)` <br> cube: `cube(const elem_type* vals, n_rows, n_cols, n_slides)` | (4)          |
-| vec: `vec(const vec&)`                    <br> mat: `mat(const mat&)`                            <br> cube: `cube(const cube&)`                                     | (5)          |
-| vec: `vec(vec&&) noexcept`                <br> mat: `mat(mat&&) noexcept`                        <br> cube: `cube(cube&&) noexcept`                                 | (6) C++11    |
-| vec: `vec(submat_slice)`                  <br> mat: `mat(submat_slice)`                          <br>                                                               | (7)          |
-| vec: `vec(submat_gslice)`                 <br> mat: `mat(submat_gslice)`                         <br> cube: `cube(submat_gslice)`                                   | (8)          |
-| vec: `vec(submat_mask)`                   <br> mat: `mat(submat_mask)`                           <br>                                                               | (9)          |
-| vec: `vec(submat_indirect)`               <br> mat: `mat(submat_indirect)`                       <br> cube: `cube(submat_indirect)`                                 | (10)         |
-| vec: `vec(initializer_list)`              <br> mat: `mat(initializer_list, n_rows, n_cols)`      <br> cube: `cube(initializer_list, n_rows, n_cols, n_slices)`      | (11v1) C++11 |
-| vec: `vec(initializer_list)`              <br> mat: `mat(nested initializer_list)`               <br> cube: `cube(nested initializer_list)`                         | (11v2) C++11 |
-| vec: `vec(valarray)`                      <br> mat: `mat(valarray, n_rows, n_cols)`              <br> cube: `cube(valarray, n_rows, n_cols, n_slides)`              | (12)         |
-| vec: `vec(const mat&)`                    <br> mat: `mat(const vec&)`                            <br>                                                               | (13)         |
-| vec: `vec(mat&&)`                         <br> mat: `mat(vec&&)`                                 <br>                                                               | (14) C++11   |
-| vec: `~vec()`                             <br> mat: `~mat()`                                     <br> cube: `~cube()`                                               | (15)         |
+| Matrix<T, N>::Matrix /  Matrix<T, N>::~Matrix <br> (with T = double, N = 1/2/3)                                                                                     |            |
+|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
+| vec: `vec()`                              <br> mat: `mat()`                                      <br> cube: `cube()`                                                | (1)        |
+| vec: `explicit vec(n_rows)`               <br> mat: `mat(n_rows, n_cols)`                        <br> cube: `cube(n_rows, n_cols, n_slices)`                        | (2)        |
+| vec: `vec(const elem_type& val, n_rows)`  <br> mat: `mat(const elem_type& val, n_rows, n_cols)`  <br> cube: `cube(const elem_type& val, n_rows, n_cols, n_slides)`  | (3)        |
+| vec: `vec(const elem_type* vals, n_rows)` <br> mat: `mat(const elem_type* vals, n_rows, n_cols)` <br> cube: `cube(const elem_type* vals, n_rows, n_cols, n_slides)` | (4)        |
+| vec: `vec(const vec&)`                    <br> mat: `mat(const mat&)`                            <br> cube: `cube(const cube&)`                                     | (5)        |
+| vec: `vec(vec&&) noexcept`                <br> mat: `mat(mat&&) noexcept`                        <br> cube: `cube(cube&&) noexcept`                                 | (6) C++11  |
+| vec: `vec(submat_slice)`                  <br> mat: `mat(submat_slice)`                          <br>                                                               | (7)        |
+| vec: `vec(submat_gslice)`                 <br> mat: `mat(submat_gslice)`                         <br> cube: `cube(submat_gslice)`                                   | (8)        |
+| vec: `vec(submat_mask)`                   <br> mat: `mat(submat_mask)`                           <br>                                                               | (9)        |
+| vec: `vec(submat_indirect)`               <br> mat: `mat(submat_indirect)`                       <br> cube: `cube(submat_indirect)`                                 | (10)       |
+| vec: `vec(initializer_list)`              <br> mat: `mat(nested initializer_list)`               <br> cube: `cube(nested initializer_list)`                         | (11) C++11 |
+| vec: `vec(valarray)`                      <br> mat: `mat(valarray, n_rows, n_cols)`              <br> cube: `cube(valarray, n_rows, n_cols, n_slides)`              | (12)       |
+| vec: `vec(const mat&)`                    <br> mat: `mat(const vec&)`                            <br>                                                               | (13)       |
+| vec: `vec(mat&&)`                         <br> mat: `mat(vec&&)`                                 <br>                                                               | (14) C++11 |
+| vec: `~vec()`                             <br> mat: `~mat()`                                     <br> cube: `~cube()`                                               | (15)       |
 
 The table above provides ways to construct new matrix from various sources:
   1) Default constructor. Constructs an empty `vec/mat/cube`.
@@ -195,20 +194,18 @@ A declaration of a `std::slice` has the form `std::slice s(start, size, stride);
 | mat : `submat_slice diag(int k)`                                                           | (8)  |
 
 ### Matrix Slicing with GsliceMatrix
-| `GsliceMatrix<T>-related member function                                                 `                                                                |       |
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------|-------|
-| mat : `mat operator()(std::gslice gs) const`                           <br> cube: `cube operator()(std::gslice gs) const`                                 | (1v1) |
-| mat : `mat operator()(std::slice s1, std::slice s2) const`             <br> cube: `cube operator()(std::slice s1, std::slice s2, std::slice s3) const`    | (1v2) |
-| mat : `submat_gslice operator()(std::gslice gs)`                       <br> cube: `submat_gslice operator()(std::gslice gs)`                              | (2v1) |
-| mat : `submat_gslice operator()(std::slice s1, std::slice s2)`         <br> cube: `submat_gslice operator()(std::slice s1, std::slice s2, std::slice s3)` | (2v2) |
-| mat : `mat submat(fr, fc, lr, lc) const`     <br> cube: `cube subcube(fr, fc, fs, lr, lc, ls) const`                                                      | (3)   |
-| mat : `submat_gslice submat(fr, fc, lr, lc)` <br> cube: `submat_gslice subcube(fr, fc, fs, lr, lc, ls)`                                                   | (4)   |
-| mat : `mat rows(fr, lr) const / mat cols(fc, lc) const`                                                                                                   | (5)   |
-| mat : `submat_gslice rows(fr, lr) / submat_gslice cols(fc, lc)`                                                                                           | (6)   |
-| cube: `mat row(i) const`     <br> cube: `mat col(i) const`     <br> cube: `mat slice(i) const`                                                            | (7)   |
-| cube: `submat_gslice row(i)` <br> cube: `submat_gslice col(i)` <br> cube: `submat_gslice slice(i)`                                                        | (8)   |
-| cube: `cube rows(fr, lr) const`  <br> cube: `cube cols(fc, lc) const`  <br> cube: `cube slices(fs, ls) const`                                             | (9)   |
-| cube: `submat_cube rows(fr, lr)` <br> cube: `submat_cube cols(fc, lc)` <br> cube: `submat_cube slices(fs, ls)`                                            | (10)  |
+| `GsliceMatrix<T>-related member function                                                 `                                                                |      |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------|------|
+| mat : `mat operator()(std::slice s1, std::slice s2) const`             <br> cube: `cube operator()(std::slice s1, std::slice s2, std::slice s3) const`    | (1)  |
+| mat : `submat_gslice operator()(std::slice s1, std::slice s2)`         <br> cube: `submat_gslice operator()(std::slice s1, std::slice s2, std::slice s3)` | (2)  |
+| mat : `mat submat(fr, fc, lr, lc) const`     <br> cube: `cube subcube(fr, fc, fs, lr, lc, ls) const`                                                      | (3)  |
+| mat : `submat_gslice submat(fr, fc, lr, lc)` <br> cube: `submat_gslice subcube(fr, fc, fs, lr, lc, ls)`                                                   | (4)  |
+| mat : `mat rows(fr, lr) const / mat cols(fc, lc) const`                                                                                                   | (5)  |
+| mat : `submat_gslice rows(fr, lr) / submat_gslice cols(fc, lc)`                                                                                           | (6)  |
+| cube: `mat row(i) const`     <br> cube: `mat col(i) const`     <br> cube: `mat slice(i) const`                                                            | (7)  |
+| cube: `submat_gslice row(i)` <br> cube: `submat_gslice col(i)` <br> cube: `submat_gslice slice(i)`                                                        | (8)  |
+| cube: `cube rows(fr, lr) const`  <br> cube: `cube cols(fc, lc) const`  <br> cube: `cube slices(fs, ls) const`                                             | (9)  |
+| cube: `submat_cube rows(fr, lr)` <br> cube: `submat_cube cols(fc, lc)` <br> cube: `submat_cube slices(fs, ls)`                                            | (10) |
 
 ### Matrix Slicing with MaskMatrix
 | `MaskMatrix<T>-related member function                                                   `                                                                                   |      |

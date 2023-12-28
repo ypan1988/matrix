@@ -467,61 +467,8 @@ void matrix_test_constructor_a1_10(bool print = false) {
   assert(mat3d_b(1, 1, 0) == 24);
 }
 
-void matrix_test_constructor_a1_11v1(bool print = false) {
-  std::cout << "[TEST]: A1_11v1. Elements (initializer list) + Dimension\n"
-            << "        vec: vec(initializer_list)\n"
-            << "        mat: mat(initializer_list, n_rows, n_cols)\n"
-            << "        cube: cube(initializer_list, n_rows, n_cols, n_slices)"
-            << std::endl;
-
-#if defined MATRIX_LIB_USE_CPP11
-  Matrix<double, 1> mat1d({1, 2, 3, 4});
-  if (print) test_print(mat1d, "mat1d =");
-  assert(mat1d.n_elem() == 4);
-  assert(mat1d.n_rows() == 4);
-  assert(mat1d.n_cols() == 1);
-  assert(mat1d(0) == 1.0);
-  assert(mat1d(1) == 2.0);
-  assert(mat1d(2) == 3.0);
-  assert(mat1d(3) == 4.0);
-
-  Matrix<double, 2> mat2d({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}, 4, 3);
-  if (print) test_print(mat2d, "mat2d =");
-  assert(mat2d.n_elem() == 12);
-  assert(mat2d.n_rows() == 4);
-  assert(mat2d.n_cols() == 3);
-  assert(mat2d(0, 0) == 1.0);
-  assert(mat2d(1, 0) == 2.0);
-  assert(mat2d(2, 0) == 3.0);
-  assert(mat2d(3, 0) == 4.0);
-  assert(mat2d(0, 2) == 9.0);
-  assert(mat2d(1, 2) == 10.0);
-  assert(mat2d(2, 2) == 11.0);
-  assert(mat2d(3, 2) == 12.0);
-
-  Matrix<double, 3> mat3d({1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-                           13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24},
-                          4, 3, 2);
-  if (print) test_print(mat3d, "mat3d =");
-  assert(mat3d.n_elem() == 24);
-  assert(mat3d.n_rows() == 4);
-  assert(mat3d.n_cols() == 3);
-  assert(mat3d.n_slices() == 2);
-  assert(mat3d(0, 0, 0) == 1.0);
-  assert(mat3d(1, 0, 0) == 2.0);
-  assert(mat3d(2, 0, 0) == 3.0);
-  assert(mat3d(3, 0, 0) == 4.0);
-  assert(mat3d(0, 2, 1) == 21.0);
-  assert(mat3d(1, 2, 1) == 22.0);
-  assert(mat3d(2, 2, 1) == 23.0);
-  assert(mat3d(3, 2, 1) == 24.0);
-#else
-  std::cout << "[NOTE]: TEST A08 SKIPPED (C++11 NOT SUPPORTED)\n";
-#endif
-}
-
-void matrix_test_constructor_a1_11v2(bool print = false) {
-  std::cout << "[TEST]: A1_11v2. Nested initializer list\n"
+void matrix_test_constructor_a1_11(bool print = false) {
+  std::cout << "[TEST]: A1_11. Nested initializer list\n"
             << "        vec: vec(initializer_list)\n"
             << "        mat: mat(nested initializer_list)\n"
             << "        cube: cube(nested initializer_list)" << std::endl;
@@ -1524,72 +1471,8 @@ void matrix_test_slicing_with_slicematrix_b2_08(bool print = false) {
   assert(mat1d_c(1) == 6);
 }
 
-void matrix_test_slicing_with_gslicematrix_b3_01_v1(bool print = false) {
-  std::cout << "[TEST]: B3_01(v1). m(gslice) / m(gslice)"
-            << " Non-const version\n";
-  Matrix<double, 2> mat2d(arr_2d, 4, 3);
-  uword start_1 = 1 + 0 * mat2d.n_rows();
-  INIT_ARR2E(size_1, 2, 2);
-  INIT_ARR2E(stride_1, mat2d.n_rows() * 2, 1 * 1);
-  mat2d(std::gslice(start_1, size_1, stride_1)) = 0;
-  if (print) test_print(mat2d, "mat2d = ");
-  assert(mat2d.n_elem() == 12);
-  assert(mat2d.n_rows() == 4);
-  assert(mat2d.n_cols() == 3);
-  assert(mat2d(0, 0) == 1);
-  assert(mat2d(1, 0) == 0);
-  assert(mat2d(2, 0) == 0);
-  assert(mat2d(3, 0) == 4);
-  assert(mat2d(0, 1) == 5);
-  assert(mat2d(1, 1) == 6);
-  assert(mat2d(2, 1) == 7);
-  assert(mat2d(3, 1) == 8);
-  assert(mat2d(0, 2) == 9);
-  assert(mat2d(1, 2) == 0);
-  assert(mat2d(2, 2) == 0);
-  assert(mat2d(3, 2) == 12);
-
-  Matrix<double, 3> mat3d(arr_3d, 4, 3, 2);
-  uword start_2 = 1 + 0 * mat3d.n_rows() + 0 * mat3d.n_rows() * mat3d.n_cols();
-  INIT_ARR3E(size_2, 2, 2, 2);
-  INIT_ARR3E(stride_2, mat3d.n_rows() * mat3d.n_cols() * 1, mat3d.n_rows() * 2,
-             2);
-  mat3d(std::gslice(start_2, size_2, stride_2)) = 0;
-  if (print) test_print(mat3d, "mat3d = ");
-  assert(mat3d.n_elem() == 24);
-  assert(mat3d.n_rows() == 4);
-  assert(mat3d.n_cols() == 3);
-  assert(mat3d.n_slices() == 2);
-
-  assert(mat3d(0, 0, 0) == 1);
-  assert(mat3d(1, 0, 0) == 0);
-  assert(mat3d(2, 0, 0) == 3);
-  assert(mat3d(3, 0, 0) == 0);
-  assert(mat3d(0, 1, 0) == 5);
-  assert(mat3d(1, 1, 0) == 6);
-  assert(mat3d(2, 1, 0) == 7);
-  assert(mat3d(3, 1, 0) == 8);
-  assert(mat3d(0, 2, 0) == 9);
-  assert(mat3d(1, 2, 0) == 0);
-  assert(mat3d(2, 2, 0) == 11);
-  assert(mat3d(3, 2, 0) == 0);
-
-  assert(mat3d(0, 0, 1) == 13);
-  assert(mat3d(1, 0, 1) == 0);
-  assert(mat3d(2, 0, 1) == 15);
-  assert(mat3d(3, 0, 1) == 0);
-  assert(mat3d(0, 1, 1) == 17);
-  assert(mat3d(1, 1, 1) == 18);
-  assert(mat3d(2, 1, 1) == 19);
-  assert(mat3d(3, 1, 1) == 20);
-  assert(mat3d(0, 2, 1) == 21);
-  assert(mat3d(1, 2, 1) == 0);
-  assert(mat3d(2, 2, 1) == 23);
-  assert(mat3d(3, 2, 1) == 0);
-}
-
-void matrix_test_slicing_with_gslicematrix_b3_01_v2(bool print = false) {
-  std::cout << "[TEST]: B3_01(v2). m(slice, slice) / m(slice, slice, slice)"
+void matrix_test_slicing_with_gslicematrix_b3_01(bool print = false) {
+  std::cout << "[TEST]: B3_01. m(slice, slice) / m(slice, slice, slice)"
             << " Non-const version\n";
   Matrix<double, 2> mat2d(arr_2d, 4, 3);
   mat2d(std::slice(1, 2, 1), std::slice(0, 2, 2)) = 0;
@@ -1645,46 +1528,8 @@ void matrix_test_slicing_with_gslicematrix_b3_01_v2(bool print = false) {
   assert(mat3d(3, 2, 1) == 0);
 }
 
-void matrix_test_slicing_with_gslicematrix_b3_02_v1(bool print = false) {
-  std::cout << "[TEST]: B3_02(v1). m(gslice) / m(gslice)"
-            << " Const version\n";
-  const Matrix<double, 2> mat2d_a(arr_2d, 4, 3);
-  uword start_1 = 1 + 0 * mat2d_a.n_rows();
-  INIT_ARR2E(size_1, 2, 2);
-  INIT_ARR2E(stride_1, mat2d_a.n_rows() * 2, 1 * 1);
-  Matrix<double, 2> mat2d_b = mat2d_a(std::gslice(start_1, size_1, stride_1));
-  if (print) test_print(mat2d_b, "mat2d_b = ");
-  assert(mat2d_b.n_elem() == 4);
-  assert(mat2d_b.n_rows() == 2);
-  assert(mat2d_b.n_cols() == 2);
-  assert(mat2d_b(0, 0) == 2);
-  assert(mat2d_b(1, 0) == 3);
-  assert(mat2d_b(0, 1) == 10);
-
-  const Matrix<double, 3> mat3d_a(arr_3d, 4, 3, 2);
-  uword start_2 =
-      1 + 0 * mat3d_a.n_rows() + 0 * mat3d_a.n_rows() * mat3d_a.n_cols();
-  INIT_ARR3E(size_2, 2, 2, 2);
-  INIT_ARR3E(stride_2, mat3d_a.n_rows() * mat3d_a.n_cols() * 1,
-             mat3d_a.n_rows() * 2, 2);
-  Matrix<double, 3> mat3d_b = mat3d_a(std::gslice(start_2, size_2, stride_2));
-  if (print) test_print(mat3d_b, "mat3d_b = ");
-  assert(mat3d_b.n_elem() == 8);
-  assert(mat3d_b.n_rows() == 2);
-  assert(mat3d_b.n_cols() == 2);
-  assert(mat3d_b.n_slices() == 2);
-  assert(mat3d_b(0, 0, 0) == 2);
-  assert(mat3d_b(1, 0, 0) == 4);
-  assert(mat3d_b(0, 1, 0) == 10);
-  assert(mat3d_b(1, 1, 0) == 12);
-  assert(mat3d_b(0, 0, 1) == 14);
-  assert(mat3d_b(1, 0, 1) == 16);
-  assert(mat3d_b(0, 1, 1) == 22);
-  assert(mat3d_b(1, 1, 1) == 24);
-}
-
-void matrix_test_slicing_with_gslicematrix_b3_02_v2(bool print = false) {
-  std::cout << "[TEST]: B3_02(v2). m(slice, slice) / m(slice, slice, slice)"
+void matrix_test_slicing_with_gslicematrix_b3_02(bool print = false) {
+  std::cout << "[TEST]: B3_02. m(slice, slice) / m(slice, slice, slice)"
             << " Const version\n";
   const Matrix<double, 2> mat2d_a(arr_2d, 4, 3);
   Matrix<double, 2> mat2d_b = mat2d_a(std::slice(1, 2, 1), std::slice(0, 2, 2));
@@ -2841,8 +2686,7 @@ int main() {
   matrix_test_constructor_a1_08(print_flag);
   matrix_test_constructor_a1_09(print_flag);
   matrix_test_constructor_a1_10(print_flag);
-  matrix_test_constructor_a1_11v1(print_flag);
-  matrix_test_constructor_a1_11v2(print_flag);
+  matrix_test_constructor_a1_11(print_flag);
   matrix_test_constructor_a1_12(print_flag);
   matrix_test_constructor_a1_13(print_flag);
   matrix_test_constructor_a1_14(print_flag);
@@ -2875,10 +2719,8 @@ int main() {
   matrix_test_slicing_with_slicematrix_b2_08(print_flag);
 
   print_msg("B3: Testing Matrix<T, N> Slicing with GSliceMatrix<T>");
-  matrix_test_slicing_with_gslicematrix_b3_01_v1(print_flag);
-  matrix_test_slicing_with_gslicematrix_b3_01_v2(print_flag);
-  matrix_test_slicing_with_gslicematrix_b3_02_v1(print_flag);
-  matrix_test_slicing_with_gslicematrix_b3_02_v2(print_flag);
+  matrix_test_slicing_with_gslicematrix_b3_01(print_flag);
+  matrix_test_slicing_with_gslicematrix_b3_02(print_flag);
 
   matrix_2d_test_gslice_array(print_flag);
   matrix_2d_test_rows(print_flag);
