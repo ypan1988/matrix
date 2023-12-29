@@ -640,6 +640,10 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
                                 uword  last_row, uword  last_col, uword  last_slice) const;
     GsliceMatrix<Tp   > subcube(uword first_row, uword first_col, uword first_slice,
                       uword  last_row, uword  last_col, uword  last_slice);
+          Matrix<Tp, 2> row(uword slice_number) const;
+    GsliceMatrix<Tp   > row(uword slice_number);
+          Matrix<Tp, 2> col(uword slice_number) const;
+    GsliceMatrix<Tp   > col(uword slice_number);
           Matrix<Tp, 2> slice(uword slice_number) const;
     GsliceMatrix<Tp   > slice(uword slice_number);
           Matrix<Tp, 3> slices(uword fs, uword ls) const { return subcube(0, 0, fs, n_rows() - 1, n_cols() - 1, ls); }
@@ -1569,16 +1573,48 @@ inline GsliceMatrix<Tp> Matrix<Tp, 3>::subcube(uword fr, uword fc, uword fs,
 }
 
 template <class Tp>
-inline Matrix<Tp, 2> Matrix<Tp, 3>::slice(uword s) const {
-  const uword start = s * _M_d1xd2;
+inline Matrix<Tp, 2> Matrix<Tp, 3>::row(uword i) const {
+  const uword start = i;
+  INIT_ARR2E(size, n_slices(), n_cols());
+  INIT_ARR2E(stride, _M_d1xd2, n_rows());
+  return Matrix<Tp, 2>(this->M_elem, start, size, stride);
+}
+
+template <class Tp>
+inline GsliceMatrix<Tp> Matrix<Tp, 3>::row(uword i) {
+  const uword start = i;
+  INIT_ARR2E(size, n_slices(), n_cols());
+  INIT_ARR2E(stride, _M_d1xd2, n_rows());
+  return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
+}
+
+template <class Tp>
+inline Matrix<Tp, 2> Matrix<Tp, 3>::col(uword j) const {
+  const uword start = j * n_rows();
+  INIT_ARR2E(size, n_slices(), n_rows());
+  INIT_ARR2E(stride, _M_d1xd2, 1);
+  return Matrix<Tp, 2>(this->M_elem, start, size, stride);
+}
+
+template <class Tp>
+inline GsliceMatrix<Tp> Matrix<Tp, 3>::col(uword j) {
+  const uword start = j * n_rows();
+  INIT_ARR2E(size, n_slices(), n_rows());
+  INIT_ARR2E(stride, _M_d1xd2, 1);
+  return GsliceMatrix<Tp>(this->M_elem, start, size, stride);
+}
+
+template <class Tp>
+inline Matrix<Tp, 2> Matrix<Tp, 3>::slice(uword k) const {
+  const uword start = k * _M_d1xd2;
   INIT_ARR2E(size, n_cols(), n_rows());
   INIT_ARR2E(stride, n_rows(), 1);
   return Matrix<Tp, 2>(this->M_elem, start, size, stride);
 }
 
 template <class Tp>
-inline GsliceMatrix<Tp> Matrix<Tp, 3>::slice(uword s) {
-  const uword start = s * _M_d1xd2;
+inline GsliceMatrix<Tp> Matrix<Tp, 3>::slice(uword k) {
+  const uword start = k * _M_d1xd2;
   INIT_ARR2E(size, n_cols(), n_rows());
   INIT_ARR2E(stride, n_rows(), 1);
   return GsliceMatrix<Tp>(this->M_elem, start, size, stride);

@@ -194,18 +194,18 @@ A declaration of a `std::slice` has the form `std::slice s(start, size, stride);
 | mat : `submat_slice diag(int k)`                                                           | (8)  |
 
 ### Matrix Slicing with GsliceMatrix
-| `GsliceMatrix<T>-related member function                                                 `                                                                |` ID `|
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| mat : `mat operator()(std::slice s1, std::slice s2) const`             <br> cube: `cube operator()(std::slice s1, std::slice s2, std::slice s3) const`    | (1)  |
-| mat : `submat_gslice operator()(std::slice s1, std::slice s2)`         <br> cube: `submat_gslice operator()(std::slice s1, std::slice s2, std::slice s3)` | (2)  |
-| mat : `mat submat(fr, fc, lr, lc) const`     <br> cube: `cube subcube(fr, fc, fs, lr, lc, ls) const`                                                      | (3)  |
-| mat : `submat_gslice submat(fr, fc, lr, lc)` <br> cube: `submat_gslice subcube(fr, fc, fs, lr, lc, ls)`                                                   | (4)  |
-| mat : `mat rows(fr, lr) const / mat cols(fc, lc) const`                                                                                                   | (5)  |
-| mat : `submat_gslice rows(fr, lr) / submat_gslice cols(fc, lc)`                                                                                           | (6)  |
-| cube: `mat row(i) const`     <br> cube: `mat col(i) const`     <br> cube: `mat slice(i) const`                                                            | (7)  |
-| cube: `submat_gslice row(i)` <br> cube: `submat_gslice col(i)` <br> cube: `submat_gslice slice(i)`                                                        | (8)  |
-| cube: `cube rows(fr, lr) const`  <br> cube: `cube cols(fc, lc) const`  <br> cube: `cube slices(fs, ls) const`                                             | (9)  |
-| cube: `submat_cube rows(fr, lr)` <br> cube: `submat_cube cols(fc, lc)` <br> cube: `submat_cube slices(fs, ls)`                                            | (10) |
+| `GsliceMatrix<T>-related member function                                                 `                                                        |` ID `|
+|:--------------------------------------------------------------------------------------------------------------------------------------------------|------|
+| mat : `mat operator()(std::slice s1, std::slice s2) const`     <br> cube: `cube operator()(std::slice s1, std::slice s2, std::slice s3) const`    | (1)  |
+| mat : `submat_gslice operator()(std::slice s1, std::slice s2)` <br> cube: `submat_gslice operator()(std::slice s1, std::slice s2, std::slice s3)` | (2)  |
+| mat : `mat submat(fr, fc, lr, lc) const`                       <br> cube: `cube subcube(fr, fc, fs, lr, lc, ls) const`                            | (3)  |
+| mat : `submat_gslice submat(fr, fc, lr, lc)`                   <br> cube: `submat_gslice subcube(fr, fc, fs, lr, lc, ls)`                         | (4)  |
+| mat : `mat rows(fr, lr) const`                                 <br> mat : `mat cols(fc, lc) const`                                                | (5)  |
+| mat : `submat_gslice rows(fr, lr)`                             <br> mat : `submat_gslice cols(fc, lc)`                                            | (6)  |
+| cube: `mat row(i) const`                                       <br> cube: `mat col(i) const`         <br> cube: `mat slice(i) const`              | (7)  |
+| cube: `submat_gslice row(i)`                                   <br> cube: `submat_gslice col(i)`     <br> cube: `submat_gslice slice(i)`          | (8)  |
+| cube: `cube rows(fr, lr) const`                                <br> cube: `cube cols(fc, lc) const`  <br> cube: `cube slices(fs, ls) const`       | (9)  |
+| cube: `submat_cube rows(fr, lr)`                               <br> cube: `submat_cube cols(fc, lc)` <br> cube: `submat_cube slices(fs, ls)`      | (10) |
 
 ### Matrix Slicing with MaskMatrix
 | `MaskMatrix<T>-related member function                                                   `                                                                                   |` ID `|
