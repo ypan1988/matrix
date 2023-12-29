@@ -1675,6 +1675,88 @@ void matrix_test_slicing_with_gslicematrix_b3_04(bool print = false) {
   assert(mat3d_d(1, 2, 2) == 36);
 }
 
+void matrix_test_slicing_with_gslicematrix_b3_05(bool print = false) {
+  std::cout << "[TEST]: B3_05. m.rows() / m.cols()"
+            << " Non-Const version\n";
+
+  Matrix<double, 2> mat2d_a(arr_2d, 4, 3);
+
+  if (print) test_print(mat2d_a, "mat2d_a = ");
+  if (print) std::cout << "Apply mat2d_a.rows(2, 3) = 0\n";
+  mat2d_a.rows(2, 3) = 0;
+  if (print) test_print(mat2d_a, "mat2d_a =");
+  assert(mat2d_a.n_elem() == 12);
+  assert(mat2d_a.n_rows() == 4);
+  assert(mat2d_a.n_cols() == 3);
+  assert(mat2d_a(0, 0) == 1);
+  assert(mat2d_a(1, 0) == 2);
+  assert(mat2d_a(2, 0) == 0);
+  assert(mat2d_a(3, 0) == 0);
+  assert(mat2d_a(0, 1) == 5);
+  assert(mat2d_a(1, 1) == 6);
+  assert(mat2d_a(2, 1) == 0);
+  assert(mat2d_a(3, 1) == 0);
+  assert(mat2d_a(0, 2) == 9);
+  assert(mat2d_a(1, 2) == 10);
+  assert(mat2d_a(2, 2) == 0);
+  assert(mat2d_a(3, 2) == 0);
+
+  Matrix<double, 2> mat2d_b(arr_2d, 4, 3);
+
+  if (print) test_print(mat2d_b, "mat2d_b = ");
+  if (print) std::cout << "Apply mat2d_b.cols(1, 2) = 0\n";
+  mat2d_b.cols(1, 2) = 0;
+  if (print) test_print(mat2d_b, "mat2d_b =");
+  assert(mat2d_b.n_elem() == 12);
+  assert(mat2d_b.n_rows() == 4);
+  assert(mat2d_b.n_cols() == 3);
+  assert(mat2d_b(0, 0) == 1);
+  assert(mat2d_b(1, 0) == 2);
+  assert(mat2d_b(2, 0) == 3);
+  assert(mat2d_b(3, 0) == 4);
+  assert(mat2d_b(0, 1) == 0);
+  assert(mat2d_b(1, 1) == 0);
+  assert(mat2d_b(2, 1) == 0);
+  assert(mat2d_b(3, 1) == 0);
+  assert(mat2d_b(0, 2) == 0);
+  assert(mat2d_b(1, 2) == 0);
+  assert(mat2d_b(2, 2) == 0);
+  assert(mat2d_b(3, 2) == 0);
+}
+
+void matrix_test_slicing_with_gslicematrix_b3_06(bool print = false) {
+  std::cout << "[TEST]: B3_06. m.rows() / m.cols()"
+            << " Const version\n";
+
+  const Matrix<double, 2> mat2d_a(arr_2d, 4, 3);
+
+  const Matrix<double, 2> mat2d_b = mat2d_a.rows(0, 1);
+  if (print) test_print(mat2d_b, "mat2d_b = ");
+  assert(mat2d_b.n_elem() == 6);
+  assert(mat2d_b.n_rows() == 2);
+  assert(mat2d_b.n_cols() == 3);
+  assert(mat2d_b(0, 0) == 1);
+  assert(mat2d_b(0, 1) == 5);
+  assert(mat2d_b(0, 2) == 9);
+  assert(mat2d_b(1, 0) == 2);
+  assert(mat2d_b(1, 1) == 6);
+  assert(mat2d_b(1, 2) == 10);
+
+  const Matrix<double, 2> mat2d_c = mat2d_a.cols(0, 1);
+  if (print) test_print(mat2d_c, "mat2d_c = ");
+  assert(mat2d_c.n_elem() == 8);
+  assert(mat2d_c.n_rows() == 4);
+  assert(mat2d_c.n_cols() == 2);
+  assert(mat2d_c(0, 0) == 1);
+  assert(mat2d_c(1, 0) == 2);
+  assert(mat2d_c(2, 0) == 3);
+  assert(mat2d_c(3, 0) == 4);
+  assert(mat2d_c(0, 1) == 5);
+  assert(mat2d_c(1, 1) == 6);
+  assert(mat2d_c(2, 1) == 7);
+  assert(mat2d_c(3, 1) == 8);
+}
+
 void matrix_test_unary_add_minus_operator(bool print = false) {
   std::cout << "[TEST]: Applies unary add/minus operators to each element\n";
 
@@ -2066,89 +2148,6 @@ void matrix_1d_test_subvec(bool print = false) {
   assert(mat1d_b.n_elem() == 2);
   assert(mat1d_b(0) == 1.0);
   assert(mat1d_b(1) == 2.0);
-}
-
-void matrix_2d_test_rows(bool print = false) {
-  std::cout << "[TEST]: 2D Matrix's member functions row()/rows()\n";
-
-  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-  Matrix<double, 2> mat2d_a(arr, 4, 3);
-
-  if (print) test_print(mat2d_a, "mat2d_a =");
-  if (print) std::cout << "Apply mat2d_a.row(3) = 0\n";
-  mat2d_a.row(3) = 0;
-  if (print) test_print(mat2d_a, "mat2d_a =");
-  assert(mat2d_a(0, 0) == 1);
-  assert(mat2d_a(0, 1) == 5);
-  assert(mat2d_a(0, 2) == 9);
-  assert(mat2d_a(3, 0) == 0);
-  assert(mat2d_a(3, 1) == 0);
-  assert(mat2d_a(3, 2) == 0);
-
-  const Matrix<double, 2> mat2d_b(arr, 4, 3);
-  Matrix<double, 2> mat2d_c(mat2d_b.row(0));
-  if (print) test_print(mat2d_c, "mat2d_c = ");
-  assert(mat2d_c.n_elem() == 3);
-  assert(mat2d_c.n_rows() == 1);
-  assert(mat2d_c.n_cols() == 3);
-  assert(mat2d_c(0, 0) == 1);
-  assert(mat2d_c(0, 1) == 5);
-  assert(mat2d_c(0, 2) == 9);
-
-  const Matrix<double, 2> mat2d_d = mat2d_b.rows(0, 1);
-  if (print) test_print(mat2d_d, "mat2d_d = ");
-  assert(mat2d_d.n_elem() == 6);
-  assert(mat2d_d.n_rows() == 2);
-  assert(mat2d_d.n_cols() == 3);
-  assert(mat2d_d(0, 0) == 1);
-  assert(mat2d_d(0, 1) == 5);
-  assert(mat2d_d(0, 2) == 9);
-  assert(mat2d_d(1, 0) == 2);
-  assert(mat2d_d(1, 1) == 6);
-  assert(mat2d_d(1, 2) == 10);
-}
-
-void matrix_2d_test_cols(bool print = false) {
-  std::cout << "[TEST]: 2D Matrix's member functions col()/cols()\n";
-
-  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-  Matrix<double, 2> mat2d_a(arr, 4, 3);
-
-  if (print) test_print(mat2d_a, "mat2d_a =");
-  if (print) std::cout << "Apply mat2d_a.col(2) = 0\n";
-  mat2d_a.col(2) = 0;
-  if (print) test_print(mat2d_a, "mat2d_a =");
-  assert(mat2d_a(0, 0) == 1);
-  assert(mat2d_a(0, 1) == 5);
-  assert(mat2d_a(0, 2) == 0);
-  assert(mat2d_a(3, 0) == 4);
-  assert(mat2d_a(3, 1) == 8);
-  assert(mat2d_a(3, 2) == 0);
-
-  const Matrix<double, 2> mat2d_b(arr, 4, 3);
-  Matrix<double, 2> mat2d_c(mat2d_b.col(0));
-  if (print) test_print(mat2d_c, "mat2d_c = ");
-  assert(mat2d_c.n_elem() == 4);
-  assert(mat2d_c.n_rows() == 4);
-  assert(mat2d_c.n_cols() == 1);
-  assert(mat2d_c(0, 0) == 1);
-  assert(mat2d_c(1, 0) == 2);
-  assert(mat2d_c(2, 0) == 3);
-  assert(mat2d_c(3, 0) == 4);
-
-  const Matrix<double, 2> mat2d_d = mat2d_b.cols(0, 1);
-  if (print) test_print(mat2d_d, "mat2d_d = ");
-  assert(mat2d_d.n_elem() == 8);
-  assert(mat2d_d.n_rows() == 4);
-  assert(mat2d_d.n_cols() == 2);
-  assert(mat2d_d(0, 0) == 1);
-  assert(mat2d_d(1, 0) == 2);
-  assert(mat2d_d(2, 0) == 3);
-  assert(mat2d_d(3, 0) == 4);
-  assert(mat2d_d(0, 1) == 5);
-  assert(mat2d_d(1, 1) == 6);
-  assert(mat2d_d(2, 1) == 7);
-  assert(mat2d_d(3, 1) == 8);
 }
 
 void matrix_3d_test_slices(bool print = false) {
@@ -2722,9 +2721,9 @@ int main() {
   matrix_test_slicing_with_gslicematrix_b3_02(print_flag);
   matrix_test_slicing_with_gslicematrix_b3_03(print_flag);
   matrix_test_slicing_with_gslicematrix_b3_04(print_flag);
+  matrix_test_slicing_with_gslicematrix_b3_05(print_flag);
+  matrix_test_slicing_with_gslicematrix_b3_06(print_flag);
 
-  matrix_2d_test_rows(print_flag);
-  matrix_2d_test_cols(print_flag);
   matrix_3d_test_slices(print_flag);
 
   print_msg("B4: Testing Matrix<T, N> Slicing with MaskMatrix<T>");
