@@ -15,6 +15,14 @@ const double arr_3d_2[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
                            13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
                            25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36};
 
+const bool bool_arr_1d[4] = {false, true, false, true};
+const bool bool_arr_2d[12] = {false, true,  false, true, false, false,
+                              false, false, false, true, false, true};
+const bool bool_arr_3d[24] = {false, false, false, false, false, false,
+                              false, false, false, false, false, false,
+                              false, true,  false, true,  false, false,
+                              false, false, false, true,  false, true};
+
 template <typename T>
 void test_print(const Matrix<T, 1>& m, std::string msg = "") {
   if (!msg.empty()) std::cout << msg << std::endl;
@@ -1991,6 +1999,116 @@ void matrix_test_slicing_with_gslicematrix_b3_10(bool print = false) {
   assert(mat3d_d(3, 2, 1) == 36);
 }
 
+void matrix_test_slicing_with_maskmatrix_b4_01(bool print = false) {
+  std::cout << "[TEST]: B4_01. m(bool_array)"
+            << " Non-Const version\n";
+
+  std::valarray<bool> bool_1d(bool_arr_1d, 4);
+  Matrix<double, 1> mat1d(arr_1d, 4);
+  mat1d(bool_1d) = 0;
+  if (print) test_print(mat1d, "mat1d = ");
+  assert(mat1d.n_elem() == 4);
+  assert(mat1d.n_rows() == 4);
+  assert(mat1d.n_cols() == 1);
+  assert(mat1d(0) == 1);
+  assert(mat1d(1) == 0);
+  assert(mat1d(2) == 3);
+  assert(mat1d(3) == 0);
+
+  std::valarray<bool> bool_2d(bool_arr_2d, 12);
+  Matrix<double, 2> mat2d(arr_2d, 4, 3);
+  mat2d(bool_2d) = 0;
+  if (print) test_print(mat2d, "mat2d = ");
+  assert(mat2d.n_elem() == 12);
+  assert(mat2d.n_rows() == 4);
+  assert(mat2d.n_cols() == 3);
+  assert(mat2d(0, 0) == 1);
+  assert(mat2d(1, 0) == 0);
+  assert(mat2d(2, 0) == 3);
+  assert(mat2d(3, 0) == 0);
+  assert(mat2d(0, 1) == 5);
+  assert(mat2d(1, 1) == 6);
+  assert(mat2d(2, 1) == 7);
+  assert(mat2d(3, 1) == 8);
+  assert(mat2d(0, 2) == 9);
+  assert(mat2d(1, 2) == 0);
+  assert(mat2d(2, 2) == 11);
+  assert(mat2d(3, 2) == 0);
+
+  std::valarray<bool> bool_3d(bool_arr_3d, 24);
+  Matrix<double, 3> mat3d(arr_3d, 4, 3, 2);
+  mat3d(bool_3d) = 0;
+  if (print) test_print(mat3d, "mat3d = ");
+  assert(mat3d.n_elem() == 24);
+  assert(mat3d.n_rows() == 4);
+  assert(mat3d.n_cols() == 3);
+  assert(mat3d.n_slices() == 2);
+  assert(mat3d(0, 0, 0) == 1);
+  assert(mat3d(1, 0, 0) == 2);
+  assert(mat3d(2, 0, 0) == 3);
+  assert(mat3d(3, 0, 0) == 4);
+  assert(mat3d(0, 1, 0) == 5);
+  assert(mat3d(1, 1, 0) == 6);
+  assert(mat3d(2, 1, 0) == 7);
+  assert(mat3d(3, 1, 0) == 8);
+  assert(mat3d(0, 2, 0) == 9);
+  assert(mat3d(1, 2, 0) == 10);
+  assert(mat3d(2, 2, 0) == 11);
+  assert(mat3d(3, 2, 0) == 12);
+  assert(mat3d(0, 0, 1) == 13);
+  assert(mat3d(1, 0, 1) == 0);
+  assert(mat3d(2, 0, 1) == 15);
+  assert(mat3d(3, 0, 1) == 0);
+  assert(mat3d(0, 1, 1) == 17);
+  assert(mat3d(1, 1, 1) == 18);
+  assert(mat3d(2, 1, 1) == 19);
+  assert(mat3d(3, 1, 1) == 20);
+  assert(mat3d(0, 2, 1) == 21);
+  assert(mat3d(1, 2, 1) == 0);
+  assert(mat3d(2, 2, 1) == 23);
+  assert(mat3d(3, 2, 1) == 0);
+}
+
+void matrix_test_slicing_with_maskmatrix_b4_02(bool print = false) {
+  std::cout << "[TEST]: B4_02. m(bool_array)"
+            << " Const version\n";
+  Matrix<double, 1> mat1d_a;
+
+  std::valarray<bool> bool_1d(bool_arr_1d, 4);
+  const Matrix<double, 1> mat1d(arr_1d, 4);
+  mat1d_a = mat1d(bool_1d);
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a.n_elem() == 2);
+  assert(mat1d_a.n_rows() == 2);
+  assert(mat1d_a.n_cols() == 1);
+  assert(mat1d_a(0) == 2);
+  assert(mat1d_a(1) == 4);
+
+  std::valarray<bool> bool_2d(bool_arr_2d, 12);
+  const Matrix<double, 2> mat2d(arr_2d, 4, 3);
+  mat1d_a = mat2d(bool_2d);
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a.n_elem() == 4);
+  assert(mat1d_a.n_rows() == 4);
+  assert(mat1d_a.n_cols() == 1);
+  assert(mat1d_a(0) == 2);
+  assert(mat1d_a(1) == 4);
+  assert(mat1d_a(2) == 10);
+  assert(mat1d_a(3) == 12);
+
+  std::valarray<bool> bool_3d(bool_arr_3d, 24);
+  const Matrix<double, 3> mat3d(arr_3d, 4, 3, 2);
+  mat1d_a = mat3d(bool_3d);
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a.n_elem() == 4);
+  assert(mat1d_a.n_rows() == 4);
+  assert(mat1d_a.n_cols() == 1);
+  assert(mat1d_a(0) == 14);
+  assert(mat1d_a(1) == 16);
+  assert(mat1d_a(2) == 22);
+  assert(mat1d_a(3) == 24);
+}
+
 void matrix_test_unary_add_minus_operator(bool print = false) {
   std::cout << "[TEST]: Applies unary add/minus operators to each element\n";
 
@@ -2547,87 +2665,6 @@ void matrix_3d_test_ind_elem(bool print = false) {
   assert(mat3d_c(1, 1, 0) == 24);
 }
 
-void matrix_1d_test_bool_elem(bool print = false) {
-  std::cout << "[TEST]: 1D Matrix access elements with bool array\n";
-
-  const bool idx[4] = {false, true, false, true};
-  std::valarray<bool> bool_arr(idx, 4);
-
-  const double a[] = {1, 2, 3, 4};
-  Matrix<double, 1> mat1d_a(a, 4);
-  const Matrix<double, 1> mat1d_b(a, 4);
-
-  mat1d_a(bool_arr) = 0;
-  if (print) test_print(mat1d_a, "mat1d_a = ");
-  assert(mat1d_a(0) == 1);
-  assert(mat1d_a(1) == 0);
-  assert(mat1d_a(2) == 3);
-  assert(mat1d_a(3) == 0);
-
-  Matrix<double, 1> mat1d_c = mat1d_b(bool_arr);
-  if (print) test_print(mat1d_c, "mat1d_c = ");
-  assert(mat1d_c(0) == 2);
-  assert(mat1d_c(1) == 4);
-}
-
-void matrix_2d_test_bool_elem(bool print = false) {
-  std::cout << "[TEST]: 2D Matrix access elements with bool array\n";
-
-  const bool idx[12] = {false, true,  false, true, false, false,
-                        false, false, false, true, false, true};
-  std::valarray<bool> bool_arr(idx, 12);
-
-  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-  Matrix<double, 2> mat2d_a(arr, 4, 3);
-  const Matrix<double, 2> mat2d_b(arr, 4, 3);
-
-  mat2d_a(bool_arr) = 0;
-  if (print) test_print(mat2d_a, "mat2d_a = ");
-  assert(mat2d_a(0, 0) == 1);
-  assert(mat2d_a(0, 1) == 5);
-  assert(mat2d_a(0, 2) == 9);
-  assert(mat2d_a(3, 0) == 0);
-  assert(mat2d_a(3, 1) == 8);
-  assert(mat2d_a(3, 2) == 0);
-
-  Matrix<double, 1> mat1d_a = mat2d_b(bool_arr);
-  if (print) test_print(mat1d_a, "mat1d_a = ");
-  assert(mat1d_a(0) == 2);
-  assert(mat1d_a(1) == 4);
-  assert(mat1d_a(2) == 10);
-  assert(mat1d_a(3) == 12);
-}
-
-void matrix_3d_test_bool_elem(bool print = false) {
-  std::cout << "[TEST]: 3D Matrix access elements with bool array\n";
-
-  const bool idx[24] = {false, false, false, false, false, false, false, false,
-                        false, false, false, false, false, true,  false, true,
-                        false, false, false, false, false, true,  false, true};
-  std::valarray<bool> bool_arr(idx, 24);
-
-  const double arr[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-                        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-  Matrix<double, 3> mat3d_a(arr, 4, 3, 2);
-  const Matrix<double, 3> mat3d_b(arr, 4, 3, 2);
-
-  mat3d_a(bool_arr) = 0;
-  if (print) test_print(mat3d_a, "mat3d_a = ");
-  assert(mat3d_a(0, 0, 0) == 1);
-  assert(mat3d_a(0, 1, 0) == 5);
-  assert(mat3d_a(0, 2, 0) == 9);
-  assert(mat3d_a(3, 0, 1) == 0);
-  assert(mat3d_a(3, 1, 1) == 20);
-  assert(mat3d_a(3, 2, 1) == 0);
-
-  Matrix<double, 1> mat1d_a = mat3d_b(bool_arr);
-  if (print) test_print(mat1d_a, "mat1d_a = ");
-  assert(mat1d_a(0) == 14);
-  assert(mat1d_a(1) == 16);
-  assert(mat1d_a(2) == 22);
-  assert(mat1d_a(3) == 24);
-}
-
 void matrix_test_binary_addition_operator(bool print = false) {
   std::cout << "[TEST]: Applies binary addition operators to each element\n";
 
@@ -2921,9 +2958,8 @@ int main() {
   matrix_test_slicing_with_gslicematrix_b3_10(print_flag);
 
   print_msg("B4: Testing Matrix<T, N> Slicing with MaskMatrix<T>");
-  matrix_1d_test_bool_elem(print_flag);
-  matrix_2d_test_bool_elem(print_flag);
-  matrix_3d_test_bool_elem(print_flag);
+  matrix_test_slicing_with_maskmatrix_b4_01(print_flag);
+  matrix_test_slicing_with_maskmatrix_b4_02(print_flag);
 
   print_msg("B5: Testing Matrix<T, N> Slicing with IndirectMatrix<T>");
   matrix_1d_test_ind_elem(print_flag);
