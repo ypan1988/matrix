@@ -316,12 +316,12 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
      SliceMatrix<Tp   > subvec(uword first_index, uword last_index);
 
   // MaskMatrix related member functions
-          Matrix<Tp, 1> operator()(const bool_array& bool_arr) const;
-      MaskMatrix<Tp   > operator()(const bool_array& bool_arr);
+          Matrix<Tp, 1> operator()(const bool_array& ba) const;
+      MaskMatrix<Tp   > operator()(const bool_array& ba);
 
   // IndirectMatrix related member functions
-          Matrix<Tp, 1> operator()(const index_array& idx_arr) const;
-  IndirectMatrix<Tp   > operator()(const index_array& idx_arr);
+          Matrix<Tp, 1> operator()(const index_array& ia) const;
+  IndirectMatrix<Tp   > operator()(const index_array& ia);
 
   Matrix<Tp, 2> t() const;
 
@@ -477,32 +477,32 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
   { _M_range_check(n1, n2); return this->M_elem[sub2ind(n1, n2)]; }
 
   // SliceMatrix related member functions
-          Matrix<Tp, 1> row(uword row_number) const;
-     SliceMatrix<Tp   > row(uword row_number);
-          Matrix<Tp, 1> col(uword col_number) const;
-     SliceMatrix<Tp   > col(uword col_number);
+          Matrix<Tp, 1> row(uword i) const;
+     SliceMatrix<Tp   > row(uword i);
+          Matrix<Tp, 1> col(uword j) const;
+     SliceMatrix<Tp   > col(uword j);
           Matrix<Tp, 1> diag(int k = 0) const;
      SliceMatrix<Tp   > diag(int k = 0);
 
   // GsliceMatrix related member functions
           Matrix<Tp, 2> operator()(std::slice s1, std::slice s2) const;
     GsliceMatrix<Tp   > operator()(std::slice s1, std::slice s2);
-          Matrix<Tp, 2> submat(uword first_row, uword first_col, uword last_row, uword last_col) const;
-    GsliceMatrix<Tp   > submat(uword first_row, uword first_col, uword last_row, uword last_col);
+          Matrix<Tp, 2> submat(uword fr, uword fc, uword lr, uword lc) const;
+    GsliceMatrix<Tp   > submat(uword fr, uword fc, uword lr, uword lc);
           Matrix<Tp, 2> rows(uword fr, uword lr) const { return submat(fr, 0, lr, n_cols() - 1); }
     GsliceMatrix<Tp   > rows(uword fr, uword lr)       { return submat(fr, 0, lr, n_cols() - 1); }
           Matrix<Tp, 2> cols(uword fc, uword lc) const { return submat(0, fc, n_rows() - 1, lc); }
     GsliceMatrix<Tp   > cols(uword fc, uword lc)       { return submat(0, fc, n_rows() - 1, lc); }
 
   // MaskMatrix related member functions
-          Matrix<Tp, 1> operator()(const bool_array& bool_arr) const;
-      MaskMatrix<Tp   > operator()(const bool_array& bool_arr);
+          Matrix<Tp, 1> operator()(const bool_array& ba) const;
+      MaskMatrix<Tp   > operator()(const bool_array& ba);
 
   // IndirectMatrix related member functions
-          Matrix<Tp, 1> operator()(const index_array& idx_arr) const;
-  IndirectMatrix<Tp   > operator()(const index_array& idx_arr);
-          Matrix<Tp, 2> operator()(const index_array& idx_arr1, const index_array& idx_arr2) const;
-  IndirectMatrix<Tp   > operator()(const index_array& idx_arr1, const index_array& idx_arr2);
+          Matrix<Tp, 1> operator()(const index_array& ia) const;
+  IndirectMatrix<Tp   > operator()(const index_array& ia);
+          Matrix<Tp, 2> operator()(const index_array& ia1, const index_array& ia2) const;
+  IndirectMatrix<Tp   > operator()(const index_array& ia1, const index_array& ia2);
 
   Matrix<Tp, 2> t() const;
 
@@ -634,16 +634,14 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
   // GsliceMatrix related member functions
           Matrix<Tp, 3> operator()(std::slice s1, std::slice s2, std::slice s3) const;
     GsliceMatrix<Tp   > operator()(std::slice s1, std::slice s2, std::slice s3);
-          Matrix<Tp, 3> subcube(uword first_row, uword first_col, uword first_slice,
-                                uword  last_row, uword  last_col, uword  last_slice) const;
-    GsliceMatrix<Tp   > subcube(uword first_row, uword first_col, uword first_slice,
-                      uword  last_row, uword  last_col, uword  last_slice);
-          Matrix<Tp, 2>   row(uword slice_number) const;
-    GsliceMatrix<Tp   >   row(uword slice_number);
-          Matrix<Tp, 2>   col(uword slice_number) const;
-    GsliceMatrix<Tp   >   col(uword slice_number);
-          Matrix<Tp, 2> slice(uword slice_number) const;
-    GsliceMatrix<Tp   > slice(uword slice_number);
+          Matrix<Tp, 3> subcube(uword fr, uword fc, uword fs, uword lr, uword lc, uword ls) const;
+    GsliceMatrix<Tp   > subcube(uword fr, uword fc, uword fs, uword lr, uword lc, uword ls);
+          Matrix<Tp, 2>   row(uword i) const;
+    GsliceMatrix<Tp   >   row(uword i);
+          Matrix<Tp, 2>   col(uword j) const;
+    GsliceMatrix<Tp   >   col(uword j);
+          Matrix<Tp, 2> slice(uword k) const;
+    GsliceMatrix<Tp   > slice(uword k);
           Matrix<Tp, 3>   rows(uword fr, uword lr) const { return subcube(fr,  0,  0,           lr, n_cols() - 1, n_slices() - 1); }
     GsliceMatrix<Tp   >   rows(uword fr, uword lr)       { return subcube(fr,  0,  0,           lr, n_cols() - 1, n_slices() - 1); }
           Matrix<Tp, 3>   cols(uword fc, uword lc) const { return subcube( 0, fc,  0, n_rows() - 1,           lc, n_slices() - 1); }
@@ -652,14 +650,14 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
     GsliceMatrix<Tp   > slices(uword fs, uword ls)       { return subcube( 0,  0, fs, n_rows() - 1, n_cols() - 1,             ls); }
 
   // MaskMatrix related member functions
-          Matrix<Tp, 1> operator()(const bool_array& bool_arr) const;
-      MaskMatrix<Tp   > operator()(const bool_array& bool_arr);
+          Matrix<Tp, 1> operator()(const bool_array& ba) const;
+      MaskMatrix<Tp   > operator()(const bool_array& ba);
 
   // IndirectMatrix related member functions
-          Matrix<Tp, 1> operator()(const index_array& idx_arr) const;
-  IndirectMatrix<Tp   > operator()(const index_array& idx_arr);
-          Matrix<Tp, 3> operator()(const index_array&, const index_array&, const index_array&) const;
-  IndirectMatrix<Tp   > operator()(const index_array&, const index_array&, const index_array&);
+          Matrix<Tp, 1> operator()(const index_array& ia) const;
+  IndirectMatrix<Tp   > operator()(const index_array& ia);
+          Matrix<Tp, 3> operator()(const index_array& ia1, const index_array& ia2, const index_array& ia3) const;
+  IndirectMatrix<Tp   > operator()(const index_array& ia1, const index_array& ia2, const index_array& ia3);
 
  public:
   Matrix operator+() const { return *this; }
@@ -1625,141 +1623,132 @@ inline GsliceMatrix<Tp> Matrix<Tp, 3>::slice(uword k) {
 // Matrix member functions dealing with bool_array and MaskMatrix
 
 template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 1>::operator()(
-    const bool_array& bool_arr) const {
-  return Matrix<Tp, 1>(this->M_elem, bool_arr);
+inline Matrix<Tp, 1> Matrix<Tp, 1>::operator()(const bool_array& ba) const {
+  return Matrix<Tp, 1>(this->M_elem, ba);
 }
 
 template <class Tp>
-inline MaskMatrix<Tp> Matrix<Tp, 1>::operator()(const bool_array& bool_arr) {
-  return MaskMatrix<Tp>(this->M_elem, bool_arr);
+inline MaskMatrix<Tp> Matrix<Tp, 1>::operator()(const bool_array& ba) {
+  return MaskMatrix<Tp>(this->M_elem, ba);
 }
 
 template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 2>::operator()(
-    const bool_array& bool_arr) const {
-  return Matrix<Tp, 1>(this->M_elem, bool_arr);
+inline Matrix<Tp, 1> Matrix<Tp, 2>::operator()(const bool_array& ba) const {
+  return Matrix<Tp, 1>(this->M_elem, ba);
 }
 
 template <class Tp>
-inline MaskMatrix<Tp> Matrix<Tp, 2>::operator()(const bool_array& bool_arr) {
-  return MaskMatrix<Tp>(this->M_elem, bool_arr);
+inline MaskMatrix<Tp> Matrix<Tp, 2>::operator()(const bool_array& ba) {
+  return MaskMatrix<Tp>(this->M_elem, ba);
 }
 
 template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 3>::operator()(
-    const bool_array& bool_arr) const {
-  return Matrix<Tp, 1>(this->M_elem, bool_arr);
+inline Matrix<Tp, 1> Matrix<Tp, 3>::operator()(const bool_array& ba) const {
+  return Matrix<Tp, 1>(this->M_elem, ba);
 }
 
 template <class Tp>
-inline MaskMatrix<Tp> Matrix<Tp, 3>::operator()(const bool_array& bool_arr) {
-  return MaskMatrix<Tp>(this->M_elem, bool_arr);
+inline MaskMatrix<Tp> Matrix<Tp, 3>::operator()(const bool_array& ba) {
+  return MaskMatrix<Tp>(this->M_elem, ba);
 }
 
 // Matrix member functions dealing with index_array and IndirectMatrix
 
 template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 1>::operator()(
-    const index_array& idx_arr) const {
-  INIT_ARR1E(dims, idx_arr.size());
-  return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
+inline Matrix<Tp, 1> Matrix<Tp, 1>::operator()(const index_array& ia) const {
+  INIT_ARR1E(dims, ia.size());
+  return Matrix<Tp, 1>(this->M_elem, ia, dims);
 }
 
 template <class Tp>
-inline IndirectMatrix<Tp> Matrix<Tp, 1>::operator()(
-    const index_array& idx_arr) {
-  INIT_ARR1E(dims, idx_arr.size());
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
+inline IndirectMatrix<Tp> Matrix<Tp, 1>::operator()(const index_array& ia) {
+  INIT_ARR1E(dims, ia.size());
+  return IndirectMatrix<Tp>(this->M_elem, ia, dims);
 }
 template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 2>::operator()(
-    const index_array& idx_arr) const {
-  INIT_ARR1E(dims, idx_arr.size());
-  return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
+inline Matrix<Tp, 1> Matrix<Tp, 2>::operator()(const index_array& ia) const {
+  INIT_ARR1E(dims, ia.size());
+  return Matrix<Tp, 1>(this->M_elem, ia, dims);
 }
 
 template <class Tp>
-inline IndirectMatrix<Tp> Matrix<Tp, 2>::operator()(
-    const index_array& idx_arr) {
-  INIT_ARR1E(dims, idx_arr.size());
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
+inline IndirectMatrix<Tp> Matrix<Tp, 2>::operator()(const index_array& ia) {
+  INIT_ARR1E(dims, ia.size());
+  return IndirectMatrix<Tp>(this->M_elem, ia, dims);
 }
 
 template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 3>::operator()(
-    const index_array& idx_arr) const {
-  INIT_ARR1E(dims, idx_arr.size());
-  return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
+inline Matrix<Tp, 1> Matrix<Tp, 3>::operator()(const index_array& ia) const {
+  INIT_ARR1E(dims, ia.size());
+  return Matrix<Tp, 1>(this->M_elem, ia, dims);
 }
 
 template <class Tp>
-inline IndirectMatrix<Tp> Matrix<Tp, 3>::operator()(
-    const index_array& idx_arr) {
-  INIT_ARR1E(dims, idx_arr.size());
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
+inline IndirectMatrix<Tp> Matrix<Tp, 3>::operator()(const index_array& ia) {
+  INIT_ARR1E(dims, ia.size());
+  return IndirectMatrix<Tp>(this->M_elem, ia, dims);
 }
 
 template <class Tp>
-inline Matrix<Tp, 2> Matrix<Tp, 2>::operator()(
-    const index_array& idx_arr1, const index_array& idx_arr2) const {
-  INIT_ARR2E(dims, idx_arr1.size(), idx_arr2.size());
-  index_array idx_arr(dims[0] * dims[1]);
+inline Matrix<Tp, 2> Matrix<Tp, 2>::operator()(const index_array& ia1,
+                                               const index_array& ia2) const {
+  INIT_ARR2E(dims, ia1.size(), ia2.size());
+  index_array ia(dims[0] * dims[1]);
   uword idx = 0;
-  for (uword j = 0; j < idx_arr2.size(); ++j) {
-    for (uword i = 0; i < idx_arr1.size(); ++i) {
-      idx_arr[idx++] = sub2ind(idx_arr1[i], idx_arr2[j]);
+  for (uword j = 0; j < ia2.size(); ++j) {
+    for (uword i = 0; i < ia1.size(); ++i) {
+      ia[idx++] = sub2ind(ia1[i], ia2[j]);
     }
   }
-  return Matrix<Tp, 2>(this->M_elem, idx_arr, dims);
+  return Matrix<Tp, 2>(this->M_elem, ia, dims);
 }
 
 template <class Tp>
-inline IndirectMatrix<Tp> Matrix<Tp, 2>::operator()(
-    const index_array& idx_arr1, const index_array& idx_arr2) {
-  INIT_ARR2E(dims, idx_arr1.size(), idx_arr2.size());
-  index_array idx_arr(dims[0] * dims[1]);
+inline IndirectMatrix<Tp> Matrix<Tp, 2>::operator()(const index_array& ia1,
+                                                    const index_array& ia2) {
+  INIT_ARR2E(dims, ia1.size(), ia2.size());
+  index_array ia(dims[0] * dims[1]);
   uword idx = 0;
-  for (uword j = 0; j < idx_arr2.size(); ++j) {
-    for (uword i = 0; i < idx_arr1.size(); ++i) {
-      idx_arr[idx++] = sub2ind(idx_arr1[i], idx_arr2[j]);
+  for (uword j = 0; j < ia2.size(); ++j) {
+    for (uword i = 0; i < ia1.size(); ++i) {
+      ia[idx++] = sub2ind(ia1[i], ia2[j]);
     }
   }
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
+  return IndirectMatrix<Tp>(this->M_elem, ia, dims);
 }
 
 template <class Tp>
-inline Matrix<Tp, 3> Matrix<Tp, 3>::operator()(
-    const index_array& idx_arr1, const index_array& idx_arr2,
-    const index_array& idx_arr3) const {
-  INIT_ARR3E(dims, idx_arr1.size(), idx_arr2.size(), idx_arr3.size());
-  index_array idx_arr(dims[0] * dims[1] * dims[2]);
+inline Matrix<Tp, 3> Matrix<Tp, 3>::operator()(const index_array& ia1,
+                                               const index_array& ia2,
+                                               const index_array& ia3) const {
+  INIT_ARR3E(dims, ia1.size(), ia2.size(), ia3.size());
+  index_array ia(dims[0] * dims[1] * dims[2]);
   uword idx = 0;
-  for (uword k = 0; k < idx_arr3.size(); ++k) {
-    for (uword j = 0; j < idx_arr2.size(); ++j) {
-      for (uword i = 0; i < idx_arr1.size(); ++i) {
-        idx_arr[idx++] = sub2ind(idx_arr1[i], idx_arr2[j], idx_arr3[k]);
+  for (uword k = 0; k < ia3.size(); ++k) {
+    for (uword j = 0; j < ia2.size(); ++j) {
+      for (uword i = 0; i < ia1.size(); ++i) {
+        ia[idx++] = sub2ind(ia1[i], ia2[j], ia3[k]);
       }
     }
   }
-  return Matrix<Tp, 3>(this->M_elem, idx_arr, dims);
+  return Matrix<Tp, 3>(this->M_elem, ia, dims);
 }
 
 template <class Tp>
-inline IndirectMatrix<Tp> Matrix<Tp, 3>::operator()(
-    const index_array& idx_arr1, const index_array& idx_arr2,
-    const index_array& idx_arr3) {
-  INIT_ARR3E(dims, idx_arr1.size(), idx_arr2.size(), idx_arr3.size());
-  index_array idx_arr(dims[0] * dims[1] * dims[2]);
+inline IndirectMatrix<Tp> Matrix<Tp, 3>::operator()(const index_array& ia1,
+                                                    const index_array& ia2,
+                                                    const index_array& ia3) {
+  INIT_ARR3E(dims, ia1.size(), ia2.size(), ia3.size());
+  index_array ia(dims[0] * dims[1] * dims[2]);
   uword idx = 0;
-  for (uword k = 0; k < idx_arr3.size(); ++k) {
-    for (uword j = 0; j < idx_arr2.size(); ++j) {
-      for (uword i = 0; i < idx_arr1.size(); ++i) {
-        idx_arr[idx++] = sub2ind(idx_arr1[i], idx_arr2[j], idx_arr3[k]);
+  for (uword k = 0; k < ia3.size(); ++k) {
+    for (uword j = 0; j < ia2.size(); ++j) {
+      for (uword i = 0; i < ia1.size(); ++i) {
+        ia[idx++] = sub2ind(ia1[i], ia2[j], ia3[k]);
       }
     }
   }
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
+  return IndirectMatrix<Tp>(this->M_elem, ia, dims);
 }
 
 //----------------------------------------------------------------------
