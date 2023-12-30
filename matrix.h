@@ -640,14 +640,18 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
                                 uword  last_row, uword  last_col, uword  last_slice) const;
     GsliceMatrix<Tp   > subcube(uword first_row, uword first_col, uword first_slice,
                       uword  last_row, uword  last_col, uword  last_slice);
-          Matrix<Tp, 2> row(uword slice_number) const;
-    GsliceMatrix<Tp   > row(uword slice_number);
-          Matrix<Tp, 2> col(uword slice_number) const;
-    GsliceMatrix<Tp   > col(uword slice_number);
+          Matrix<Tp, 2>   row(uword slice_number) const;
+    GsliceMatrix<Tp   >   row(uword slice_number);
+          Matrix<Tp, 2>   col(uword slice_number) const;
+    GsliceMatrix<Tp   >   col(uword slice_number);
           Matrix<Tp, 2> slice(uword slice_number) const;
     GsliceMatrix<Tp   > slice(uword slice_number);
-          Matrix<Tp, 3> slices(uword fs, uword ls) const { return subcube(0, 0, fs, n_rows() - 1, n_cols() - 1, ls); }
-    GsliceMatrix<Tp   > slices(uword fs, uword ls)       { return subcube(0, 0, fs, n_rows() - 1, n_cols() - 1, ls); }
+          Matrix<Tp, 3>   rows(uword fr, uword lr) const { return subcube(fr,  0,  0,           lr, n_cols() - 1, n_slices() - 1); }
+    GsliceMatrix<Tp   >   rows(uword fr, uword lr)       { return subcube(fr,  0,  0,           lr, n_cols() - 1, n_slices() - 1); }
+          Matrix<Tp, 3>   cols(uword fc, uword lc) const { return subcube( 0, fc,  0, n_rows() - 1,           lc, n_slices() - 1); }
+    GsliceMatrix<Tp   >   cols(uword fc, uword lc)       { return subcube( 0, fc,  0, n_rows() - 1,           lc, n_slices() - 1); }
+          Matrix<Tp, 3> slices(uword fs, uword ls) const { return subcube( 0,  0, fs, n_rows() - 1, n_cols() - 1,             ls); }
+    GsliceMatrix<Tp   > slices(uword fs, uword ls)       { return subcube( 0,  0, fs, n_rows() - 1, n_cols() - 1,             ls); }
 
   // MaskMatrix related member functions
           Matrix<Tp, 1> operator()(const bool_array& bool_arr) const;
