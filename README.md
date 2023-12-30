@@ -208,15 +208,15 @@ A declaration of a `std::slice` has the form `std::slice s(start, size, stride);
 | cube: `submat_cube rows(fr, lr)`                               <br> cube: `submat_cube cols(fc, lc)` <br> cube: `submat_cube slices(fs, ls)`      | (10) |
 
 ### Matrix Slicing with MaskMatrix
-| `MaskMatrix<T>-related member function                                                   `                                                                                   |` ID `|
-|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| vec : `vec operator()(const bool_array& ba) const`   <br> mat: `vec operator()(const bool_array& ba) const` <br> cube: `vec operator()(const bool_array& ba) const`          | (1)  |
-| vec : `submat_mask operator()(const bool_array& ba)` <br> mat: `submat_mask operator()(const bool_array& ba)`  <br> cube: `submat_mask operator()(const bool_array& ba)`     | (2)  |
+| `MaskMatrix<T>-related member function                                                   `                                                                               |` ID `|
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
+| vec : `vec operator()(const bool_array& ba) const`   <br> mat: `vec operator()(const bool_array& ba) const`    <br> cube: `vec operator()(const bool_array& ba) const`   | (1)  |
+| vec : `submat_mask operator()(const bool_array& ba)` <br> mat: `submat_mask operator()(const bool_array& ba)`  <br> cube: `submat_mask operator()(const bool_array& ba)` | (2)  |
 
 ### Matrix Slicing with IndirectMatrix
-| `IndirectMatrix<T>-related member function                                               `                                                                                                                                                                     |` ID `|
-|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| vec : `vec elem(const index_array& ia) const`            <br> mat: `vec elem(const index_array& ia) const`                                     <br> cube: `vec elem(const index_array& ia) const`                                                              | (1)  |
-| vec : `submat_indirect elem(const index_array& ia)`      <br> mat: `submat_indirect elem(const index_array& ia)`                               <br> cube: `submat_indirect elem(const index_array& ia)`                                                        | (2)  |
-| vec : `vec operator()(const index_array& ia) const`      <br> mat: `mat operator()(const index_array& ia1, const index_array& ia2) const`      <br> cube: `cube operator()(const index_array& ia1, const index_array& ia2, const index_array& ia3) const`      | (3)  |
-| vec : `submat_indirect operator()(const index_array& ia)`<br> mat: `submat_indirect operator()(const index_array& ia1, const index_array& ia2)`<br> cube: `submat_indirect operator()(const index_array& ia1, const index_array& ia2, const index_array& ia3)` | (4)  |
+| `IndirectMatrix<T>-related member function                                               `                                                                                                        |` ID `|
+|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
+| vec : `vec operator()(const index_array& ia) const`            <br> mat : `vec operator()(const index_array& ia) const`            <br> cube: `vec elem(const index_array& ia) const`             | (1)  |
+| vec : `submat_indirect operator()(const index_array& ia)`      <br> mat : `submat_indirect operator()(const index_array& ia)`      <br> cube: `submat_indirect elem(const index_array& ia)`       | (2)  |
+| mat : `mat operator()(const index_array& ia1, const index_array& ia2) const`      <br> cube: `cube operator()(const index_array& ia1, const index_array& ia2, const index_array& ia3) const`      | (3)  |
+| mat : `submat_indirect operator()(const index_array& ia1, const index_array& ia2)`<br> cube: `submat_indirect operator()(const index_array& ia1, const index_array& ia2, const index_array& ia3)` | (4)  |

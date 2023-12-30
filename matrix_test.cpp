@@ -23,6 +23,14 @@ const bool bool_arr_3d[24] = {false, false, false, false, false, false,
                               false, true,  false, true,  false, false,
                               false, false, false, true,  false, true};
 
+const uword index_arr_1d[2] = {1, 3};
+const uword index_arr_2d[4] = {1, 3, 9, 11};
+const uword index_arr_3d[4] = {13, 15, 21, 23};
+
+const uword index_dim1[3] = {0, 1, 3};
+const uword index_dim2[2] = {0, 2};
+const uword index_dim3[1] = {1};
+
 template <typename T>
 void test_print(const Matrix<T, 1>& m, std::string msg = "") {
   if (!msg.empty()) std::cout << msg << std::endl;
@@ -2109,6 +2117,207 @@ void matrix_test_slicing_with_maskmatrix_b4_02(bool print = false) {
   assert(mat1d_a(3) == 24);
 }
 
+void matrix_test_slicing_with_indirectmatrix_b5_01(bool print = false) {
+  std::cout << "[TEST]: B5_01. m(index_array)"
+            << " Non-Const version\n";
+  index_array index_1d(index_arr_1d, 2);
+  Matrix<double, 1> mat1d(arr_1d, 4);
+  mat1d(index_1d) = 0;
+  if (print) test_print(mat1d, "mat1d = ");
+  assert(mat1d.n_elem() == 4);
+  assert(mat1d.n_rows() == 4);
+  assert(mat1d.n_cols() == 1);
+  assert(mat1d(0) == 1);
+  assert(mat1d(1) == 0);
+  assert(mat1d(2) == 3);
+  assert(mat1d(3) == 0);
+
+  index_array index_2d(index_arr_2d, 4);
+  Matrix<double, 2> mat2d(arr_2d, 4, 3);
+  mat2d(index_2d) = 0;
+  assert(mat2d.n_elem() == 12);
+  assert(mat2d.n_rows() == 4);
+  assert(mat2d.n_cols() == 3);
+  assert(mat2d(0, 0) == 1);
+  assert(mat2d(1, 0) == 0);
+  assert(mat2d(2, 0) == 3);
+  assert(mat2d(3, 0) == 0);
+  assert(mat2d(0, 1) == 5);
+  assert(mat2d(1, 1) == 6);
+  assert(mat2d(2, 1) == 7);
+  assert(mat2d(3, 1) == 8);
+  assert(mat2d(0, 2) == 9);
+  assert(mat2d(1, 2) == 0);
+  assert(mat2d(2, 2) == 11);
+  assert(mat2d(3, 2) == 0);
+
+  index_array index_3d(index_arr_3d, 4);
+  Matrix<double, 3> mat3d(arr_3d, 4, 3, 2);
+  mat3d(index_3d) = 0;
+  assert(mat3d.n_elem() == 24);
+  assert(mat3d.n_rows() == 4);
+  assert(mat3d.n_cols() == 3);
+  assert(mat3d.n_slices() == 2);
+  assert(mat3d(0, 0, 0) == 1);
+  assert(mat3d(1, 0, 0) == 2);
+  assert(mat3d(2, 0, 0) == 3);
+  assert(mat3d(3, 0, 0) == 4);
+  assert(mat3d(0, 1, 0) == 5);
+  assert(mat3d(1, 1, 0) == 6);
+  assert(mat3d(2, 1, 0) == 7);
+  assert(mat3d(3, 1, 0) == 8);
+  assert(mat3d(0, 2, 0) == 9);
+  assert(mat3d(1, 2, 0) == 10);
+  assert(mat3d(2, 2, 0) == 11);
+  assert(mat3d(3, 2, 0) == 12);
+  assert(mat3d(0, 0, 1) == 13);
+  assert(mat3d(1, 0, 1) == 0);
+  assert(mat3d(2, 0, 1) == 15);
+  assert(mat3d(3, 0, 1) == 0);
+  assert(mat3d(0, 1, 1) == 17);
+  assert(mat3d(1, 1, 1) == 18);
+  assert(mat3d(2, 1, 1) == 19);
+  assert(mat3d(3, 1, 1) == 20);
+  assert(mat3d(0, 2, 1) == 21);
+  assert(mat3d(1, 2, 1) == 0);
+  assert(mat3d(2, 2, 1) == 23);
+  assert(mat3d(3, 2, 1) == 0);
+}
+
+void matrix_test_slicing_with_indirectmatrix_b5_02(bool print = false) {
+  std::cout << "[TEST]: B5_02. m(index_array)"
+            << " Const version\n";
+  Matrix<double, 1> mat1d_a;
+
+  index_array index_1d(index_arr_1d, 2);
+  const Matrix<double, 1> mat1d(arr_1d, 4);
+  mat1d_a = mat1d(index_1d);
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a.n_elem() == 2);
+  assert(mat1d_a.n_rows() == 2);
+  assert(mat1d_a.n_cols() == 1);
+  assert(mat1d_a(0) == 2);
+  assert(mat1d_a(1) == 4);
+
+  index_array index_2d(index_arr_2d, 4);
+  const Matrix<double, 2> mat2d(arr_2d, 4, 3);
+  mat1d_a = mat2d(index_2d);
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a.n_elem() == 4);
+  assert(mat1d_a.n_rows() == 4);
+  assert(mat1d_a.n_cols() == 1);
+  assert(mat1d_a(0) == 2);
+  assert(mat1d_a(1) == 4);
+  assert(mat1d_a(2) == 10);
+  assert(mat1d_a(3) == 12);
+
+  index_array index_3d(index_arr_3d, 4);
+  const Matrix<double, 3> mat3d(arr_3d, 4, 3, 2);
+  mat1d_a = mat3d(index_3d);
+  if (print) test_print(mat1d_a, "mat1d_a = ");
+  assert(mat1d_a.n_elem() == 4);
+  assert(mat1d_a.n_rows() == 4);
+  assert(mat1d_a.n_cols() == 1);
+  assert(mat1d_a(0) == 14);
+  assert(mat1d_a(1) == 16);
+  assert(mat1d_a(2) == 22);
+  assert(mat1d_a(3) == 24);
+}
+
+void matrix_test_slicing_with_indirectmatrix_b5_03(bool print = false) {
+  std::cout << "[TEST]: B5_03. m(ia1, ia2) / m(ia1, ia2, ia3)"
+            << " Non-Const version\n";
+  index_array idx_arr1(index_dim1, 3);
+  index_array idx_arr2(index_dim2, 2);
+  index_array idx_arr3(index_dim3, 1);
+
+  Matrix<double, 2> mat2d(arr_2d, 4, 3);
+  mat2d(idx_arr1, idx_arr2) = 0;
+  if (print) test_print(mat2d, "mat2d = ");
+  assert(mat2d.n_elem() == 12);
+  assert(mat2d.n_rows() == 4);
+  assert(mat2d.n_cols() == 3);
+  assert(mat2d(0, 0) == 0);
+  assert(mat2d(1, 0) == 0);
+  assert(mat2d(2, 0) == 3);
+  assert(mat2d(3, 0) == 0);
+  assert(mat2d(0, 1) == 5);
+  assert(mat2d(1, 1) == 6);
+  assert(mat2d(2, 1) == 7);
+  assert(mat2d(3, 1) == 8);
+  assert(mat2d(0, 2) == 0);
+  assert(mat2d(1, 2) == 0);
+  assert(mat2d(2, 2) == 11);
+  assert(mat2d(3, 2) == 0);
+
+  Matrix<double, 3> mat3d(arr_3d, 4, 3, 2);
+  mat3d(idx_arr1, idx_arr2, idx_arr3) = 0;
+  if (print) test_print(mat3d, "mat3d = ");
+  assert(mat3d.n_elem() == 24);
+  assert(mat3d.n_rows() == 4);
+  assert(mat3d.n_cols() == 3);
+  assert(mat3d.n_slices() == 2);
+  assert(mat3d(0, 0, 0) == 1);
+  assert(mat3d(1, 0, 0) == 2);
+  assert(mat3d(2, 0, 0) == 3);
+  assert(mat3d(3, 0, 0) == 4);
+  assert(mat3d(0, 1, 0) == 5);
+  assert(mat3d(1, 1, 0) == 6);
+  assert(mat3d(2, 1, 0) == 7);
+  assert(mat3d(3, 1, 0) == 8);
+  assert(mat3d(0, 2, 0) == 9);
+  assert(mat3d(1, 2, 0) == 10);
+  assert(mat3d(2, 2, 0) == 11);
+  assert(mat3d(3, 2, 0) == 12);
+  assert(mat3d(0, 0, 1) == 0);
+  assert(mat3d(1, 0, 1) == 0);
+  assert(mat3d(2, 0, 1) == 15);
+  assert(mat3d(3, 0, 1) == 0);
+  assert(mat3d(0, 1, 1) == 17);
+  assert(mat3d(1, 1, 1) == 18);
+  assert(mat3d(2, 1, 1) == 19);
+  assert(mat3d(3, 1, 1) == 20);
+  assert(mat3d(0, 2, 1) == 0);
+  assert(mat3d(1, 2, 1) == 0);
+  assert(mat3d(2, 2, 1) == 23);
+  assert(mat3d(3, 2, 1) == 0);
+}
+
+void matrix_test_slicing_with_indirectmatrix_b5_04(bool print = false) {
+  std::cout << "[TEST]: B5_04. m(ia1, ia2) / m(ia1, ia2, ia3)"
+            << " Const version\n";
+  index_array idx_arr1(index_dim1, 3);
+  index_array idx_arr2(index_dim2, 2);
+  index_array idx_arr3(index_dim3, 1);
+
+  const Matrix<double, 2> mat2d(arr_2d, 4, 3);
+  Matrix<double, 2> mat2d_a = mat2d(idx_arr1, idx_arr2);
+  if (print) test_print(mat2d_a, "mat2d_a = ");
+  assert(mat2d_a.n_elem() == 6);
+  assert(mat2d_a.n_rows() == 3);
+  assert(mat2d_a.n_cols() == 2);
+  assert(mat2d_a(0, 0) == 1);
+  assert(mat2d_a(1, 0) == 2);
+  assert(mat2d_a(2, 0) == 4);
+  assert(mat2d_a(0, 1) == 9);
+  assert(mat2d_a(1, 1) == 10);
+  assert(mat2d_a(2, 1) == 12);
+
+  const Matrix<double, 3> mat3d(arr_3d, 4, 3, 2);
+  Matrix<double, 3> mat3d_a = mat3d(idx_arr1, idx_arr2, idx_arr3);
+  if (print) test_print(mat3d_a, "mat3d_a = ");
+  assert(mat3d_a.n_elem() == 6);
+  assert(mat3d_a.n_rows() == 3);
+  assert(mat3d_a.n_cols() == 2);
+  assert(mat3d_a.n_slices() == 1);
+  assert(mat3d_a(0, 0, 0) == 13);
+  assert(mat3d_a(1, 0, 0) == 14);
+  assert(mat3d_a(2, 0, 0) == 16);
+  assert(mat3d_a(0, 1, 0) == 21);
+  assert(mat3d_a(1, 1, 0) == 22);
+  assert(mat3d_a(2, 1, 0) == 24);
+}
+
 void matrix_test_unary_add_minus_operator(bool print = false) {
   std::cout << "[TEST]: Applies unary add/minus operators to each element\n";
 
@@ -2502,45 +2711,6 @@ void matrix_1d_test_subvec(bool print = false) {
   assert(mat1d_b(1) == 2.0);
 }
 
-void matrix_nd_test_elem(bool print = false) {
-  std::cout << "[TEST]: 1/2/3D Matrix's member functions elem()\n";
-
-  const uword a[] = {0, 2, 4, 6};
-  std::valarray<std::size_t> idx(a, 4);
-
-  const double a1[] = {1, 2, 3, 4};
-  Matrix<double, 1> mat1d(a1, 4);
-  if (print) test_print(mat1d, "mat1d =");
-  Matrix<double, 1> mat1d_a(mat1d.get_elem());
-  assert(mat1d_a(0) == 1);
-  assert(mat1d_a(1) == 2);
-  assert(mat1d_a(2) == 3);
-  assert(mat1d_a(3) == 4);
-
-  const double a2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-  Matrix<double, 2> mat2d(a2, 4, 3);
-  if (print) test_print(mat2d, "mat2d =");
-  mat2d.elem(idx) = 0;
-  if (print) test_print(mat2d, "mat2d =");
-  assert(mat2d(0, 0) == 0);
-  assert(mat2d(0, 1) == 0);
-  assert(mat2d(0, 2) == 9);
-  assert(mat2d(3, 0) == 4);
-  assert(mat2d(3, 1) == 8);
-  assert(mat2d(3, 2) == 12);
-
-  const double a3[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-                       13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-  Matrix<double, 3> mat3d(a3, 4, 3, 2);
-  if (print) test_print(mat3d, "mat3d =");
-  Matrix<double, 1> mat1d_c;
-  mat1d_c = mat3d.elem(idx);
-  assert(mat1d_c(0) == 1);
-  assert(mat1d_c(1) == 3);
-  assert(mat1d_c(2) == 5);
-  assert(mat1d_c(3) == 7);
-}
-
 void matrix_1d_test_transpose(bool print = false) {
   std::cout << "[TEST]: 1D Matrix's member functions transpose\n";
 
@@ -2579,90 +2749,6 @@ void matrix_2d_test_transpose(bool print = false) {
   assert(mat2d_b(0, 3) == 4);
   assert(mat2d_b(1, 3) == 8);
   assert(mat2d_b(2, 3) == 12);
-}
-
-void matrix_1d_test_ind_elem(bool print = false) {
-  std::cout << "[TEST]: 1D Matrix access incontinuous elements\n";
-
-  const std::size_t idx[2] = {1, 3};
-  std::valarray<std::size_t> idx_arr(idx, 2);
-
-  const double a[] = {1, 2, 3, 4};
-  Matrix<double, 1> mat1d_a(a, 4);
-  const Matrix<double, 1> mat1d_b(a, 4);
-
-  mat1d_a(idx_arr) = 0;
-  if (print) test_print(mat1d_a, "mat1d_a = ");
-  assert(mat1d_a(0) == 1);
-  assert(mat1d_a(1) == 0);
-  assert(mat1d_a(2) == 3);
-  assert(mat1d_a(3) == 0);
-
-  Matrix<double, 1> mat1d_c = mat1d_b(idx_arr);
-  if (print) test_print(mat1d_c, "mat1d_c = ");
-  assert(mat1d_c(0) == 2);
-  assert(mat1d_c(1) == 4);
-}
-
-void matrix_2d_test_ind_elem(bool print = false) {
-  std::cout << "[TEST]: 2D Matrix access incontinuous elements\n";
-
-  const std::size_t idx1[2] = {1, 3};
-  std::valarray<std::size_t> idx_arr1(idx1, 2);
-  const std::size_t idx2[2] = {0, 2};
-  std::valarray<std::size_t> idx_arr2(idx2, 2);
-
-  const double arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-  Matrix<double, 2> mat2d_a(arr, 4, 3);
-  const Matrix<double, 2> mat2d_b(arr, 4, 3);
-
-  mat2d_a(idx_arr1, idx_arr2) = 0;
-  if (print) test_print(mat2d_a, "mat2d_a = ");
-  assert(mat2d_a(0, 0) == 1);
-  assert(mat2d_a(0, 1) == 5);
-  assert(mat2d_a(0, 2) == 9);
-  assert(mat2d_a(3, 0) == 0);
-  assert(mat2d_a(3, 1) == 8);
-  assert(mat2d_a(3, 2) == 0);
-
-  Matrix<double, 2> mat2d_c = mat2d_b(idx_arr1, idx_arr2);
-  if (print) test_print(mat2d_c, "mat2d_c = ");
-  assert(mat2d_c(0, 0) == 2);
-  assert(mat2d_c(0, 1) == 10);
-  assert(mat2d_c(1, 0) == 4);
-  assert(mat2d_c(1, 1) == 12);
-}
-
-void matrix_3d_test_ind_elem(bool print = false) {
-  std::cout << "[TEST]: 3D Matrix access incontinuous elements\n";
-
-  const std::size_t idx1[2] = {1, 3};
-  std::valarray<std::size_t> idx_arr1(idx1, 2);
-  const std::size_t idx2[2] = {0, 2};
-  std::valarray<std::size_t> idx_arr2(idx2, 2);
-  const std::size_t idx3[3] = {1};
-  std::valarray<std::size_t> idx_arr3(idx3, 1);
-
-  const double arr[] = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-                        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-  Matrix<double, 3> mat3d_a(arr, 4, 3, 2);
-  const Matrix<double, 3> mat3d_b(arr, 4, 3, 2);
-
-  mat3d_a(idx_arr1, idx_arr2, idx_arr3) = 0;
-  if (print) test_print(mat3d_a, "mat3d_a = ");
-  assert(mat3d_a(0, 0, 0) == 1);
-  assert(mat3d_a(0, 1, 0) == 5);
-  assert(mat3d_a(0, 2, 0) == 9);
-  assert(mat3d_a(3, 0, 1) == 0);
-  assert(mat3d_a(3, 1, 1) == 20);
-  assert(mat3d_a(3, 2, 1) == 0);
-
-  Matrix<double, 3> mat3d_c = mat3d_b(idx_arr1, idx_arr2, idx_arr3);
-  if (print) test_print(mat3d_c, "mat3d_c = ");
-  assert(mat3d_c(0, 0, 0) == 14);
-  assert(mat3d_c(0, 1, 0) == 22);
-  assert(mat3d_c(1, 0, 0) == 16);
-  assert(mat3d_c(1, 1, 0) == 24);
 }
 
 void matrix_test_binary_addition_operator(bool print = false) {
@@ -2962,10 +3048,10 @@ int main() {
   matrix_test_slicing_with_maskmatrix_b4_02(print_flag);
 
   print_msg("B5: Testing Matrix<T, N> Slicing with IndirectMatrix<T>");
-  matrix_1d_test_ind_elem(print_flag);
-  matrix_2d_test_ind_elem(print_flag);
-  matrix_3d_test_ind_elem(print_flag);
-  matrix_nd_test_elem(print_flag);
+  matrix_test_slicing_with_indirectmatrix_b5_01(print_flag);
+  matrix_test_slicing_with_indirectmatrix_b5_02(print_flag);
+  matrix_test_slicing_with_indirectmatrix_b5_03(print_flag);
+  matrix_test_slicing_with_indirectmatrix_b5_04(print_flag);
 
   std::cout << "\n----- H: Testing Matrix<T, N> Arithmetic Operations -----\n"
             << std::endl;

@@ -320,8 +320,6 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
       MaskMatrix<Tp   > operator()(const bool_array& bool_arr);
 
   // IndirectMatrix related member functions
-          Matrix<Tp, 1> elem(const index_array& idx_arr) const;
-  IndirectMatrix<Tp   > elem(const index_array& idx_arr);
           Matrix<Tp, 1> operator()(const index_array& idx_arr) const;
   IndirectMatrix<Tp   > operator()(const index_array& idx_arr);
 
@@ -501,8 +499,8 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
       MaskMatrix<Tp   > operator()(const bool_array& bool_arr);
 
   // IndirectMatrix related member functions
-          Matrix<Tp, 1> elem(const index_array& idx_arr) const;
-  IndirectMatrix<Tp   > elem(const index_array& idx_arr);
+          Matrix<Tp, 1> operator()(const index_array& idx_arr) const;
+  IndirectMatrix<Tp   > operator()(const index_array& idx_arr);
           Matrix<Tp, 2> operator()(const index_array& idx_arr1, const index_array& idx_arr2) const;
   IndirectMatrix<Tp   > operator()(const index_array& idx_arr1, const index_array& idx_arr2);
 
@@ -658,8 +656,8 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
       MaskMatrix<Tp   > operator()(const bool_array& bool_arr);
 
   // IndirectMatrix related member functions
-          Matrix<Tp, 1> elem(const index_array& idx_arr) const;
-  IndirectMatrix<Tp   > elem(const index_array& idx_arr);
+          Matrix<Tp, 1> operator()(const index_array& idx_arr) const;
+  IndirectMatrix<Tp   > operator()(const index_array& idx_arr);
           Matrix<Tp, 3> operator()(const index_array&, const index_array&, const index_array&) const;
   IndirectMatrix<Tp   > operator()(const index_array&, const index_array&, const index_array&);
 
@@ -1662,49 +1660,41 @@ inline MaskMatrix<Tp> Matrix<Tp, 3>::operator()(const bool_array& bool_arr) {
 // Matrix member functions dealing with index_array and IndirectMatrix
 
 template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 1>::elem(const index_array& idx_arr) const {
-  INIT_ARR1E(dims, idx_arr.size());
-  return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
-}
-
-template <class Tp>
-inline IndirectMatrix<Tp> Matrix<Tp, 1>::elem(const index_array& idx_arr) {
-  INIT_ARR1E(dims, idx_arr.size());
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
-}
-template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 2>::elem(const index_array& idx_arr) const {
-  INIT_ARR1E(dims, idx_arr.size());
-  return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
-}
-
-template <class Tp>
-inline IndirectMatrix<Tp> Matrix<Tp, 2>::elem(const index_array& idx_arr) {
-  INIT_ARR1E(dims, idx_arr.size());
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
-}
-
-template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 3>::elem(const index_array& idx_arr) const {
-  INIT_ARR1E(dims, idx_arr.size());
-  return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
-}
-
-template <class Tp>
-inline IndirectMatrix<Tp> Matrix<Tp, 3>::elem(const index_array& idx_arr) {
-  INIT_ARR1E(dims, idx_arr.size());
-  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
-}
-
-template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 1>::operator()(
     const index_array& idx_arr) const {
   INIT_ARR1E(dims, idx_arr.size());
-  return Matrix(this->M_elem, idx_arr, dims);
+  return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
 }
 
 template <class Tp>
 inline IndirectMatrix<Tp> Matrix<Tp, 1>::operator()(
+    const index_array& idx_arr) {
+  INIT_ARR1E(dims, idx_arr.size());
+  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
+}
+template <class Tp>
+inline Matrix<Tp, 1> Matrix<Tp, 2>::operator()(
+    const index_array& idx_arr) const {
+  INIT_ARR1E(dims, idx_arr.size());
+  return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
+}
+
+template <class Tp>
+inline IndirectMatrix<Tp> Matrix<Tp, 2>::operator()(
+    const index_array& idx_arr) {
+  INIT_ARR1E(dims, idx_arr.size());
+  return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
+}
+
+template <class Tp>
+inline Matrix<Tp, 1> Matrix<Tp, 3>::operator()(
+    const index_array& idx_arr) const {
+  INIT_ARR1E(dims, idx_arr.size());
+  return Matrix<Tp, 1>(this->M_elem, idx_arr, dims);
+}
+
+template <class Tp>
+inline IndirectMatrix<Tp> Matrix<Tp, 3>::operator()(
     const index_array& idx_arr) {
   INIT_ARR1E(dims, idx_arr.size());
   return IndirectMatrix<Tp>(this->M_elem, idx_arr, dims);
