@@ -33,9 +33,17 @@ other APIs have their origins in a few different programming languages
 
 ### 2.1 Matrix<T, N>
 
-`Matrix<T, N>` is an **N**-dimensional dense matrix of some value type **T** (**YP**: currently only 1D/2D/3D matrix are implemented). Internally it consists of a `std::valarray<T>` for storing its elements in [column-major ordering](https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order) (like **Fortran**) and a `std::size_t` array of size **N** to record its sizes on each dimension:
+`Matrix<T, N>` is an **N**-dimensional dense matrix (**N = 1, 2 and
+3**) of some value type **T**. Internally it consists of a
+`std::valarray<T>` for storing its elements in [column-major
+ordering](https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order)
+(like **Fortran**) and a `std::size_t` array of size **N** to record
+its sizes on each dimension:
 
-+ **Elements** (or the raw `std::valarray<T>`) can be accessed as a whole by `get_elem()` (i.e., convert a `Matrix<T, N>` back to a `std::valarray<T>`):
++ **Elements** (or the raw `std::valarray<T>`) can be accessed as a
+  whole by `get_elem()` (i.e., convert a `Matrix<T, N>` back to a
+  `std::valarray<T>`):
+
   ```cpp
   // define an empty 2D matrix with T = double
   Matrix<double, 2> x;
@@ -46,14 +54,19 @@ other APIs have their origins in a few different programming languages
   const std::valarray<double> &va2 = x.get_elem();
   ```
 
-+ **Dimensions** of `Matrix<T, N>` can be accessed similarly by `get_dims()` while total size and size on each dimension can be obtained through the following member functions (all the returned values have type `std::size_t`):
++ **Dimensions** of `Matrix<T, N>` can be accessed similarly by
+  `get_dims()` which returns a `std::valarray<std::size_t>`. While
+  total size and size on each dimension can be obtained through the
+  member functions in the following table with the return type
+  `std::size_t`:
 
-  | `Matrix<T, 1>` | `Matrix<T, 2>` | `Matrix<T, 3>` | Description                   |
-  | :------------: | :------------: | :------------: |:------------------------------|
-  | `x.n_elem()`   | `x.n_elem()`   | `x.n_elem()`   | total number of elements in x |
-  | `x.n_rows()`   | `x.n_rows()`   | `x.n_rows()`   | number of rows in x           |
-  | `x.n_cols()`   | `x.n_cols()`   | `x.n_cols()`   | number of columns in x        |
-  |                |                | `x.n_slices()` | number of slices in x         |
+  | `Matrix<T, 1>` | `Matrix<T, 2>` | `Matrix<T, 3>` | Description              |
+  | :------------: | :------------: | :------------: |:-------------------------|
+  | `m1.n_elem()`  | `m2.n_elem()`  | `m3.n_elem()`  | total number of elements |
+  | `m1.n_rows()`  | `m2.n_rows()`  | `m3.n_rows()`  | number of rows           |
+  | `m1.n_cols()`  | `m2.n_cols()`  | `m3.n_cols()`  | number of columns        |
+  |                |                | `m3.n_slices()`| number of slices         |
+
   ```cpp
   // define a 2x3 matrix
   Matrix<double, 2> x(2, 3);
@@ -64,46 +77,42 @@ other APIs have their origins in a few different programming languages
   std::cout << x.n_cols() << std::endl;            // 3
   ```
 
-For convenience the following typedefs of `Matrix<T, N>` have been provided for 1D/2D/3D matrix:
+### 2.2 Sub-Matrices
+Similar to `Matrix<T, N>`, four wrappers for the corresponding helper
+classes of `std::valarray<T>` are included in this library, namely
+`SliceMatrix<T>`, `GsliceMatrix<T>`, `MaskMatrix<T>` and
+`IndirectMatrix<T>` (see table below for a short description).
 
-  | type  T  | `Matrix<T, 1>` | `Matrix<T, 2>` | `Matrix<T, 3>` |
-  | :------: | :------------: | :------------: | :------------: |
-  | `double` | `vec`          | `mat`          | `cube`         |
-  | `double` | `dvec`         | `dmat`         | `dcube`        |
-  | `float`  | `fvec`         | `fmat `        | `fcube`        |
+  | Wrapper Class       | Description of the Wrapper Class                                                             |
+  |:--------------------|:---------------------------------------------------------------------------------------------|
+  | `SliceMatrix<T>`    | Reference to a subset of `Matrix<T,N>` specified by the `std::slice` object.                 |
+  | `GsliceMatrix<T>`   | Reference to a subset of `Matrix<T,N>` specified by the `std::gslice` object.                |
+  | `MaskMatrix<T>`     | Reference to a subset of `Matrix<T,N>` specified by the `std::valarray<bool>` object.        |
+  | `IndirectMatrix<T>` | Reference to a subset of `Matrix<T,N>` specified by the `std::valarray<std::size_t>` object. |
 
-For example, we assume that type **T** is `double` in the first row, then obviously
-  + `vec` is a 1D matrix (i.e., `vec = Matrix<double, 1>`)
-  + `mat` is a 2D matrix (i.e., `mat = Matrix<double, 2>`)
-  + `cube` is a 3D matrix (i.e., `cube = Matrix<double, 3>`)
+These wrapper classes provides writing access to sub-part of
+`Matrix<T, N>` and they will be discussed in more detail in section 4
+**Subscripting and Slicing**. Most of the time, it is safe to ignore
+the existence of these three helper classes when dealing with
+sub-Matrices.
 
-Note that in the following part of this document, we assume that
-  + `T = double` by default, and `elem_type` should always be the same as type **T**
-  + `vec/mat/cube` are used for better readability, but it is possible to use other types
-  + Anything marked as **C++11** can be used only when the compiler supports **C++11** (**YP**: Since **std::valarray** is included in **STL** since **C++98**, this matrix library, as a wrapper of **std::valarray**, will support **pre-C++11** compilers) 
+For convenience, in the following part of this document we assume that:
+  + `uword = std::size_t` / `bool_array = std::valarray<bool>` /
+    `index_array = std::valarray<std::size_t>`
+  + `T = double` by default, `elem_type` refers to `Matrix<T,
+    N>::elem_type`(hence it should always be the same as type **T**)
+  + we use `vec = Matrix<double, 1>` / `mat = Matrix<double, 2>` /
+    `cube = Matrix<double, 3>` for better readability, but it is
+    possible to use other types
+  + similarly we denote `submat_slice = SliceMatrix<double>` /
+    `submat_gslice = GsliceMatrix<double>` / `submat_mask =
+    MaskMatrix<double>` / `submat_indirect = MaskMatrix<double>`
+  + Any API marked as **C++11** can be used only when the compiler
+    supports **C++11** (**YP**: Since **std::valarray** is included in
+    **STL** since **C++98**, this matrix library, as a wrapper of
+    **std::valarray**, will support **pre-C++11** compilers)
 
-### Sub-Matrix<T>
-Similar to `Matrix<T, N>`, four wrappers for the corresponding helper classes of `std::valarray<T>` are included in this library, namely `SliceMatrix<T>`, `GsliceMatrix<T>`, `MaskMatrix<T>` and `IndirectMatrix<T>` (see table below for a short description).
-
-  | Wrapper Class       | Description of the Wrapper Class                                              |
-  |:--------------------|:------------------------------------------------------------------------------|
-  | `SliceMatrix<T>`    | Reference to a subset of `Matrix<T,N>` specified by the `std::slice` object.  |
-  | `GsliceMatrix<T>`   | Reference to a subset of `Matrix<T,N>` specified by the `std::gslice` object. |
-  | `MaskMatrix<T>`     | Reference to a subset of `Matrix<T,N>` specified by the `bool_array` object.  |
-  | `IndirectMatrix<T>` | Reference to a subset of `Matrix<T,N>` specified by the `index_array` object. |
-
-These wrapper classes behave just like the `Matrix` except they refer to a `Matrix`, rather than owning their own elements. They can be viewed as a reference to a sub-`Matrix` which will be discussed in more detail in section **Subscripting and Slicing**. Most of the time, it is safe to ignore the existence of these three helper classes when dealing with sub-Matrix. But for better readability of this doc, we provide following typedefs for 1D/2D/3D sub-Matrix:
-
-  |       type  T       | <div style="width:290px">double</div> |
-  |:-------------------:|:-------------------------------------:|
-  |  `SliceMatrix<T>`   |            `submat_slice`             |
-  |  `GsliceMatrix<T>`  |            `submat_gslice`            |
-  |   `MaskMatrix<T>`   |             `submat_mask`             |
-  | `IndirectMatrix<T>` |           `submat_indirect`           |
-
-
-
-## Constructions and Assignments
+## 3.Constructions and Assignments
 
 ### Constructors and Destructors
 
@@ -168,7 +177,7 @@ The table above provides ways to replace the contents of the matrix:
   9) Copy assignment operator for the assignment between a `vec` and a n x 1 or 1 x n `mat`.
   10) Move assignment operator for the assignment between a `vec` and a n x 1 or 1 x n `mat`.
 
-## Subscripting and Slicing
+## 4.Subscripting and Slicing
 ### Matrix Subscripting
 | `Matrix<T, N>::operator()  (with T = double, N = 1/2/3)                                  `                                                                |` ID `|
 |:----------------------------------------------------------------------------------------------------------------------------------------------------------|------|
