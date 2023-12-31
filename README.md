@@ -209,12 +209,12 @@ The table above provides ways to replace the contents of the `Matrix<T, N>`:
 
 ## 4.Subscripting and Slicing
 ### 4.1 Matrix Subscripting
-| `Matrix<T, N> (T = double, N = 1/2/3) Subscription                                       `                                                                |` ID `|
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| vec : `const elem_type& operator()(i) const` <br> mat : `const elem_type& operator()(i, j) const` <br> cube: `const elem_type& operator()(i, j, k) const` | (1)  |
-| vec : `elem_type& operator()(i)`             <br> mat : `elem_type& operator()(i, j)`             <br> cube: `elem_type& operator()(i, j, k)`             | (2)  |
-| vec : `const elem_type& operator[](i) const` <br> mat : `const elem_type& operator[](i) const`    <br> cube: `const elem_type& operator[](i) const`       | (3)  |
-| vec : `elem_type& operator[](i)`             <br> mat : `elem_type& operator[](i)`                <br> cube: `elem_type& operator[](i)`                   | (4)  |
+| `Matrix<T, N> (T = double, N = 1/2/3) Subscription                                       `                                                                | ` ID `|
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------|-------|
+| vec : `const elem_type& operator()(i) const` <br> mat : `const elem_type& operator()(i, j) const` <br> cube: `const elem_type& operator()(i, j, k) const` | 1     |
+| vec : `elem_type& operator()(i)`             <br> mat : `elem_type& operator()(i, j)`             <br> cube: `elem_type& operator()(i, j, k)`             | 2     |
+| vec : `const elem_type& operator[](i) const` <br> mat : `const elem_type& operator[](i) const`    <br> cube: `const elem_type& operator[](i) const`       | 3     |
+| vec : `elem_type& operator[](i)`             <br> mat : `elem_type& operator[](i)`                <br> cube: `elem_type& operator[](i)`                   | 4     |
 
 
 ### 4.2 Matrix Slicing with SliceMatrix
@@ -227,39 +227,39 @@ of 2D matrix.  A declaration of a `std::slice` has the form
 
 | `SliceMatrix<T>-related member function                                                  ` |` ID `|
 |:-------------------------------------------------------------------------------------------|------|
-| vec : `vec operator()(std::slice s1) const`                                                | (1)  |
-| vec : `slice_view operator()(std::slice s1)`                                               | (2)  |
-| vec : `vec subvec(first_row, last_row) const`                                              | (3)  |
-| vec : `slice_view subvec(first_row, last_row)`                                             | (4)  |
-| mat : `vec row(i) const / vec col(i) const`                                                | (5)  |
-| mat : `slice_view row(i) / slice_view col(i)`                                              | (6)  |
-| mat : `vec diag(int k) const`                                                              | (7)  |
-| mat : `slice_view diag(int k)`                                                             | (8)  |
+| vec : `vec operator()(std::slice s1) const`                                                | 1  |
+| vec : `slice_view operator()(std::slice s1)`                                               | 2  |
+| vec : `vec subvec(first_row, last_row) const`                                              | 3  |
+| vec : `slice_view subvec(first_row, last_row)`                                             | 4  |
+| mat : `vec row(i) const / vec col(i) const`                                                | 5  |
+| mat : `slice_view row(i) / slice_view col(i)`                                              | 6  |
+| mat : `vec diag(int k) const`                                                              | 7  |
+| mat : `slice_view diag(int k)`                                                             | 8  |
 
 ### 4.3 Matrix Slicing with GsliceMatrix
 | `GsliceMatrix<T>-related member function                                                 `                                                        |` ID `|
 |:--------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| mat : `mat operator()(std::slice s1, std::slice s2) const`     <br> cube: `cube operator()(std::slice s1, std::slice s2, std::slice s3) const`    | (1)  |
-| mat : `gslice_view operator()(std::slice s1, std::slice s2)`   <br> cube: `gslice_view operator()(std::slice s1, std::slice s2, std::slice s3)`   | (2)  |
-| mat : `mat submat(fr, fc, lr, lc) const`                       <br> cube: `cube subcube(fr, fc, fs, lr, lc, ls) const`                            | (3)  |
-| mat : `gslice_view submat(fr, fc, lr, lc)`                     <br> cube: `gslice_view subcube(fr, fc, fs, lr, lc, ls)`                           | (4)  |
-| mat : `mat rows(fr, lr) const`                                 <br> mat : `mat cols(fc, lc) const`                                                | (5)  |
-| mat : `gslice_view rows(fr, lr)`                               <br> mat : `gslice_view cols(fc, lc)`                                              | (6)  |
-| cube: `mat row(i) const`                                       <br> cube: `mat col(i) const`         <br> cube: `mat slice(i) const`              | (7)  |
-| cube: `gslice_view row(i)`                                     <br> cube: `gslice_view col(i)`       <br> cube: `gslice_view slice(i)`            | (8)  |
-| cube: `cube rows(fr, lr) const`                                <br> cube: `cube cols(fc, lc) const`  <br> cube: `cube slices(fs, ls) const`       | (9)  |
-| cube: `gslice_view rows(fr, lr)`                               <br> cube: `gslice_view cols(fc, lc)` <br> cube: `gslice_view slices(fs, ls)`      | (10) |
+| mat : `mat operator()(std::slice s1, std::slice s2) const`     <br> cube: `cube operator()(std::slice s1, std::slice s2, std::slice s3) const`    | 1  |
+| mat : `gslice_view operator()(std::slice s1, std::slice s2)`   <br> cube: `gslice_view operator()(std::slice s1, std::slice s2, std::slice s3)`   | 2  |
+| mat : `mat submat(fr, fc, lr, lc) const`                       <br> cube: `cube subcube(fr, fc, fs, lr, lc, ls) const`                            | 3  |
+| mat : `gslice_view submat(fr, fc, lr, lc)`                     <br> cube: `gslice_view subcube(fr, fc, fs, lr, lc, ls)`                           | 4  |
+| mat : `mat rows(fr, lr) const`                                 <br> mat : `mat cols(fc, lc) const`                                                | 5  |
+| mat : `gslice_view rows(fr, lr)`                               <br> mat : `gslice_view cols(fc, lc)`                                              | 6  |
+| cube: `mat row(i) const`                                       <br> cube: `mat col(i) const`         <br> cube: `mat slice(i) const`              | 7  |
+| cube: `gslice_view row(i)`                                     <br> cube: `gslice_view col(i)`       <br> cube: `gslice_view slice(i)`            | 8  |
+| cube: `cube rows(fr, lr) const`                                <br> cube: `cube cols(fc, lc) const`  <br> cube: `cube slices(fs, ls) const`       | 9  |
+| cube: `gslice_view rows(fr, lr)`                               <br> cube: `gslice_view cols(fc, lc)` <br> cube: `gslice_view slices(fs, ls)`      | 10 |
 
 ### 4.4 Matrix Slicing with MaskMatrix
 | `MaskMatrix<T>-related member function                                                   `                                                                               |` ID `|
 |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| vec : `vec operator()(const bool_array& ba) const`   <br> mat: `vec operator()(const bool_array& ba) const`    <br> cube: `vec operator()(const bool_array& ba) const`   | (1)  |
-| vec : `mask_view operator()(const bool_array& ba)`   <br> mat: `mask_view operator()(const bool_array& ba)`    <br> cube: `mask_view operator()(const bool_array& ba)`   | (2)  |
+| vec : `vec operator()(const bool_array& ba) const`   <br> mat: `vec operator()(const bool_array& ba) const`    <br> cube: `vec operator()(const bool_array& ba) const`   | 1  |
+| vec : `mask_view operator()(const bool_array& ba)`   <br> mat: `mask_view operator()(const bool_array& ba)`    <br> cube: `mask_view operator()(const bool_array& ba)`   | 2  |
 
 ### 4.5 Matrix Slicing with IndirectMatrix
 | `IndirectMatrix<T>-related member function                                               `                                                                                                        |` ID `|
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| vec : `vec operator()(const index_array& ia) const`            <br> mat : `vec operator()(const index_array& ia) const`            <br> cube: `vec elem(const index_array& ia) const`             | (1)  |
-| vec : `indirect_view operator()(const index_array& ia)`        <br> mat : `indirect_view operator()(const index_array& ia)`        <br> cube: `indirect_view elem(const index_array& ia)`         | (2)  |
-| mat : `mat operator()(const index_array& ia1, const index_array& ia2) const`      <br> cube: `cube operator()(const index_array& ia1, const index_array& ia2, const index_array& ia3) const`      | (3)  |
-| mat : `indirect_view operator()(const index_array& ia1, const index_array& ia2)`  <br> cube: `indirect_view operator()(const index_array& ia1, const index_array& ia2, const index_array& ia3)`   | (4)  |
+| vec : `vec operator()(const index_array& ia) const`            <br> mat : `vec operator()(const index_array& ia) const`            <br> cube: `vec operator()(const index_array& ia) const`       | 1  |
+| vec : `indirect_view operator()(const index_array& ia)`        <br> mat : `indirect_view operator()(const index_array& ia)`        <br> cube: `indirect_view operator()(const index_array& ia)`   | 2  |
+| mat : `mat operator()(const index_array& ia1, const index_array& ia2) const`      <br> cube: `cube operator()(const index_array& ia1, const index_array& ia2, const index_array& ia3) const`      | 3  |
+| mat : `indirect_view operator()(const index_array& ia1, const index_array& ia2)`  <br> cube: `indirect_view operator()(const index_array& ia1, const index_array& ia2, const index_array& ia3)`   | 4  |
