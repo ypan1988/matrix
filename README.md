@@ -69,12 +69,12 @@ its sizes on each dimension:
 
   ```cpp
   // define a 2x3 matrix
-  Matrix<double, 2> x(2, 3);
+  Matrix<double, 2> m2(2, 3);
   // get the dimensions
-  std::valarray<std::size_t> dims = x.get_dims();  // {2, 3}
-  std::cout << x.n_elem() << std::endl;            // 6
-  std::cout << x.n_rows() << std::endl;            // 2
-  std::cout << x.n_cols() << std::endl;            // 3
+  std::valarray<std::size_t> dims = m2.get_dims();  // {2, 3}
+  std::cout << m2.n_elem() << std::endl;            // 6
+  std::cout << m2.n_rows() << std::endl;            // 2
+  std::cout << m2.n_cols() << std::endl;            // 3
   ```
 
 ### 2.2 Sub-Matrices
@@ -91,7 +91,7 @@ classes of `std::valarray<T>` are included in this library, namely
   | `IndirectMatrix<T>` | Reference to a subset of `Matrix<T,N>` specified by the `std::valarray<std::size_t>` object. |
 
 These wrapper classes provides writing access to sub-part of
-`Matrix<T, N>` and they will be discussed in more detail in section 4
+`Matrix<T, N>` and they will be discussed in more detail in section
 **Subscripting and Slicing**. Most of the time, it is safe to ignore
 the existence of these three helper classes when dealing with
 sub-Matrices.
@@ -101,16 +101,17 @@ For convenience, in the following part of this document we assume that:
     `index_array = std::valarray<std::size_t>`
   + `T = double` by default, `elem_type` refers to `Matrix<T,
     N>::elem_type`(hence it should always be the same as type **T**)
-  + we use `vec = Matrix<double, 1>` / `mat = Matrix<double, 2>` /
+  + We use `vec = Matrix<double, 1>` / `mat = Matrix<double, 2>` /
     `cube = Matrix<double, 3>` for better readability, but it is
     possible to use other types
-  + similarly we denote `submat_slice = SliceMatrix<double>` /
+  + Similarly we denote `submat_slice = SliceMatrix<double>` /
     `submat_gslice = GsliceMatrix<double>` / `submat_mask =
     MaskMatrix<double>` / `submat_indirect = MaskMatrix<double>`
   + Any API marked as **C++11** can be used only when the compiler
-    supports **C++11** (**YP**: Since **std::valarray** is included in
-    **STL** since **C++98**, this matrix library, as a wrapper of
-    **std::valarray**, will support **pre-C++11** compilers)
+    supports **C++11**. Note that it is not a C++11 only library --
+    Since **std::valarray** is included in **STL** since **C++98**,
+    this matrix library, as a wrapper of **std::valarray**, can be
+    used with **pre-C++11** compilers.
 
 ## 3.Constructions and Assignments
 
