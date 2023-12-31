@@ -1821,6 +1821,11 @@ typedef Matrix<double, 1> vec;
 typedef Matrix<double, 2> mat;
 typedef Matrix<double, 3> cube;
 
+typedef SliceMatrix<double> slice_view;
+typedef GsliceMatrix<double> gslice_view;
+typedef MaskMatrix<double> mask_view;
+typedef IndirectMatrix<double> indirect_view;
+
 }  // namespace matrix_lib
 
 #endif
