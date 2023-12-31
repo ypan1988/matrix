@@ -115,72 +115,101 @@ For convenience, in the following part of this document we assume that:
 
 ## 3.Constructions and Assignments
 
-### Constructors and Destructors
+### 3.1 Constructors and Destructors
 
-| `Matrix<T, N>::Matrix /  Matrix<T, N>::~Matrix (with T = double, N = 1/2/3)              `                                                                          | `   ID   ` |
-|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
-| vec: `vec()`                              <br> mat: `mat()`                                      <br> cube: `cube()`                                                | (1)        |
-| vec: `explicit vec(n_rows)`               <br> mat: `mat(n_rows, n_cols)`                        <br> cube: `cube(n_rows, n_cols, n_slices)`                        | (2)        |
-| vec: `vec(const elem_type& val, n_rows)`  <br> mat: `mat(const elem_type& val, n_rows, n_cols)`  <br> cube: `cube(const elem_type& val, n_rows, n_cols, n_slides)`  | (3)        |
-| vec: `vec(const elem_type* vals, n_rows)` <br> mat: `mat(const elem_type* vals, n_rows, n_cols)` <br> cube: `cube(const elem_type* vals, n_rows, n_cols, n_slides)` | (4)        |
-| vec: `vec(const vec&)`                    <br> mat: `mat(const mat&)`                            <br> cube: `cube(const cube&)`                                     | (5)        |
-| vec: `vec(vec&&) noexcept`                <br> mat: `mat(mat&&) noexcept`                        <br> cube: `cube(cube&&) noexcept`                                 | (6) C++11  |
-| vec: `vec(submat_slice)`                  <br> mat: `mat(submat_slice)`                          <br>                                                               | (7)        |
-| vec: `vec(submat_gslice)`                 <br> mat: `mat(submat_gslice)`                         <br> cube: `cube(submat_gslice)`                                   | (8)        |
-| vec: `vec(submat_mask)`                   <br> mat: `mat(submat_mask)`                           <br>                                                               | (9)        |
-| vec: `vec(submat_indirect)`               <br> mat: `mat(submat_indirect)`                       <br> cube: `cube(submat_indirect)`                                 | (10)       |
-| vec: `vec(initializer_list)`              <br> mat: `mat(nested initializer_list)`               <br> cube: `cube(nested initializer_list)`                         | (11) C++11 |
-| vec: `vec(valarray)`                      <br> mat: `mat(valarray, n_rows, n_cols)`              <br> cube: `cube(valarray, n_rows, n_cols, n_slides)`              | (12)       |
-| vec: `vec(const mat&)`                    <br> mat: `mat(const vec&)`                            <br>                                                               | (13)       |
-| vec: `vec(mat&&)`                         <br> mat: `mat(vec&&)`                                 <br>                                                               | (14) C++11 |
-| vec: `~vec()`                             <br> mat: `~mat()`                                     <br> cube: `~cube()`                                               | (15)       |
+| `Matrix<T, N> (T = double, N = 1/2/3) Construction and Destruction                       `                                                                          | `  ID  `   |
+|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------|
+| vec: `vec()`                              <br> mat: `mat()`                                      <br> cube: `cube()`                                                | 1          |
+| vec: `explicit vec(n_rows)`               <br> mat: `mat(n_rows, n_cols)`                        <br> cube: `cube(n_rows, n_cols, n_slices)`                        | 2          |
+| vec: `vec(const elem_type& val, n_rows)`  <br> mat: `mat(const elem_type& val, n_rows, n_cols)`  <br> cube: `cube(const elem_type& val, n_rows, n_cols, n_slides)`  | 3          |
+| vec: `vec(const elem_type* vals, n_rows)` <br> mat: `mat(const elem_type* vals, n_rows, n_cols)` <br> cube: `cube(const elem_type* vals, n_rows, n_cols, n_slides)` | 4          |
+| vec: `vec(const vec&)`                    <br> mat: `mat(const mat&)`                            <br> cube: `cube(const cube&)`                                     | 5          |
+| vec: `vec(vec&&) noexcept`                <br> mat: `mat(mat&&) noexcept`                        <br> cube: `cube(cube&&) noexcept`                                 | 6 (C++11)  |
+| vec: `vec(submat_slice)`                  <br> mat: `mat(submat_slice)`                          <br>                                                               | 7          |
+| vec: `vec(submat_gslice)`                 <br> mat: `mat(submat_gslice)`                         <br> cube: `cube(submat_gslice)`                                   | 8          |
+| vec: `vec(submat_mask)`                   <br> mat: `mat(submat_mask)`                           <br>                                                               | 9          |
+| vec: `vec(submat_indirect)`               <br> mat: `mat(submat_indirect)`                       <br> cube: `cube(submat_indirect)`                                 | 10         |
+| vec: `vec(initializer_list)`              <br> mat: `mat(nested initializer_list)`               <br> cube: `cube(nested initializer_list)`                         | 11 (C++11) |
+| vec: `vec(valarray)`                      <br> mat: `mat(valarray, n_rows, n_cols)`              <br> cube: `cube(valarray, n_rows, n_cols, n_slides)`              | 12         |
+| vec: `vec(const mat&)`                    <br> mat: `mat(const vec&)`                            <br>                                                               | 13         |
+| vec: `vec(mat&&)`                         <br> mat: `mat(vec&&)`                                 <br>                                                               | 14 (C++11) |
+| vec: `~vec()`                             <br> mat: `~mat()`                                     <br> cube: `~cube()`                                               | 15         |
 
-The table above provides ways to construct new matrix from various sources:
-  1) Default constructor. Constructs an empty `vec/mat/cube`.
-  2) Constructs a `vec/mat/cube` with the specified number of elements in each dimension.
-  3) Constructs a `vec/mat/cube` with all elements set to `val` and the specified number of elements in each dimension.
-  4) Constructs a `vec/mat/cube` with elements set to the contents of array pointed by `vals` and the specified number of elements in each dimension. If this array contains less than total number of elements (i.e., products of the specified number of elements in each dimension), the behavior is undefined.
-  5) Copy constructor. Constructs a `vec/mat/cube` from another one using copy semantics.
-  6) Move constructor. Constructs a `vec/mat/cube` from another one using move semantics.
-  7) Constructs a `vec/mat/cube` from a `submat_slice` (i.e., a `sub-Matrix` described by `std::slice`).
-  8) Constructs a `vec/mat/cube` from a `submat_gslice` (i.e., a `sub-Matrix` described by `std::gslice`).
-  9) Constructs a `vec/mat/cube` from a `submat_mask` (i.e., a `sub-Matrix` described by `bool_array`).
-  10) Constructs a `vec/mat/cube` from a `submat_indirect` (i.e., a `sub-Matrix` described by `index_array`).
-  11) Constructs a `vec/mat/cube` with elements set to the contents of the `initializer_list` and the specified number of elements in each dimension.
-  12) Constructs a `vec/mat/cube` with elements set to the contents of the `valarray` and the specified number of elements in each dimension.
-  13) Constructs a `vec` from a **n x 1** `mat` using copy semantics; Constructs a n x 1 or 1 x n `mat` from a `vec` using copy semantics.
-  14) Constructs a `vec` from a **n x 1** `mat` using move semantics; Constructs a n x 1 or 1 x n `mat` from a `vec` using move semantics.
-  15) Destructs the `vec/mat/cube`. The destructors of the elements (if **T** is a class) are called and the used storage is deallocated.
+A `Matrix<T, N>` (**N = 1,2,3**) can be created from various sources:
 
-### Assignments
-| `Matrix<T, N>::operator= (with T = double, N = 1/2/3)                                    `                                                            | `   ID   ` |
+  1. Default constructor. Constructs an empty `vec/mat/cube`.
+  2. Constructs a `vec/mat/cube` with specified number of elements in
+     each dimension.
+  3. Constructs a `vec/mat/cube` with all elements set to `val` and
+     the specified number of elements in each dimension.
+  4. Constructs a `vec/mat/cube` with elements set to the contents of
+     array pointed by `vals` and the specified number of elements in
+     each dimension. If this array contains less than total number of
+     elements (i.e., products of the specified number of elements in
+     each dimension), the behavior is undefined.
+  5. Copy constructor. Constructs a `vec/mat/cube` from another one
+     using copy semantics.
+  6. Move constructor. Constructs a `vec/mat/cube` from another one
+     using move semantics.
+  7. Constructs a `vec/mat/cube` from a `submat_slice` (i.e., a
+     `sub-Matrix` described by `std::slice`).
+  8. Constructs a `vec/mat/cube` from a `submat_gslice` (i.e., a
+     `sub-Matrix` described by `std::gslice`).
+  9. Constructs a `vec/mat/cube` from a `submat_mask` (i.e., a
+     `sub-Matrix` described by `bool_array`).
+  10. Constructs a `vec/mat/cube` from a `submat_indirect` (i.e., a
+      `sub-Matrix` described by `index_array`).
+  11. Constructs a `vec/mat/cube` with elements set to the contents of
+      the `initializer_list` and the specified number of elements in
+      each dimension.
+  12. Constructs a `vec/mat/cube` with elements set to the contents of
+      the `valarray` and the specified number of elements in each
+      dimension.
+  13. Constructs a `vec` from a **n x 1** or **1 x n** `mat` using
+      copy semantics; Constructs a **n x 1** or **1 x n** `mat` from a
+      `vec` using copy semantics.
+  14. Constructs a `vec` from a **n x 1** or ***1 x n* `mat` using
+      move semantics; Constructs a **n x 1** or **1 x n** `mat` from a
+      `vec` using move semantics.
+  15. Destructs the `vec/mat/cube`. The destructors of the elements
+      (if **T** is a class) are called and the used storage is
+      deallocated.
+
+### 3.2 Assignments
+| `Matrix<T, N> (T = double, N = 1/2/3) Assignment                                         `                                                            | `   ID   ` |
 |:------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
-| vec: `vec& operator=(const vec&)`           <br> mat: `mat& operator=(const mat&)`              <br> cube: `cube& operator=(const cube&)`             | (1)        |
-| vec: `vec& operator=(vec&&)`                <br> mat: `mat& operator=(mat&&)`                   <br> cube: `cube& operator=(cube&&)`                  | (2) C++11  |
-| vec: `vec& operator=(const elem_type& val)` <br> mat: `mat& operator=(const elem_type& val)`    <br> cube: `cube& operator=(const elem_type& val)`    | (3)        |
-| vec: `vec& operator=(submat_slice)`         <br> mat: `mat& operator=(submat_slice)`            <br>                                                  | (4)        |
-| vec: `vec& operator=(submat_gslice)`        <br> mat: `mat& operator=(submat_gslice)`           <br> cube: `cube& operator=(submat_gslice)`           | (5)        |
-| vec: `vec& operator=(submat_mask)`          <br> mat: `mat& operator=(submat_mask)`             <br>                                                  | (6)        |
-| vec: `vec& operator=(submat_indirect)`      <br> mat: `mat& operator=(submat_indirect)`         <br> cube: `cube& operator=(submat_indirect)`         | (7)        |
-| vec: `vec& operator=(initializer_list)`     <br> mat: `mat& operator=(nested_initializer_list)` <br> cube: `cube& operator=(nested_initializer_list)` | (8) C++11  |
-| vec: `vec& operator=(const mat&)`           <br> mat: `mat& operator=(const vec&)`              <br>                                                  | (9)        |
-| vec: `vec& operator=(mat&&)`                <br> mat: `mat& operator=(vec&&)`                   <br>                                                  | (10) C++11 |
+| vec: `vec& operator=(const vec&)`           <br> mat: `mat& operator=(const mat&)`              <br> cube: `cube& operator=(const cube&)`             | 1          |
+| vec: `vec& operator=(vec&&)`                <br> mat: `mat& operator=(mat&&)`                   <br> cube: `cube& operator=(cube&&)`                  | 2 (C++11)  |
+| vec: `vec& operator=(const elem_type& val)` <br> mat: `mat& operator=(const elem_type& val)`    <br> cube: `cube& operator=(const elem_type& val)`    | 3          |
+| vec: `vec& operator=(submat_slice)`         <br> mat: `mat& operator=(submat_slice)`            <br>                                                  | 4          |
+| vec: `vec& operator=(submat_gslice)`        <br> mat: `mat& operator=(submat_gslice)`           <br> cube: `cube& operator=(submat_gslice)`           | 5          |
+| vec: `vec& operator=(submat_mask)`          <br> mat: `mat& operator=(submat_mask)`             <br>                                                  | 6          |
+| vec: `vec& operator=(submat_indirect)`      <br> mat: `mat& operator=(submat_indirect)`         <br> cube: `cube& operator=(submat_indirect)`         | 7          |
+| vec: `vec& operator=(initializer_list)`     <br> mat: `mat& operator=(nested_initializer_list)` <br> cube: `cube& operator=(nested_initializer_list)` | 8 (C++11)  |
+| vec: `vec& operator=(const mat&)`           <br> mat: `mat& operator=(const vec&)`              <br>                                                  | 9          |
+| vec: `vec& operator=(mat&&)`                <br> mat: `mat& operator=(vec&&)`                   <br>                                                  | 10 (C++11) |
 
-The table above provides ways to replace the contents of the matrix:
-  1) Copy assignment operator.
-  2) Move assignment operator.
-  3) Replaces each value in `*this` with a copy of `val`.
-  4) Assignment with Sub-Matrix (SliceMatrix).
-  5) Assignment with Sub-Matrix (GSliceMatrix).
-  6) Assignment with Sub-Matrix (MaskMatrix).
-  7) Assignment with Sub-Matrix (IndirectMatrix).
-  8) Assignment with nested initializer list.
-  9) Copy assignment operator for the assignment between a `vec` and a n x 1 or 1 x n `mat`.
-  10) Move assignment operator for the assignment between a `vec` and a n x 1 or 1 x n `mat`.
+The table above provides ways to replace the contents of the `Matrix<T, N>`:
+  1. Copy assignment operator.
+  2. Move assignment operator.
+  3. Replaces each value in `*this` with a copy of `val`.
+  4. Assignment with a `submat_slice` (i.e., a `sub-Matrix` described
+     by `std::slice`).
+  5. Assignment with a `submat_gslice` (i.e., a `sub-Matrix` described
+     by `std::gslice`).
+  6. Assignment with a `submat_mask` (i.e., a `sub-Matrix` described
+     by `bool_array`).
+  7. Assignment with a `submat_indirect` (i.e., a `sub-Matrix`
+      described by `index_array`).
+  8. Assignment with nested initializer list.
+  9. Copy assignment operator for the assignment between a `vec` and a
+     **n x 1** or **1 x n** `mat`.
+  10. Move assignment operator for the assignment between a `vec` and
+      a **n x 1** or **1 x n** `mat`.
 
 ## 4.Subscripting and Slicing
-### Matrix Subscripting
-| `Matrix<T, N>::operator()  (with T = double, N = 1/2/3)                                  `                                                                |` ID `|
+### 4.1 Matrix Subscripting
+| `Matrix<T, N> (T = double, N = 1/2/3) Subscription                                       `                                                                |` ID `|
 |:----------------------------------------------------------------------------------------------------------------------------------------------------------|------|
 | vec : `const elem_type& operator()(i) const` <br> mat : `const elem_type& operator()(i, j) const` <br> cube: `const elem_type& operator()(i, j, k) const` | (1)  |
 | vec : `elem_type& operator()(i)`             <br> mat : `elem_type& operator()(i, j)`             <br> cube: `elem_type& operator()(i, j, k)`             | (2)  |
@@ -188,9 +217,13 @@ The table above provides ways to replace the contents of the matrix:
 | vec : `elem_type& operator[](i)`             <br> mat : `elem_type& operator[](i)`                <br> cube: `elem_type& operator[](i)`                   | (4)  |
 
 
-### Matrix Slicing with SliceMatrix
-One subset of a `std::valarray` is a `std::slice`, which selects every nth element of a `std::valarray` for some integer n. As we shall see, this in turn makes it possible to select elements from a row/col/diag of 2D matrix.
-A declaration of a `std::slice` has the form `std::slice s(start, size, stride);` which specifies the indices `start, start + stride, start + 2*stride, ...` in a `std::valarray`.
+### 4.2 Matrix Slicing with SliceMatrix
+One subset of a `std::valarray` is a `std::slice`, which selects every
+nth element of a `std::valarray` for some integer n. As we shall see,
+this in turn makes it possible to select elements from a row/col/diag
+of 2D matrix.  A declaration of a `std::slice` has the form
+`std::slice s(start, size, stride);` which specifies the indices
+`start, start + stride, start + 2*stride, ...` in a `std::valarray`.
 
 | `SliceMatrix<T>-related member function                                                  ` |` ID `|
 |:-------------------------------------------------------------------------------------------|------|
@@ -203,7 +236,7 @@ A declaration of a `std::slice` has the form `std::slice s(start, size, stride);
 | mat : `vec diag(int k) const`                                                              | (7)  |
 | mat : `submat_slice diag(int k)`                                                           | (8)  |
 
-### Matrix Slicing with GsliceMatrix
+### 4.3 Matrix Slicing with GsliceMatrix
 | `GsliceMatrix<T>-related member function                                                 `                                                        |` ID `|
 |:--------------------------------------------------------------------------------------------------------------------------------------------------|------|
 | mat : `mat operator()(std::slice s1, std::slice s2) const`     <br> cube: `cube operator()(std::slice s1, std::slice s2, std::slice s3) const`    | (1)  |
@@ -217,13 +250,13 @@ A declaration of a `std::slice` has the form `std::slice s(start, size, stride);
 | cube: `cube rows(fr, lr) const`                                <br> cube: `cube cols(fc, lc) const`  <br> cube: `cube slices(fs, ls) const`       | (9)  |
 | cube: `submat_cube rows(fr, lr)`                               <br> cube: `submat_cube cols(fc, lc)` <br> cube: `submat_cube slices(fs, ls)`      | (10) |
 
-### Matrix Slicing with MaskMatrix
+### 4.4 Matrix Slicing with MaskMatrix
 | `MaskMatrix<T>-related member function                                                   `                                                                               |` ID `|
 |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
 | vec : `vec operator()(const bool_array& ba) const`   <br> mat: `vec operator()(const bool_array& ba) const`    <br> cube: `vec operator()(const bool_array& ba) const`   | (1)  |
 | vec : `submat_mask operator()(const bool_array& ba)` <br> mat: `submat_mask operator()(const bool_array& ba)`  <br> cube: `submat_mask operator()(const bool_array& ba)` | (2)  |
 
-### Matrix Slicing with IndirectMatrix
+### 4.5 Matrix Slicing with IndirectMatrix
 | `IndirectMatrix<T>-related member function                                               `                                                                                                        |` ID `|
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
 | vec : `vec operator()(const index_array& ia) const`            <br> mat : `vec operator()(const index_array& ia) const`            <br> cube: `vec elem(const index_array& ia) const`             | (1)  |
