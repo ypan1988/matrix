@@ -312,8 +312,8 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
   // SliceMatrix related member functions
           Matrix<Tp, 1> operator()(std::slice s) const;
      SliceMatrix<Tp   > operator()(std::slice s);
-          Matrix<Tp, 1> subvec(uword first_index, uword last_index) const;
-     SliceMatrix<Tp   > subvec(uword first_index, uword last_index);
+          Matrix<Tp, 1> subvec(uword fi, uword li) const;
+     SliceMatrix<Tp   > subvec(uword fi, uword li);
 
   // MaskMatrix related member functions
           Matrix<Tp, 1> operator()(const bool_array& ba) const;
@@ -1415,54 +1415,54 @@ inline SliceMatrix<Tp> Matrix<Tp, 1>::operator()(std::slice s) {
 }
 
 template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 1>::subvec(uword i, uword j) const {
-  if (i > j || j >= M_dims[0]) error("1D subscription error");
-  const uword start = i;
-  const uword size = j - i + 1;
+inline Matrix<Tp, 1> Matrix<Tp, 1>::subvec(uword fi, uword li) const {
+  if (fi > li || li >= M_dims[0]) error("1D subscription error");
+  const uword start = fi;
+  const uword size = li - fi + 1;
   const uword stride = 1;
   return Matrix<Tp, 1>(this->M_elem, start, size, stride, is_column_vector);
 }
 
 template <class Tp>
-inline SliceMatrix<Tp> Matrix<Tp, 1>::subvec(uword i, uword j) {
-  if (i > j || j >= M_dims[0]) error("1D subscription error");
-  const uword start = i;
-  const uword size = j - i + 1;
+inline SliceMatrix<Tp> Matrix<Tp, 1>::subvec(uword fi, uword li) {
+  if (fi > li || li >= M_dims[0]) error("1D subscription error");
+  const uword start = fi;
+  const uword size = li - fi + 1;
   const uword stride = 1;
   return SliceMatrix<Tp>(this->M_elem, start, size, stride, is_column_vector);
 }
 
 template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 2>::row(uword r) const {
-  _M_range_check(r, 0);
-  const uword start = r;
+inline Matrix<Tp, 1> Matrix<Tp, 2>::row(uword i) const {
+  _M_range_check(i, 0);
+  const uword start = i;
   const uword size = M_dims[1];
   const uword stride = M_dims[0];
   return Matrix<Tp, 1>(this->M_elem, start, size, stride, false);
 }
 
 template <class Tp>
-inline SliceMatrix<Tp> Matrix<Tp, 2>::row(uword r) {
-  _M_range_check(r, 0);
-  const uword start = r;
+inline SliceMatrix<Tp> Matrix<Tp, 2>::row(uword i) {
+  _M_range_check(i, 0);
+  const uword start = i;
   const uword size = M_dims[1];
   const uword stride = M_dims[0];
   return SliceMatrix<Tp>(this->M_elem, start, size, stride, false);
 }
 
 template <class Tp>
-inline Matrix<Tp, 1> Matrix<Tp, 2>::col(uword c) const {
-  _M_range_check(0, c);
-  const uword start = c * M_dims[0];
+inline Matrix<Tp, 1> Matrix<Tp, 2>::col(uword j) const {
+  _M_range_check(0, j);
+  const uword start = j * M_dims[0];
   const uword size = M_dims[0];
   const uword stride = 1;
   return Matrix<Tp, 1>(this->M_elem, start, size, stride);
 }
 
 template <class Tp>
-inline SliceMatrix<Tp> Matrix<Tp, 2>::col(uword c) {
-  _M_range_check(0, c);
-  const uword start = c * M_dims[0];
+inline SliceMatrix<Tp> Matrix<Tp, 2>::col(uword j) {
+  _M_range_check(0, j);
+  const uword start = j * M_dims[0];
   const uword size = M_dims[0];
   const uword stride = 1;
   return SliceMatrix<Tp>(this->M_elem, start, size, stride);
