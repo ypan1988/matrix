@@ -1321,7 +1321,10 @@ struct SliceMatrix : public SubMatrix_base<Tp, std::slice> {
   std::slice& desc() { return M_desc; }
   const std::slice& desc() const { return M_desc; }
 
-  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
+  SliceMatrix& operator=(const Tp& value) {
+    this->M_elem[M_desc] = value;
+    return *this;
+  }
 };
 
 //----------------------------------------------------------------------
@@ -1350,7 +1353,10 @@ struct GsliceMatrix : public SubMatrix_base<Tp, std::gslice> {
   std::gslice& desc() { return M_desc; }
   const std::gslice& desc() const { return M_desc; }
 
-  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
+  GsliceMatrix& operator=(const Tp& value) {
+    this->M_elem[M_desc] = value;
+    return *this;
+  }
 };
 
 //----------------------------------------------------------------------
@@ -1371,7 +1377,10 @@ struct MaskMatrix : public SubMatrix_base<Tp, bool_array> {
   bool_array& desc() { return M_desc; }
   const bool_array& desc() const { return M_desc; }
 
-  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
+  MaskMatrix& operator=(const Tp& value) {
+    this->M_elem[M_desc] = value;
+    return *this;
+  }
 };
 
 //----------------------------------------------------------------------
@@ -1393,7 +1402,10 @@ struct IndirectMatrix : public SubMatrix_base<Tp, index_array> {
   index_array& desc() { return M_desc; }
   const index_array& desc() const { return M_desc; }
 
-  void operator=(const Tp& value) { this->M_elem[M_desc] = value; }
+  IndirectMatrix& operator=(const Tp& value) {
+    this->M_elem[M_desc] = value;
+    return *this;
+  }
 };
 
 // Matrix member functions dealing with SliceMatrix
