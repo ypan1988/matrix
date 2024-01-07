@@ -299,15 +299,15 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
   uword         n_rows() const { return  is_column_vector ? M_dims[0] : (M_dims[0] ? 1 : 0); }
   uword         n_cols() const { return !is_column_vector ? M_dims[0] : (M_dims[0] ? 1 : 0); }
 
-  void _M_range_check(uword n1) const {
+  void M_range_check(uword n1) const {
     matrix_assert(n1 < this->n_elem(),
-            "Matrix<T, 1>::_M_range_check:\n" <<
+            "Matrix<T, 1>::M_range_check:\n" <<
             "  Index " << n1 << " is out of bound for axis 0 with size " << n_rows());
   }
 
   // subscripting:
-        elem_type& operator()(uword n1)       { _M_range_check(n1); return this->M_elem[n1]; }
-  const elem_type& operator()(uword n1) const { _M_range_check(n1); return this->M_elem[n1]; }
+        elem_type& operator()(uword n1)       { M_range_check(n1); return this->M_elem[n1]; }
+  const elem_type& operator()(uword n1) const { M_range_check(n1); return this->M_elem[n1]; }
 
   // SliceMatrix related member functions
           Matrix<Tp, 1> operator()(std::slice s) const;
@@ -465,16 +465,16 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
   uword         n_rows() const { return M_dims[0]; }
   uword         n_cols() const { return M_dims[1]; }
 
-  void _M_range_check(uword n1, uword n2) const {
-    matrix_assert(n1 < n_rows(), "Matrix<T, 2>::_M_range_check: index is out of bound for dimension 1");
-    matrix_assert(n2 < n_cols(), "Matrix<T, 2>::_M_range_check: index is out of bound for dimension 2");
+  void M_range_check(uword n1, uword n2) const {
+    matrix_assert(n1 < n_rows(), "Matrix<T, 2>::M_range_check: index is out of bound for dimension 1");
+    matrix_assert(n2 < n_cols(), "Matrix<T, 2>::M_range_check: index is out of bound for dimension 2");
   }
 
   // subscripting:
         elem_type& operator()(uword n1, uword n2)
-  { _M_range_check(n1, n2); return this->M_elem[sub2ind(n1, n2)]; }
+  { M_range_check(n1, n2); return this->M_elem[sub2ind(n1, n2)]; }
   const elem_type& operator()(uword n1, uword n2) const
-  { _M_range_check(n1, n2); return this->M_elem[sub2ind(n1, n2)]; }
+  { M_range_check(n1, n2); return this->M_elem[sub2ind(n1, n2)]; }
 
   // SliceMatrix related member functions
           Matrix<Tp, 1> row(uword i) const;
@@ -619,17 +619,17 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
   uword         n_cols() const { return M_dims[1]; }
   uword       n_slices() const { return M_dims[2]; }
 
-  void _M_range_check(uword n1, uword n2, uword n3) const {
-    matrix_assert(n1 < n_rows()  , "Matrix<T, 3>::_M_range_check: index is out of bound for dimension 1");
-    matrix_assert(n2 < n_cols()  , "Matrix<T, 3>::_M_range_check: index is out of bound for dimension 2");
-    matrix_assert(n3 < n_slices(), "Matrix<T, 3>::_M_range_check: index is out of bound for dimension 3");
+  void M_range_check(uword n1, uword n2, uword n3) const {
+    matrix_assert(n1 < n_rows()  , "Matrix<T, 3>::M_range_check: index is out of bound for dimension 1");
+    matrix_assert(n2 < n_cols()  , "Matrix<T, 3>::M_range_check: index is out of bound for dimension 2");
+    matrix_assert(n3 < n_slices(), "Matrix<T, 3>::M_range_check: index is out of bound for dimension 3");
   }
 
   // subscripting:
         elem_type& operator()(uword n1, uword n2, uword n3)
-  { _M_range_check(n1, n2, n3); return this->M_elem[sub2ind(n1, n2, n3)]; }
+  { M_range_check(n1, n2, n3); return this->M_elem[sub2ind(n1, n2, n3)]; }
   const elem_type& operator()(uword n1, uword n2, uword n3) const
-  { _M_range_check(n1, n2, n3); return this->M_elem[sub2ind(n1, n2, n3)]; }
+  { M_range_check(n1, n2, n3); return this->M_elem[sub2ind(n1, n2, n3)]; }
 
   // GsliceMatrix related member functions
           Matrix<Tp, 3> operator()(std::slice s1, std::slice s2, std::slice s3) const;
@@ -1446,7 +1446,7 @@ inline SliceMatrix<Tp> Matrix<Tp, 1>::subvec(uword fi, uword li) {
 
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 2>::row(uword i) const {
-  _M_range_check(i, 0);
+  M_range_check(i, 0);
   const uword start = i;
   const uword size = M_dims[1];
   const uword stride = M_dims[0];
@@ -1455,7 +1455,7 @@ inline Matrix<Tp, 1> Matrix<Tp, 2>::row(uword i) const {
 
 template <class Tp>
 inline SliceMatrix<Tp> Matrix<Tp, 2>::row(uword i) {
-  _M_range_check(i, 0);
+  M_range_check(i, 0);
   const uword start = i;
   const uword size = M_dims[1];
   const uword stride = M_dims[0];
@@ -1464,7 +1464,7 @@ inline SliceMatrix<Tp> Matrix<Tp, 2>::row(uword i) {
 
 template <class Tp>
 inline Matrix<Tp, 1> Matrix<Tp, 2>::col(uword j) const {
-  _M_range_check(0, j);
+  M_range_check(0, j);
   const uword start = j * M_dims[0];
   const uword size = M_dims[0];
   const uword stride = 1;
@@ -1473,7 +1473,7 @@ inline Matrix<Tp, 1> Matrix<Tp, 2>::col(uword j) const {
 
 template <class Tp>
 inline SliceMatrix<Tp> Matrix<Tp, 2>::col(uword j) {
-  _M_range_check(0, j);
+  M_range_check(0, j);
   const uword start = j * M_dims[0];
   const uword size = M_dims[0];
   const uword stride = 1;
