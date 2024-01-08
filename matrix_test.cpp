@@ -2973,6 +2973,27 @@ void matrix_test_dot(bool print = false) {
   assert(res == 30);
 }
 
+void matrix_et_add(bool print = false) {
+  std::cout << "[TEST]: ET Addition\n";
+
+  Matrix<double, 2> a(arr_2d, 4, 3);
+  Matrix<double, 2> b(arr_2d, 4, 3);
+  Matrix<double, 2> c(arr_2d, 4, 3);
+  Matrix<double, 2> d(a.e() + b.e() + c.e(), 4, 3);
+  a *= 3.0;
+  bool_array ba = (a == d);
+
+  if (print) {
+    test_print(a, "a = ");
+    test_print(d, "d = ");
+  }
+
+  assert(a.n_elem() == d.n_elem());
+  assert(a.n_rows() == d.n_rows());
+  assert(a.n_cols() == d.n_cols());
+  assert(all(ba) == true);
+}
+
 void print_msg(const std::string& msg) {
   std::cout << "\n----- " << msg << " -----\n" << std::endl;
 }
@@ -3084,6 +3105,8 @@ int main() {
   matrix_test_matmul1(print_flag);
   matrix_test_matmul2(print_flag);
   matrix_test_matmul3(print_flag);
+
+  matrix_et_add(print_flag);
 
   std::cout << "\n----- All tests are done... -----\n" << std::endl;
   return 0;

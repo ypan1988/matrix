@@ -88,6 +88,24 @@ typedef std::size_t uword;
 typedef std::valarray<bool> bool_array;
 typedef std::valarray<std::size_t> index_array;
 
+bool all(const bool_array& ba) {
+  const bool* begin = &ba[0];
+  const bool* end = &ba[0] + ba.size();
+  if (end == std::find(begin, end, false))
+    return true;
+  else
+    return false;
+}
+
+bool any(const bool_array& ba) {
+  const bool* begin = &ba[0];
+  const bool* end = &ba[0] + ba.size();
+  if (end == std::find(begin, end, true))
+    return false;
+  else
+    return true;
+}
+
 //-----------------------------------------------------------------------------
 
 // The general Matrix template is simply a prop for its specializations:
@@ -156,6 +174,7 @@ struct Matrix_base {
 #endif
 
   // elements accessor and mutator functions
+  const std::valarray<Tp>& e()        const { return M_elem; }
   const std::valarray<Tp>& get_elem() const { return M_elem; }
   std::valarray<Tp> get_elem(const std::slice & x) const { return M_elem[x]; }
   std::valarray<Tp> get_elem(const std::gslice& x) const { return M_elem[x]; }
