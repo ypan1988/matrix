@@ -129,23 +129,23 @@ For convenience, in the following part of this document we assume that:
 
 ### 3.1 Constructors and Destructors
 
-| `std::valarray<T>::valarray`             |`Matrix<T, N> (T = double, N = 1/2/3) Construction and Destruction                       `                                                                         | `  ID  `   |
-|:-----------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------|
-| `valarray();`                            |vec: `vec()`                              <br> mat: `mat()`                                      <br> cube: `cube()`                                                | 1          |
-| `explicit valarray(count);`              |vec: `explicit vec(n_rows)`               <br> mat: `mat(n_rows, n_cols)`                        <br> cube: `cube(n_rows, n_cols, n_slices)`                        | 2          |
-| `valarray(const T& val, count);`         |vec: `vec(const elem_type& val, n_rows)`  <br> mat: `mat(const elem_type& val, n_rows, n_cols)`  <br> cube: `cube(const elem_type& val, n_rows, n_cols, n_slides)`  | 3          |
-| `valarray(const T* vals, count);`        |vec: `vec(const elem_type* vals, n_rows)` <br> mat: `mat(const elem_type* vals, n_rows, n_cols)` <br> cube: `cube(const elem_type* vals, n_rows, n_cols, n_slides)` | 4          |
-| `valarray(const valarray& other);`       |vec: `vec(const vec&)`                    <br> mat: `mat(const mat&)`                            <br> cube: `cube(const cube&)`                                     | 5          |
-| `valarray(valarray&& other) noexcept;`   |vec: `vec(vec&&) noexcept`                <br> mat: `mat(mat&&) noexcept`                        <br> cube: `cube(cube&&) noexcept`                                 | 6 (C++11)  |
-| `valarray(const slice_array<T>& sa);`    |vec: `vec(slice_view)`                    <br> mat: `mat(slice_view)`                            <br>                                                               | 7          |
-| `valarray(const gslice_array<T>& gsa);`  |vec: `vec(gslice_view)`                   <br> mat: `mat(gslice_view)`                           <br> cube: `cube(gslice_view)`                                     | 8          |
-| `valarray(const mask_array<T>& ma);`     |vec: `vec(mask_view)`                     <br> mat: `mat(mask_view)`                             <br>                                                               | 9          |
-| `valarray(const indirect_array<T>& ia);` |vec: `vec(indirect_view)`                 <br> mat: `mat(indirect_view)`                         <br> cube: `cube(indirect_view)`                                   | 10         |
-| `valarray(initializer_list<T> il);`      |vec: `vec(initializer_list)`              <br> mat: `mat(nested initializer_list)`               <br> cube: `cube(nested initializer_list)`                         | 11 (C++11) |
-|                                          |vec: `vec(valarray)`                      <br> mat: `mat(valarray, n_rows, n_cols)`              <br> cube: `cube(valarray, n_rows, n_cols, n_slides)`              | 12         |
-|                                          |vec: `vec(const mat&)`                    <br> mat: `mat(const vec&)`                            <br>                                                               | 13         |
-|                                          |vec: `vec(mat&&)`                         <br> mat: `mat(vec&&)`                                 <br>                                                               | 14 (C++11) |
-| `~valarray()`                            |vec: `~vec()`                             <br> mat: `~mat()`                                     <br> cube: `~cube()`                                               | 15         |
+| `std::valarray<T>::valarray`            | `Matrix<T, N>::Matrix (T = double, N = 1/2/3)                                                   `                                         | `  ID  `   |
+|:----------------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------|:-----------|
+| `valarray()`                            | vec: `vec()`                          <br> mat: `mat()`                              <br> cube: `cube()`                                  | 1          |
+| `explicit valarray(count)`              | vec: `explicit vec(nr)`               <br> mat: `mat(nr, nc)`                        <br> cube: `cube(nr, nc, ns)`                        | 2          |
+| `valarray(const T& val, count)`         | vec: `vec(const elem_type& val, nr)`  <br> mat: `mat(const elem_type& val, nr, nc)`  <br> cube: `cube(const elem_type& val, nr, nc, ns)`  | 3          |
+| `valarray(const T* vals, count)`        | vec: `vec(const elem_type* vals, nr)` <br> mat: `mat(const elem_type* vals, nr, nc)` <br> cube: `cube(const elem_type* vals, nr, nc, ns)` | 4          |
+| `valarray(const valarray& other)`       | vec: `vec(const vec& other)`          <br> mat: `mat(const mat& other)`              <br> cube: `cube(const cube& other)`                 | 5          |
+| `valarray(valarray&& other) noexcept`   | vec: `vec(vec&& other) noexcept`      <br> mat: `mat(mat&& other) noexcept`          <br> cube: `cube(cube&& other) noexcept`             | 6 (C++11)  |
+| `valarray(const slice_array<T>& sa)`    | vec: `vec(const slice_view& other)`   <br> mat: `mat(const slice_view& other)`       <br>                                                 | 7          |
+| `valarray(const gslice_array<T>& gsa)`  | vec: `vec(const gslice_view& other)`  <br> mat: `mat(const gslice_view& other)`      <br> cube: `cube(const gslice_view& other)`          | 8          |
+| `valarray(const mask_array<T>& ma)`     | vec: `vec(const mask_view& other)`    <br> mat: `mat(const mask_view& other)`        <br>                                                 | 9          |
+| `valarray(const indirect_array<T>& ia)` | vec: `vec(const indirect_view&other)` <br> mat: `mat(const indirect_view& other)`    <br> cube: `cube(const indirect_view& other)`        | 10         |
+| `valarray(initializer_list<T> il)`      | vec: `vec(initializer_list il)`       <br> mat: `mat(nested_initializer_list)`       <br> cube: `cube(nested_initializer_list)`           | 11 (C++11) |
+|                                         | vec: `vec(const valarray& other)`     <br> mat: `mat(const valarray& other, nr, nc)` <br> cube: `cube(const valarray& other, nr, nc, ns)` | 12         |
+|                                         | vec: `vec(const mat& other)`          <br> mat: `mat(const vec& other)`              <br>                                                 | 13         |
+|                                         | vec: `vec(mat&& other)`               <br> mat: `mat(vec&& other)`                   <br>                                                 | 14 (C++11) |
+| `~valarray()`                           | vec: `~vec()`                         <br> mat: `~mat()`                             <br> cube: `~cube()`                                 | 15         |
 
 A `Matrix<T, N>` (**N = 1,2,3**) can be created from various sources:
 
@@ -186,6 +186,11 @@ A `Matrix<T, N>` (**N = 1,2,3**) can be created from various sources:
   15. Destructs the `vec/mat/cube`. The destructors of the elements
       (if **T** is a class) are called and the used storage is
       deallocated.
+
+| `std::valarray<T>::~valarray` | `Matrix<T, N>::~Matrix (T = double, N = 1/2/3)                                                   ` | `  ID  `   |
+|:------------------------------|:---------------------------------------------------------------------------------------------------|:-----------|
+| `~valarray()`                 | vec: `~vec()` <br> mat: `~mat()` <br> cube: `~cube()`                                              | 15         |
+
 
 ### 3.2 Assignments
 | `Matrix<T, N> (T = double, N = 1/2/3) Assignment                                         `                                                            | `   ID   ` |
