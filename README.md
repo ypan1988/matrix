@@ -1,16 +1,16 @@
-`matrix.h`: A small multidimensional matrix library
+`matrix.h`: A multidimensional matrix library
 ==
 
 ## 1. Introduction
 
 The **C++** language does not come with its own matrix library. This
-is partially true -- the **Standard Template Library (STL)** has
-introduced
+is partially true -- **C++98** introduced a special container named
 [`std::valarray`](https://en.cppreference.com/w/cpp/numeric/valarray)
-for fast mathematical computations since **C++98**. The
-`std::valarray` by itself only acts like a 1D array, but it can be
-used to simulate a **N**-dimensional matrix quite easily with its
-helper classes (i.e.,
+for the processing of arrays of numeric values as an attempt to copy
+**Fortran**'s model of multidimensional array.
+
+The `std::valarray` by itself only acts like a 1D array, but it can be
+used to simulate a N-dimensional matrix with its helper classes (i.e.,
 [`std::slice_array`](https://en.cppreference.com/w/cpp/numeric/valarray/slice_array),
 [`std::gslice_array`](https://en.cppreference.com/w/cpp/numeric/valarray/gslice_array),
 [`std::mask_array`](https://en.cppreference.com/w/cpp/numeric/valarray/mask_array)
@@ -18,16 +18,29 @@ and
 [`std::indirect_array`](https://en.cppreference.com/w/cpp/numeric/valarray/mask_array))
 which have the reference semantics to a subset of the array.
 
-This single header matrix library can be viewed as a wrapper of
-`std::valarray` and an extension of Bjarne Stroustrup's
+However, to make more than trivial use of `std:valarray`, you have to
+learn a lot about these ancillary classes, some of which are pretty
+complex and none of which seems very well documented. Hence, we write
+this single header matrix library as a wrapper and/or an extension of
+`std::valarray`:
+
++ The code is based on Bjarne Stroustrup's
 [matrix](https://www.stroustrup.com/Programming/Matrix/Matrix.h)
-implementation. It provides standard building blocks for performing
-basic vector, matrix and cube operations. Most of the APIs are coming
-from [**Armadillo**](https://arma.sourceforge.net/docs.html) (a
-popular **C++** library for linear algebra with syntax similar to
-**MATLAB**), but note that it will not be compatible for sure. While
-other APIs have their origins in a few different programming languages
-(e.g., **Fortran**).
+implementation and provides standard building blocks for performing
+basic vector, matrix and cube operations;
+
++ Most of the APIs are coming from `std::valarray` itself and
+[**Armadillo**](https://arma.sourceforge.net/docs.html) (a popular
+**C++** library for linear algebra with syntax similar to **MATLAB**),
+but note that it will not be compatible for sure. While other APIs
+have their origins in a few different programming languages (e.g.,
+**Fortran**);
+
++ This is not a C++11 only library -- Since **std::valarray** is
+included in **STL** since **C++98**(and it is not likely to be removed
+in the near future), this matrix library, which can be based on
+`std::valarray`, can be used with **pre-C++11** compilers.
+
 
 ## 2. A Matrix Template
 
@@ -41,17 +54,17 @@ ordering](https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major
 its sizes on each dimension:
 
 + **Elements** (or the raw `std::valarray<T>`) can be accessed as a
-  whole by `get_elem()` (i.e., convert a `Matrix<T, N>` back to a
+  whole by `get_elem()/e()` (i.e., convert a `Matrix<T, N>` back to a
   `std::valarray<T>`):
 
   ```cpp
   // define an empty 2D matrix with T = double
   Matrix<double, 2> x;
   // ...
-  // make a copy for the array of elements 
-  std::valarray<double> va1 = x.get_elem();
   // extract a read-only array of elements
-  const std::valarray<double> &va2 = x.get_elem();
+  const std::valarray<double> &va2 = x.get_elem(); // Or x.e()
+  // make a copy for the array of elements
+  std::valarray<double> va1 = x.get_elem(); // Or x.e() again
   ```
 
 + **Dimensions** of `Matrix<T, N>` can be accessed similarly by
@@ -78,19 +91,21 @@ its sizes on each dimension:
   ```
 
 ### 2.2 Sub-Matrices
-Similar to `Matrix<T, N>`, four wrappers for the corresponding helper
-classes of `std::valarray<T>` are included in this library, namely
-`SliceMatrix<T>`, `GsliceMatrix<T>`, `MaskMatrix<T>` and
-`IndirectMatrix<T>` (see table below for a short description).
 
-  | Wrapper Class       | Description of the Wrapper Class                                                             |
-  |:--------------------|:---------------------------------------------------------------------------------------------|
-  | `SliceMatrix<T>`    | Reference to a subset of `Matrix<T,N>` specified by the `std::slice` object.                 |
-  | `GsliceMatrix<T>`   | Reference to a subset of `Matrix<T,N>` specified by the `std::gslice` object.                |
-  | `MaskMatrix<T>`     | Reference to a subset of `Matrix<T,N>` specified by the `std::valarray<bool>` object.        |
-  | `IndirectMatrix<T>` | Reference to a subset of `Matrix<T,N>` specified by the `std::valarray<std::size_t>` object. |
+Similar to `Matrix<T, N>`, four types of Sub-Matrix classes for the
+corresponding helper classes of `std::valarray<T>` are included in
+this library, namely `SliceMatrix<T>`, `GsliceMatrix<T>`,
+`MaskMatrix<T>` and `IndirectMatrix<T>` (see table below for a short
+description).
 
-These wrapper classes provides writing access to sub-part of
+  | Helper Classes           | Wrapper Classes     | Description of the Wrapper Class                                                             |
+  |:-------------------------|:--------------------|:---------------------------------------------------------------------------------------------|
+  | `std::slice_array<T>`    | `SliceMatrix<T>`    | Reference to a subset of `Matrix<T,N>` specified by the `std::slice` object.                 |
+  | `std::gslice_array<T>`   | `GsliceMatrix<T>`   | Reference to a subset of `Matrix<T,N>` specified by the `std::gslice` object.                |
+  | `std::mask_array<T>`     | `MaskMatrix<T>`     | Reference to a subset of `Matrix<T,N>` specified by the `std::valarray<bool>` object.        |
+  | `std::indirect_array<T>` | `IndirectMatrix<T>` | Reference to a subset of `Matrix<T,N>` specified by the `std::valarray<std::size_t>` object. |
+
+These helper classes provides writing access to sub-part of
 `Matrix<T, N>` and they will be discussed in more detail in section
 **Subscripting and Slicing**. Most of the time, it is safe to ignore
 the existence of these three helper classes when dealing with
@@ -108,32 +123,29 @@ For convenience, in the following part of this document we assume that:
     `gslice_view = GsliceMatrix<double>` / `mask_view =
     MaskMatrix<double>` / `indirect_view = MaskMatrix<double>`
   + Any API marked as **C++11** can be used only when the compiler
-    supports **C++11**. Note that it is not a C++11 only library --
-    Since **std::valarray** is included in **STL** since **C++98**,
-    this matrix library, as a wrapper of **std::valarray**, can be
-    used with **pre-C++11** compilers.
+    supports **C++11**.
 
 ## 3.Constructions and Assignments
 
 ### 3.1 Constructors and Destructors
 
-| `Matrix<T, N> (T = double, N = 1/2/3) Construction and Destruction                       `                                                                          | `  ID  `   |
-|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------|
-| vec: `vec()`                              <br> mat: `mat()`                                      <br> cube: `cube()`                                                | 1          |
-| vec: `explicit vec(n_rows)`               <br> mat: `mat(n_rows, n_cols)`                        <br> cube: `cube(n_rows, n_cols, n_slices)`                        | 2          |
-| vec: `vec(const elem_type& val, n_rows)`  <br> mat: `mat(const elem_type& val, n_rows, n_cols)`  <br> cube: `cube(const elem_type& val, n_rows, n_cols, n_slides)`  | 3          |
-| vec: `vec(const elem_type* vals, n_rows)` <br> mat: `mat(const elem_type* vals, n_rows, n_cols)` <br> cube: `cube(const elem_type* vals, n_rows, n_cols, n_slides)` | 4          |
-| vec: `vec(const vec&)`                    <br> mat: `mat(const mat&)`                            <br> cube: `cube(const cube&)`                                     | 5          |
-| vec: `vec(vec&&) noexcept`                <br> mat: `mat(mat&&) noexcept`                        <br> cube: `cube(cube&&) noexcept`                                 | 6 (C++11)  |
-| vec: `vec(slice_view)`                    <br> mat: `mat(slice_view)`                            <br>                                                               | 7          |
-| vec: `vec(gslice_view)`                   <br> mat: `mat(gslice_view)`                           <br> cube: `cube(gslice_view)`                                     | 8          |
-| vec: `vec(mask_view)`                     <br> mat: `mat(mask_view)`                             <br>                                                               | 9          |
-| vec: `vec(indirect_view)`                 <br> mat: `mat(indirect_view)`                         <br> cube: `cube(indirect_view)`                                   | 10         |
-| vec: `vec(initializer_list)`              <br> mat: `mat(nested initializer_list)`               <br> cube: `cube(nested initializer_list)`                         | 11 (C++11) |
-| vec: `vec(valarray)`                      <br> mat: `mat(valarray, n_rows, n_cols)`              <br> cube: `cube(valarray, n_rows, n_cols, n_slides)`              | 12         |
-| vec: `vec(const mat&)`                    <br> mat: `mat(const vec&)`                            <br>                                                               | 13         |
-| vec: `vec(mat&&)`                         <br> mat: `mat(vec&&)`                                 <br>                                                               | 14 (C++11) |
-| vec: `~vec()`                             <br> mat: `~mat()`                                     <br> cube: `~cube()`                                               | 15         |
+| `std::valarray<T>::valarray`             |`Matrix<T, N> (T = double, N = 1/2/3) Construction and Destruction                       `                                                                         | `  ID  `   |
+|:-----------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------|
+| `valarray();`                            |vec: `vec()`                              <br> mat: `mat()`                                      <br> cube: `cube()`                                                | 1          |
+| `explicit valarray(count);`              |vec: `explicit vec(n_rows)`               <br> mat: `mat(n_rows, n_cols)`                        <br> cube: `cube(n_rows, n_cols, n_slices)`                        | 2          |
+| `valarray(const T& val, count);`         |vec: `vec(const elem_type& val, n_rows)`  <br> mat: `mat(const elem_type& val, n_rows, n_cols)`  <br> cube: `cube(const elem_type& val, n_rows, n_cols, n_slides)`  | 3          |
+| `valarray(const T* vals, count);`        |vec: `vec(const elem_type* vals, n_rows)` <br> mat: `mat(const elem_type* vals, n_rows, n_cols)` <br> cube: `cube(const elem_type* vals, n_rows, n_cols, n_slides)` | 4          |
+| `valarray(const valarray& other);`       |vec: `vec(const vec&)`                    <br> mat: `mat(const mat&)`                            <br> cube: `cube(const cube&)`                                     | 5          |
+| `valarray(valarray&& other) noexcept;`   |vec: `vec(vec&&) noexcept`                <br> mat: `mat(mat&&) noexcept`                        <br> cube: `cube(cube&&) noexcept`                                 | 6 (C++11)  |
+| `valarray(const slice_array<T>& sa);`    |vec: `vec(slice_view)`                    <br> mat: `mat(slice_view)`                            <br>                                                               | 7          |
+| `valarray(const gslice_array<T>& gsa);`  |vec: `vec(gslice_view)`                   <br> mat: `mat(gslice_view)`                           <br> cube: `cube(gslice_view)`                                     | 8          |
+| `valarray(const mask_array<T>& ma);`     |vec: `vec(mask_view)`                     <br> mat: `mat(mask_view)`                             <br>                                                               | 9          |
+| `valarray(const indirect_array<T>& ia);` |vec: `vec(indirect_view)`                 <br> mat: `mat(indirect_view)`                         <br> cube: `cube(indirect_view)`                                   | 10         |
+| `valarray(initializer_list<T> il);`      |vec: `vec(initializer_list)`              <br> mat: `mat(nested initializer_list)`               <br> cube: `cube(nested initializer_list)`                         | 11 (C++11) |
+|                                          |vec: `vec(valarray)`                      <br> mat: `mat(valarray, n_rows, n_cols)`              <br> cube: `cube(valarray, n_rows, n_cols, n_slides)`              | 12         |
+|                                          |vec: `vec(const mat&)`                    <br> mat: `mat(const vec&)`                            <br>                                                               | 13         |
+|                                          |vec: `vec(mat&&)`                         <br> mat: `mat(vec&&)`                                 <br>                                                               | 14 (C++11) |
+| `~valarray()`                            |vec: `~vec()`                             <br> mat: `~mat()`                                     <br> cube: `~cube()`                                               | 15         |
 
 A `Matrix<T, N>` (**N = 1,2,3**) can be created from various sources:
 
