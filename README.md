@@ -193,18 +193,18 @@ A `Matrix<T, N>` (**N = 1,2,3**) can be created from various sources:
 
 
 ### 3.2 Assignments
-| `Matrix<T, N> (T = double, N = 1/2/3) Assignment                                         `                                                            | `   ID   ` |
-|:------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
-| vec: `vec& operator=(const vec&)`           <br> mat: `mat& operator=(const mat&)`              <br> cube: `cube& operator=(const cube&)`             | 1          |
-| vec: `vec& operator=(vec&&)`                <br> mat: `mat& operator=(mat&&)`                   <br> cube: `cube& operator=(cube&&)`                  | 2 (C++11)  |
-| vec: `vec& operator=(const elem_type& val)` <br> mat: `mat& operator=(const elem_type& val)`    <br> cube: `cube& operator=(const elem_type& val)`    | 3          |
-| vec: `vec& operator=(slice_view)`           <br> mat: `mat& operator=(slice_view)`              <br>                                                  | 4          |
-| vec: `vec& operator=(gslice_view)`          <br> mat: `mat& operator=(gslice_view)`             <br> cube: `cube& operator=(gslice_view)`             | 5          |
-| vec: `vec& operator=(mask_view)`            <br> mat: `mat& operator=(mask_view)`               <br>                                                  | 6          |
-| vec: `vec& operator=(indirect_view)`        <br> mat: `mat& operator=(indirect_view)`           <br> cube: `cube& operator=(indirect_view)`           | 7          |
-| vec: `vec& operator=(initializer_list)`     <br> mat: `mat& operator=(nested_initializer_list)` <br> cube: `cube& operator=(nested_initializer_list)` | 8 (C++11)  |
-| vec: `vec& operator=(const mat&)`           <br> mat: `mat& operator=(const vec&)`              <br>                                                  | 9          |
-| vec: `vec& operator=(mat&&)`                <br> mat: `mat& operator=(vec&&)`                   <br>                                                  | 10 (C++11) |
+| `std::valarray<T>::operator=`                            | `Matrix<T, N>::operator= (T = double, N = 1/2/3)                                          `                                                           | `   ID   ` |
+|:---------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
+| `valarray<T>& operator=(const valarray<T>& other)`       | vec: `vec& operator=(const vec&)`           <br> mat: `mat& operator=(const mat&)`              <br> cube: `cube& operator=(const cube&)`             | 1          |
+| `valarray<T>& operator=(valarray<T>&& other) noexcept`   | vec: `vec& operator=(vec&&)`                <br> mat: `mat& operator=(mat&&)`                   <br> cube: `cube& operator=(cube&&)`                  | 2 (C++11)  |
+| `valarray<T>& operator=(const T& val)`                   | vec: `vec& operator=(const elem_type& val)` <br> mat: `mat& operator=(const elem_type& val)`    <br> cube: `cube& operator=(const elem_type& val)`    | 3          |
+| `valarray<T>& operator=(const slice_array<T>& other)`    | vec: `vec& operator=(slice_view)`           <br> mat: `mat& operator=(slice_view)`              <br>                                                  | 4          |
+| `valarray<T>& operator=(const gslice_array<T>& other)`   | vec: `vec& operator=(gslice_view)`          <br> mat: `mat& operator=(gslice_view)`             <br> cube: `cube& operator=(gslice_view)`             | 5          |
+| `valarray<T>& operator=(const mask_array<T>& other)`     | vec: `vec& operator=(mask_view)`            <br> mat: `mat& operator=(mask_view)`               <br>                                                  | 6          |
+| `valarray<T>& operator=(const indirect_array<T>& other)` | vec: `vec& operator=(indirect_view)`        <br> mat: `mat& operator=(indirect_view)`           <br> cube: `cube& operator=(indirect_view)`           | 7          |
+| `valarray<T>& operator=(initializer_list<T> il)`         | vec: `vec& operator=(initializer_list)`     <br> mat: `mat& operator=(nested_initializer_list)` <br> cube: `cube& operator=(nested_initializer_list)` | 8 (C++11)  |
+|                                                          | vec: `vec& operator=(const mat&)`           <br> mat: `mat& operator=(const vec&)`              <br>                                                  | 9          |
+|                                                          | vec: `vec& operator=(mat&&)`                <br> mat: `mat& operator=(vec&&)`                   <br>                                                  | 10 (C++11) |
 
 The table above provides ways to replace the contents of the `Matrix<T, N>`:
   1. Copy assignment operator.
