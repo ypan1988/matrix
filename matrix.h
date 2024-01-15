@@ -88,14 +88,21 @@ typedef std::size_t uword;
 typedef std::valarray<bool> bool_array;
 typedef std::valarray<std::size_t> index_array;
 
+#ifndef MATRIX_LIB_USE_CPP11
 bool all(const bool_array& ba) {
-  const bool* begin = &ba[0];
-  const bool* end = &ba[0] + ba.size();
-  if (end == std::find(begin, end, false))
+  for (uword i = 0; i != ba.size(); ++i) {
+    if (!ba[i]) return false;
+  }
+  return true;
+}
+#else
+bool all(const bool_array& ba) {
+  if (std::end(ba) == std::find(std::begin(ba), std::end(ba), false))
     return true;
   else
     return false;
 }
+#endif
 
 bool any(const bool_array& ba) {
   const bool* begin = &ba[0];
@@ -1358,6 +1365,8 @@ struct SliceMatrix : public SubMatrix_base<Tp, std::slice> {
 template <class Tp>
 struct GsliceMatrix : public SubMatrix_base<Tp, std::gslice> {
  public:
+  typedef Tp elem_type;
+
   std::gslice M_desc;
   uword M_order;
   index_array M_dims;
@@ -1378,10 +1387,14 @@ struct GsliceMatrix : public SubMatrix_base<Tp, std::gslice> {
   std::gslice& desc() { return M_desc; }
   const std::gslice& desc() const { return M_desc; }
 
-  GsliceMatrix& operator=(const Tp& value) {
-    this->M_elem[M_desc] = value;
-    return *this;
-  }
+  // clang-format off
+  GsliceMatrix& operator= (const elem_type& x) { this->M_elem[M_desc]  =                              x; return *this; }
+  GsliceMatrix& operator+=(const elem_type& x) { this->M_elem[M_desc] += std::valarray<Tp>(x, n_elem()); return *this; }
+  GsliceMatrix& operator-=(const elem_type& x) { this->M_elem[M_desc] -= std::valarray<Tp>(x, n_elem()); return *this; }
+  GsliceMatrix& operator*=(const elem_type& x) { this->M_elem[M_desc] *= std::valarray<Tp>(x, n_elem()); return *this; }
+  GsliceMatrix& operator/=(const elem_type& x) { this->M_elem[M_desc] /= std::valarray<Tp>(x, n_elem()); return *this; }
+  GsliceMatrix& operator%=(const elem_type& x) { this->M_elem[M_desc] %= std::valarray<Tp>(x, n_elem()); return *this; }
+  // clang-format on
 };
 
 //----------------------------------------------------------------------
@@ -1390,6 +1403,8 @@ struct GsliceMatrix : public SubMatrix_base<Tp, std::gslice> {
 template <class Tp>
 struct MaskMatrix : public SubMatrix_base<Tp, bool_array> {
  public:
+  typedef Tp elem_type;
+
   bool_array M_desc;
   uword M_size;
   MaskMatrix(std::valarray<Tp>& va, const bool_array& boolarr)
@@ -1402,10 +1417,14 @@ struct MaskMatrix : public SubMatrix_base<Tp, bool_array> {
   bool_array& desc() { return M_desc; }
   const bool_array& desc() const { return M_desc; }
 
-  MaskMatrix& operator=(const Tp& value) {
-    this->M_elem[M_desc] = value;
-    return *this;
-  }
+  // clang-format off
+  MaskMatrix& operator= (const elem_type& x) { this->M_elem[M_desc]  =                              x; return *this; }
+  MaskMatrix& operator+=(const elem_type& x) { this->M_elem[M_desc] += std::valarray<Tp>(x, n_elem()); return *this; }
+  MaskMatrix& operator-=(const elem_type& x) { this->M_elem[M_desc] -= std::valarray<Tp>(x, n_elem()); return *this; }
+  MaskMatrix& operator*=(const elem_type& x) { this->M_elem[M_desc] *= std::valarray<Tp>(x, n_elem()); return *this; }
+  MaskMatrix& operator/=(const elem_type& x) { this->M_elem[M_desc] /= std::valarray<Tp>(x, n_elem()); return *this; }
+  MaskMatrix& operator%=(const elem_type& x) { this->M_elem[M_desc] %= std::valarray<Tp>(x, n_elem()); return *this; }
+  // clang-format on
 };
 
 //----------------------------------------------------------------------
@@ -1414,6 +1433,8 @@ struct MaskMatrix : public SubMatrix_base<Tp, bool_array> {
 template <class Tp>
 struct IndirectMatrix : public SubMatrix_base<Tp, index_array> {
  public:
+  typedef Tp elem_type;
+
   index_array M_desc;
   index_array M_dims;
   uword M_order;
@@ -1427,10 +1448,14 @@ struct IndirectMatrix : public SubMatrix_base<Tp, index_array> {
   index_array& desc() { return M_desc; }
   const index_array& desc() const { return M_desc; }
 
-  IndirectMatrix& operator=(const Tp& value) {
-    this->M_elem[M_desc] = value;
-    return *this;
-  }
+  // clang-format off
+  IndirectMatrix& operator= (const elem_type& x) { this->M_elem[M_desc]  =                              x; return *this; }
+  IndirectMatrix& operator+=(const elem_type& x) { this->M_elem[M_desc] += std::valarray<Tp>(x, n_elem()); return *this; }
+  IndirectMatrix& operator-=(const elem_type& x) { this->M_elem[M_desc] -= std::valarray<Tp>(x, n_elem()); return *this; }
+  IndirectMatrix& operator*=(const elem_type& x) { this->M_elem[M_desc] *= std::valarray<Tp>(x, n_elem()); return *this; }
+  IndirectMatrix& operator/=(const elem_type& x) { this->M_elem[M_desc] /= std::valarray<Tp>(x, n_elem()); return *this; }
+  IndirectMatrix& operator%=(const elem_type& x) { this->M_elem[M_desc] %= std::valarray<Tp>(x, n_elem()); return *this; }
+  // clang-format on
 };
 
 // Matrix member functions dealing with SliceMatrix

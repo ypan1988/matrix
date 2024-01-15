@@ -3010,6 +3010,11 @@ void matrix_et_add(bool print = false) {
   if (print) {
     test_print(a, "a = ");
     test_print(d, "d = ");
+    std::cout << "ba = " << std::endl;
+    for (uword i = 0; i != ba.size(); ++i) {
+      std::cout << i << " " << ba[i] << std::endl;
+    }
+    std::cout << "all(ba) = " << all(ba) << std::endl;
   }
 
   assert(a.n_elem() == d.n_elem());
