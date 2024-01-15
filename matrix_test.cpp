@@ -2318,6 +2318,30 @@ void matrix_test_slicing_with_indirectmatrix_b5_04(bool print = false) {
   assert(mat3d_a(2, 1, 0) == 24);
 }
 
+void matrix_test_scalar_operations_c2_02(bool print = false) {
+  std::cout << "[TEST]: C2_02. scalar operations on slicematrix" << std::endl;
+  Matrix<double, 2> mat2d(arr_2d, 4, 3);
+  if (print) test_print(mat2d, "mat2d = ");
+  mat2d.row(0) += 1;
+  mat2d.col(2) += 2;
+  if (print) test_print(mat2d, "mat2d = ");
+  assert(mat2d.n_elem() == 12);
+  assert(mat2d.n_rows() == 4);
+  assert(mat2d.n_cols() == 3);
+  assert(mat2d(0, 0) == 2);
+  assert(mat2d(1, 0) == 2);
+  assert(mat2d(2, 0) == 3);
+  assert(mat2d(3, 0) == 4);
+  assert(mat2d(0, 1) == 6);
+  assert(mat2d(1, 1) == 6);
+  assert(mat2d(2, 1) == 7);
+  assert(mat2d(3, 1) == 8);
+  assert(mat2d(0, 2) == 12);
+  assert(mat2d(1, 2) == 12);
+  assert(mat2d(2, 2) == 13);
+  assert(mat2d(3, 2) == 14);
+}
+
 void matrix_test_unary_add_minus_operator(bool print = false) {
   std::cout << "[TEST]: Applies unary add/minus operators to each element\n";
 
@@ -3074,8 +3098,12 @@ int main() {
   matrix_test_slicing_with_indirectmatrix_b5_03(print_flag);
   matrix_test_slicing_with_indirectmatrix_b5_04(print_flag);
 
-  std::cout << "\n----- H: Testing Matrix<T, N> Arithmetic Operations -----\n"
-            << std::endl;
+  print_msg("C: Testing Arithmetic Operations");
+
+  print_msg("C2: Testing Arithmetic Operations");
+  // matrix_test_scalar_operations_c2_01(); // Matrix<T,N>::operator+=()
+  matrix_test_scalar_operations_c2_02(print_flag);
+
   matrix_test_unary_add_minus_operator(print_flag);
   matrix_test_addition_assignment_operator(print_flag);
   matrix_test_subtraction_assignment_operator(print_flag);

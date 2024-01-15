@@ -1329,6 +1329,8 @@ struct SubMatrix_base {
 template <class Tp>
 struct SliceMatrix : public SubMatrix_base<Tp, std::slice> {
  public:
+  typedef Tp elem_type;
+
   std::slice M_desc;
   bool is_column_vector;
   SliceMatrix(std::valarray<Tp>& va, uword start, uword size, uword stride,
@@ -1340,10 +1342,14 @@ struct SliceMatrix : public SubMatrix_base<Tp, std::slice> {
   std::slice& desc() { return M_desc; }
   const std::slice& desc() const { return M_desc; }
 
-  SliceMatrix& operator=(const Tp& value) {
-    this->M_elem[M_desc] = value;
-    return *this;
-  }
+  // clang-format off
+  SliceMatrix& operator= (const elem_type& x) { this->M_elem[M_desc]  =                              x; return *this; }
+  SliceMatrix& operator+=(const elem_type& x) { this->M_elem[M_desc] += std::valarray<Tp>(x, n_elem()); return *this; }
+  SliceMatrix& operator-=(const elem_type& x) { this->M_elem[M_desc] -= std::valarray<Tp>(x, n_elem()); return *this; }
+  SliceMatrix& operator*=(const elem_type& x) { this->M_elem[M_desc] *= std::valarray<Tp>(x, n_elem()); return *this; }
+  SliceMatrix& operator/=(const elem_type& x) { this->M_elem[M_desc] /= std::valarray<Tp>(x, n_elem()); return *this; }
+  SliceMatrix& operator%=(const elem_type& x) { this->M_elem[M_desc] %= std::valarray<Tp>(x, n_elem()); return *this; }
+  // clang-format on
 };
 
 //----------------------------------------------------------------------
