@@ -95,12 +95,24 @@ bool all(const bool_array& ba) {
   }
   return true;
 }
+bool any(const bool_array& ba) {
+  for (uword i = 0; i != ba.size(); ++i) {
+    if (ba[i]) return true;
+  }
+  return false;
+}
 #else
 bool all(const bool_array& ba) {
   if (std::end(ba) == std::find(std::begin(ba), std::end(ba), false))
     return true;
   else
     return false;
+}
+bool any(const bool_array& ba) {
+  if (std::begin(ba) == std::find(std::begin(ba), std::end(ba), true))
+    return false;
+  else
+    return true;
 }
 #endif
 
