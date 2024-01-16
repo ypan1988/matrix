@@ -116,15 +116,6 @@ bool any(const bool_array& ba) {
 }
 #endif
 
-bool any(const bool_array& ba) {
-  const bool* begin = &ba[0];
-  const bool* end = &ba[0] + ba.size();
-  if (end == std::find(begin, end, true))
-    return false;
-  else
-    return true;
-}
-
 //-----------------------------------------------------------------------------
 
 // The general Matrix template is simply a prop for its specializations:
