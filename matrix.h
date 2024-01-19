@@ -930,389 +930,6 @@ SEXP Matrix<Tp, 3>::export_matrix_to_sexp() const {
 }
 #endif
 
-//----------------------------------------------------------------------
-// Matrix non-member functions.
-
-bool same_dims(const std::valarray<uword>& d1, const std::valarray<uword>& d2) {
-  uword n = d1.size();
-  for (uword i = 0; i != n; ++i)
-    if (d1[i] != d2[i]) return false;
-  return true;
-}
-
-// Binary arithmetic operations between two Matrix.
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator+(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp += y;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator-(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp -= y;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator*(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp *= y;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator/(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp /= y;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator%(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp %= y;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator&(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp &= y;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator|(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp |= y;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator^(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp ^= y;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator<<(const Matrix<Tp, Size>& x,
-                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp <<= y;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator>>(const Matrix<Tp, Size>& x,
-                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp >>= y;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator&&(const Matrix<Tp, Size>& x,
-                             const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  return x.get_elem() && y.get_elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator||(const Matrix<Tp, Size>& x,
-                             const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  return x.get_elem() || y.get_elem();
-}
-
-// Binary arithmetic operations between an array and a scalar.
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator+(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp += c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator+(const Tp& c, const Matrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c + x.get_elem(), x.get_dims());
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator-(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp -= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator-(const Tp& c, const Matrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c - x.get_elem(), x.get_dims());
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator*(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp *= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator*(const Tp& c, const Matrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c * x.get_elem(), x.get_dims());
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator/(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp /= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator/(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c / x.get_elem(), x.get_dims());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator%(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp %= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator%(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c % x.get_elem(), x.get_dims());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator&(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp &= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator&(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c & x.get_elem(), x.get_dims());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator|(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp |= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator|(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c | x.get_elem(), x.get_dims());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator^(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp ^= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator^(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c ^ x.get_elem(), x.get_dims());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator<<(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp <<= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator<<(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c << x.get_elem(), x.get_dims());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator>>(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp >>= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator>>(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c >> x.get_elem(), x.get_dims());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator&&(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.get_elem() && c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator&&(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c && x.get_elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator||(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.get_elem() || c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator||(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c || x.get_elem();
-}
-
-// Binary logical operations between two Matrices.
-
-template <class Tp, uword Size>
-inline bool_array operator==(const Matrix<Tp, Size>& x,
-                             const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  return x.get_elem() == y.get_elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator!=(const Matrix<Tp, Size>& x,
-                             const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  return x.get_elem() != y.get_elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator<(const Matrix<Tp, Size>& x,
-                            const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  return x.get_elem() < y.get_elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator<=(const Matrix<Tp, Size>& x,
-                             const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  return x.get_elem() <= y.get_elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator>(const Matrix<Tp, Size>& x,
-                            const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  return x.get_elem() > y.get_elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator>=(const Matrix<Tp, Size>& x,
-                             const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
-  return x.get_elem() >= y.get_elem();
-}
-
-// Logical operations between a Matrix and a scalar.
-
-template <class Tp, uword Size>
-inline bool_array operator==(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.get_elem() == c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator==(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c == x.get_elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator!=(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.get_elem() != c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator!=(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c != x.get_elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator<(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.get_elem() < c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator<(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c < x.get_elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator<=(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.get_elem() <= c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator<=(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c <= x.get_elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator>(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.get_elem() > c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator>(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c > x.get_elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator>=(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.get_elem() >= c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator>=(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c >= x.get_elem();
-}
-
-// Matrix "transcendentals" (the list includes abs and sqrt, which,
-// of course, are not transcendental).
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> abs(const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(std::abs(x.get_elem()), x.get_dims());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> exp(const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(std::exp(x.get_elem()), x.get_dims());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> log(const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(std::log(x.get_elem()), x.get_dims());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> log10(const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(std::log10(x.get_elem()), x.get_dims());
-  return tmp;
-}
-
-template <class Tp>
-Tp dot(const Matrix<Tp, 1>& x, const Matrix<Tp, 1>& y) {
-  return (x.get_elem() * y.get_elem()).sum();
-}
-
 template <class Tp, class Tpx>
 struct SubMatrix_base {
  public:
@@ -1832,6 +1449,389 @@ inline IndirectMatrix<Tp> Matrix<Tp, 3>::operator()(const index_array& ia1,
     }
   }
   return IndirectMatrix<Tp>(this->M_elem, ia, dims);
+}
+
+//----------------------------------------------------------------------
+// Matrix / Sub-Matrix non-member functions.
+
+bool same_dims(const std::valarray<uword>& d1, const std::valarray<uword>& d2) {
+  uword n = d1.size();
+  for (uword i = 0; i != n; ++i)
+    if (d1[i] != d2[i]) return false;
+  return true;
+}
+
+// Binary arithmetic operations between two Matrix.
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator+(const Matrix<Tp, Size>& x,
+                                  const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  Matrix<Tp, Size> tmp(x);
+  return tmp += y;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator-(const Matrix<Tp, Size>& x,
+                                  const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  Matrix<Tp, Size> tmp(x);
+  return tmp -= y;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator*(const Matrix<Tp, Size>& x,
+                                  const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  Matrix<Tp, Size> tmp(x);
+  return tmp *= y;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator/(const Matrix<Tp, Size>& x,
+                                  const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  Matrix<Tp, Size> tmp(x);
+  return tmp /= y;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator%(const Matrix<Tp, Size>& x,
+                                  const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  Matrix<Tp, Size> tmp(x);
+  return tmp %= y;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator&(const Matrix<Tp, Size>& x,
+                                  const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  Matrix<Tp, Size> tmp(x);
+  return tmp &= y;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator|(const Matrix<Tp, Size>& x,
+                                  const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  Matrix<Tp, Size> tmp(x);
+  return tmp |= y;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator^(const Matrix<Tp, Size>& x,
+                                  const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  Matrix<Tp, Size> tmp(x);
+  return tmp ^= y;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator<<(const Matrix<Tp, Size>& x,
+                                   const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  Matrix<Tp, Size> tmp(x);
+  return tmp <<= y;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator>>(const Matrix<Tp, Size>& x,
+                                   const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  Matrix<Tp, Size> tmp(x);
+  return tmp >>= y;
+}
+
+template <class Tp, uword Size>
+inline bool_array operator&&(const Matrix<Tp, Size>& x,
+                             const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  return x.get_elem() && y.get_elem();
+}
+
+template <class Tp, uword Size>
+inline bool_array operator||(const Matrix<Tp, Size>& x,
+                             const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  return x.get_elem() || y.get_elem();
+}
+
+// Binary arithmetic operations between an array and a scalar.
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator+(const Matrix<Tp, Size>& x, const Tp& c) {
+  Matrix<Tp, Size> tmp(x);
+  return tmp += c;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator+(const Tp& c, const Matrix<Tp, Size>& x) {
+  return Matrix<Tp, Size>(c + x.get_elem(), x.get_dims());
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator-(const Matrix<Tp, Size>& x, const Tp& c) {
+  Matrix<Tp, Size> tmp(x);
+  return tmp -= c;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator-(const Tp& c, const Matrix<Tp, Size>& x) {
+  return Matrix<Tp, Size>(c - x.get_elem(), x.get_dims());
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator*(const Matrix<Tp, Size>& x, const Tp& c) {
+  Matrix<Tp, Size> tmp(x);
+  return tmp *= c;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator*(const Tp& c, const Matrix<Tp, Size>& x) {
+  return Matrix<Tp, Size>(c * x.get_elem(), x.get_dims());
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator/(const Matrix<Tp, Size>& x, const Tp& c) {
+  Matrix<Tp, Size> tmp(x);
+  return tmp /= c;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator/(const Tp& c, const Matrix<Tp, Size>& x) {
+  Matrix<Tp, Size> tmp(c / x.get_elem(), x.get_dims());
+  return tmp;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator%(const Matrix<Tp, Size>& x, const Tp& c) {
+  Matrix<Tp, Size> tmp(x);
+  return tmp %= c;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator%(const Tp& c, const Matrix<Tp, Size>& x) {
+  Matrix<Tp, Size> tmp(c % x.get_elem(), x.get_dims());
+  return tmp;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator&(const Matrix<Tp, Size>& x, const Tp& c) {
+  Matrix<Tp, Size> tmp(x);
+  return tmp &= c;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator&(const Tp& c, const Matrix<Tp, Size>& x) {
+  Matrix<Tp, Size> tmp(c & x.get_elem(), x.get_dims());
+  return tmp;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator|(const Matrix<Tp, Size>& x, const Tp& c) {
+  Matrix<Tp, Size> tmp(x);
+  return tmp |= c;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator|(const Tp& c, const Matrix<Tp, Size>& x) {
+  Matrix<Tp, Size> tmp(c | x.get_elem(), x.get_dims());
+  return tmp;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator^(const Matrix<Tp, Size>& x, const Tp& c) {
+  Matrix<Tp, Size> tmp(x);
+  return tmp ^= c;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator^(const Tp& c, const Matrix<Tp, Size>& x) {
+  Matrix<Tp, Size> tmp(c ^ x.get_elem(), x.get_dims());
+  return tmp;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator<<(const Matrix<Tp, Size>& x, const Tp& c) {
+  Matrix<Tp, Size> tmp(x);
+  return tmp <<= c;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator<<(const Tp& c, const Matrix<Tp, Size>& x) {
+  Matrix<Tp, Size> tmp(c << x.get_elem(), x.get_dims());
+  return tmp;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator>>(const Matrix<Tp, Size>& x, const Tp& c) {
+  Matrix<Tp, Size> tmp(x);
+  return tmp >>= c;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator>>(const Tp& c, const Matrix<Tp, Size>& x) {
+  Matrix<Tp, Size> tmp(c >> x.get_elem(), x.get_dims());
+  return tmp;
+}
+
+template <class Tp, uword Size>
+inline bool_array operator&&(const Matrix<Tp, Size>& x, const Tp& c) {
+  return x.get_elem() && c;
+}
+
+template <class Tp, uword Size>
+inline bool_array operator&&(const Tp& c, const Matrix<Tp, Size>& x) {
+  return c && x.get_elem();
+}
+
+template <class Tp, uword Size>
+inline bool_array operator||(const Matrix<Tp, Size>& x, const Tp& c) {
+  return x.get_elem() || c;
+}
+
+template <class Tp, uword Size>
+inline bool_array operator||(const Tp& c, const Matrix<Tp, Size>& x) {
+  return c || x.get_elem();
+}
+
+// Binary logical operations between two Matrices.
+
+template <class Tp, uword Size>
+inline bool_array operator==(const Matrix<Tp, Size>& x,
+                             const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  return x.get_elem() == y.get_elem();
+}
+
+template <class Tp, uword Size>
+inline bool_array operator!=(const Matrix<Tp, Size>& x,
+                             const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  return x.get_elem() != y.get_elem();
+}
+
+template <class Tp, uword Size>
+inline bool_array operator<(const Matrix<Tp, Size>& x,
+                            const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  return x.get_elem() < y.get_elem();
+}
+
+template <class Tp, uword Size>
+inline bool_array operator<=(const Matrix<Tp, Size>& x,
+                             const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  return x.get_elem() <= y.get_elem();
+}
+
+template <class Tp, uword Size>
+inline bool_array operator>(const Matrix<Tp, Size>& x,
+                            const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  return x.get_elem() > y.get_elem();
+}
+
+template <class Tp, uword Size>
+inline bool_array operator>=(const Matrix<Tp, Size>& x,
+                             const Matrix<Tp, Size>& y) {
+  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  return x.get_elem() >= y.get_elem();
+}
+
+// Logical operations between a Matrix and a scalar.
+
+template <class Tp, uword Size>
+inline bool_array operator==(const Matrix<Tp, Size>& x, const Tp& c) {
+  return x.get_elem() == c;
+}
+
+template <class Tp, uword Size>
+inline bool_array operator==(const Tp& c, const Matrix<Tp, Size>& x) {
+  return c == x.get_elem();
+}
+
+template <class Tp, uword Size>
+inline bool_array operator!=(const Matrix<Tp, Size>& x, const Tp& c) {
+  return x.get_elem() != c;
+}
+
+template <class Tp, uword Size>
+inline bool_array operator!=(const Tp& c, const Matrix<Tp, Size>& x) {
+  return c != x.get_elem();
+}
+
+template <class Tp, uword Size>
+inline bool_array operator<(const Matrix<Tp, Size>& x, const Tp& c) {
+  return x.get_elem() < c;
+}
+
+template <class Tp, uword Size>
+inline bool_array operator<(const Tp& c, const Matrix<Tp, Size>& x) {
+  return c < x.get_elem();
+}
+
+template <class Tp, uword Size>
+inline bool_array operator<=(const Matrix<Tp, Size>& x, const Tp& c) {
+  return x.get_elem() <= c;
+}
+
+template <class Tp, uword Size>
+inline bool_array operator<=(const Tp& c, const Matrix<Tp, Size>& x) {
+  return c <= x.get_elem();
+}
+
+template <class Tp, uword Size>
+inline bool_array operator>(const Matrix<Tp, Size>& x, const Tp& c) {
+  return x.get_elem() > c;
+}
+
+template <class Tp, uword Size>
+inline bool_array operator>(const Tp& c, const Matrix<Tp, Size>& x) {
+  return c > x.get_elem();
+}
+
+template <class Tp, uword Size>
+inline bool_array operator>=(const Matrix<Tp, Size>& x, const Tp& c) {
+  return x.get_elem() >= c;
+}
+
+template <class Tp, uword Size>
+inline bool_array operator>=(const Tp& c, const Matrix<Tp, Size>& x) {
+  return c >= x.get_elem();
+}
+
+// Matrix "transcendentals" (the list includes abs and sqrt, which,
+// of course, are not transcendental).
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> abs(const Matrix<Tp, Size>& x) {
+  Matrix<Tp, Size> tmp(std::abs(x.get_elem()), x.get_dims());
+  return tmp;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> exp(const Matrix<Tp, Size>& x) {
+  Matrix<Tp, Size> tmp(std::exp(x.get_elem()), x.get_dims());
+  return tmp;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> log(const Matrix<Tp, Size>& x) {
+  Matrix<Tp, Size> tmp(std::log(x.get_elem()), x.get_dims());
+  return tmp;
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> log10(const Matrix<Tp, Size>& x) {
+  Matrix<Tp, Size> tmp(std::log10(x.get_elem()), x.get_dims());
+  return tmp;
+}
+
+template <class Tp>
+Tp dot(const Matrix<Tp, 1>& x, const Matrix<Tp, 1>& y) {
+  return (x.get_elem() * y.get_elem()).sum();
 }
 
 //----------------------------------------------------------------------
