@@ -116,6 +116,11 @@ bool any(const bool_array& ba) {
 }
 #endif
 
+template <class Tp>
+bool all_equal(const std::valarray<Tp>& va1, const std::valarray<Tp>& va2) {
+  return all(va1 == va2);
+}
+
 //-----------------------------------------------------------------------------
 
 // The general Matrix template is simply a prop for its specializations:
@@ -1454,19 +1459,12 @@ inline IndirectMatrix<Tp> Matrix<Tp, 3>::operator()(const index_array& ia1,
 //----------------------------------------------------------------------
 // Matrix / Sub-Matrix non-member functions.
 
-bool same_dims(const std::valarray<uword>& d1, const std::valarray<uword>& d2) {
-  uword n = d1.size();
-  for (uword i = 0; i != n; ++i)
-    if (d1[i] != d2[i]) return false;
-  return true;
-}
-
 // Binary arithmetic operations between two Matrix.
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator+(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp += y;
 }
@@ -1474,7 +1472,7 @@ inline Matrix<Tp, Size> operator+(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator-(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp -= y;
 }
@@ -1482,7 +1480,7 @@ inline Matrix<Tp, Size> operator-(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator*(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp *= y;
 }
@@ -1490,7 +1488,7 @@ inline Matrix<Tp, Size> operator*(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator/(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp /= y;
 }
@@ -1498,7 +1496,7 @@ inline Matrix<Tp, Size> operator/(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator%(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp %= y;
 }
@@ -1506,7 +1504,7 @@ inline Matrix<Tp, Size> operator%(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator&(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp &= y;
 }
@@ -1514,7 +1512,7 @@ inline Matrix<Tp, Size> operator&(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator|(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp |= y;
 }
@@ -1522,7 +1520,7 @@ inline Matrix<Tp, Size> operator|(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator^(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp ^= y;
 }
@@ -1530,7 +1528,7 @@ inline Matrix<Tp, Size> operator^(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator<<(const Matrix<Tp, Size>& x,
                                    const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp <<= y;
 }
@@ -1538,7 +1536,7 @@ inline Matrix<Tp, Size> operator<<(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator>>(const Matrix<Tp, Size>& x,
                                    const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp >>= y;
 }
@@ -1546,14 +1544,14 @@ inline Matrix<Tp, Size> operator>>(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline bool_array operator&&(const Matrix<Tp, Size>& x,
                              const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   return x.get_elem() && y.get_elem();
 }
 
 template <class Tp, uword Size>
 inline bool_array operator||(const Matrix<Tp, Size>& x,
                              const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   return x.get_elem() || y.get_elem();
 }
 
@@ -1701,42 +1699,42 @@ inline bool_array operator||(const Tp& c, const Matrix<Tp, Size>& x) {
 template <class Tp, uword Size>
 inline bool_array operator==(const Matrix<Tp, Size>& x,
                              const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   return x.get_elem() == y.get_elem();
 }
 
 template <class Tp, uword Size>
 inline bool_array operator!=(const Matrix<Tp, Size>& x,
                              const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   return x.get_elem() != y.get_elem();
 }
 
 template <class Tp, uword Size>
 inline bool_array operator<(const Matrix<Tp, Size>& x,
                             const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   return x.get_elem() < y.get_elem();
 }
 
 template <class Tp, uword Size>
 inline bool_array operator<=(const Matrix<Tp, Size>& x,
                              const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   return x.get_elem() <= y.get_elem();
 }
 
 template <class Tp, uword Size>
 inline bool_array operator>(const Matrix<Tp, Size>& x,
                             const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   return x.get_elem() > y.get_elem();
 }
 
 template <class Tp, uword Size>
 inline bool_array operator>=(const Matrix<Tp, Size>& x,
                              const Matrix<Tp, Size>& y) {
-  matrix_assert(same_dims(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
   return x.get_elem() >= y.get_elem();
 }
 
