@@ -2318,6 +2318,28 @@ void matrix_test_slicing_with_indirectmatrix_b5_04(bool print = false) {
   assert(mat3d_a(2, 1, 0) == 24);
 }
 
+void matrix_test_scalar_operations_c2_01(bool print = false) {
+  std::cout << "[TEST]: C2_01. scalar operations on matrix" << std::endl;
+  Matrix<double, 1> mat1d_a(arr_1d, 4);
+  Matrix<double, 2> mat2d_a(arr_2d, 4, 3);
+  Matrix<double, 3> mat3d_a(arr_3d, 4, 3, 2);
+
+  const Matrix<double, 1> mat1d_b(arr_1d, 4);
+  const Matrix<double, 2> mat2d_b(arr_2d, 4, 3);
+  const Matrix<double, 3> mat3d_b(arr_3d, 4, 3, 2);
+
+  mat1d_a += 1;
+  mat2d_a += 2;
+  mat3d_a += 3;
+
+  assert(all(mat1d_a == (mat1d_b + 1.0)));
+  assert(all(mat1d_a == (1.0 + mat1d_b)));
+  assert(all(mat2d_a == (mat2d_b + 2.0)));
+  assert(all(mat2d_a == (2.0 + mat2d_b)));
+  assert(all(mat3d_a == (mat3d_b + 3.0)));
+  assert(all(mat3d_a == (3.0 + mat3d_b)));
+}
+
 void matrix_test_scalar_operations_c2_02(bool print = false) {
   std::cout << "[TEST]: C2_02. scalar operations on slicematrix" << std::endl;
   Matrix<double, 2> mat2d(arr_2d, 4, 3);
@@ -3105,8 +3127,8 @@ int main() {
 
   print_msg("C: Testing Arithmetic Operations");
 
-  print_msg("C2: Testing Arithmetic Operations");
-  // matrix_test_scalar_operations_c2_01(); // Matrix<T,N>::operator+=()
+  print_msg("C2: Testing Scalar Operations");
+  matrix_test_scalar_operations_c2_01(print_flag);
   matrix_test_scalar_operations_c2_02(print_flag);
 
   matrix_test_unary_add_minus_operator(print_flag);
