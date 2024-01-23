@@ -68,7 +68,7 @@ its sizes on each dimension:
   ```
 
 + **Dimensions** of `Matrix<T, N>` can be accessed similarly by
-  `get_dims()` which returns a `std::valarray<std::size_t>`. While
+  `size()` which returns a `std::valarray<std::size_t>`. While
   total size and size on each dimension can be obtained through the
   member functions in the following table with the return type
   `std::size_t`:
@@ -84,10 +84,10 @@ its sizes on each dimension:
   // define a 2x3 matrix
   Matrix<double, 2> m2(2, 3);
   // get the dimensions
-  std::valarray<std::size_t> dims = m2.get_dims();  // {2, 3}
-  std::cout << m2.n_elem() << std::endl;            // 6
-  std::cout << m2.n_rows() << std::endl;            // 2
-  std::cout << m2.n_cols() << std::endl;            // 3
+  std::valarray<std::size_t> dims = m2.size();  // {2, 3}
+  std::cout << m2.n_elem() << std::endl;        // 6
+  std::cout << m2.n_rows() << std::endl;        // 2
+  std::cout << m2.n_cols() << std::endl;        // 3
   ```
 
 ### 2.2 Sub-Matrices

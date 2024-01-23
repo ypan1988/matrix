@@ -280,21 +280,21 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
 
   // clang-format off
   // construct/destroy:
-  Matrix()                             : Matrix_base<Tp>(                ) { M_init(); }    // (1)
-  explicit Matrix(uword n1)            : Matrix_base<Tp>(              n1) { M_init(); }    // (2)
-  Matrix(const elem_type& x, uword n1) : Matrix_base<Tp>(x,            n1) { M_init(); }    // (3)
-  Matrix(const elem_type* x, uword n1) : Matrix_base<Tp>(x,            n1) { M_init(); }    // (4)
-  Matrix(const         Matrix    &  x) : Matrix_base<Tp>(x.M_elem        ) { M_init(); }    // (5)
-  Matrix(const    SliceMatrix<Tp>&  x) : Matrix_base<Tp>(x.get_sub_elem()) { M_init(x.is_col()); }    // (7)
-  Matrix(const   GsliceMatrix<Tp>&  x) : Matrix_base<Tp>(x.get_sub_elem()) { M_init(); }    // (8)
-  Matrix(const     MaskMatrix<Tp>&  x) : Matrix_base<Tp>(x.get_sub_elem()) { M_init(); }    // (9)
-  Matrix(const IndirectMatrix<Tp>&  x) : Matrix_base<Tp>(x.get_sub_elem()) { M_init(); }    // (10)
+  Matrix()                             : Matrix_base<Tp>(            ) { M_init(); }    // (1)
+  explicit Matrix(uword n1)            : Matrix_base<Tp>(          n1) { M_init(); }    // (2)
+  Matrix(const elem_type& x, uword n1) : Matrix_base<Tp>(x,        n1) { M_init(); }    // (3)
+  Matrix(const elem_type* x, uword n1) : Matrix_base<Tp>(x,        n1) { M_init(); }    // (4)
+  Matrix(const         Matrix    &  x) : Matrix_base<Tp>(x.M_elem    ) { M_init(); }    // (5)
+  Matrix(const    SliceMatrix<Tp>&  x) : Matrix_base<Tp>(x.sub_elem()) { M_init(x.is_col()); }    // (7)
+  Matrix(const   GsliceMatrix<Tp>&  x) : Matrix_base<Tp>(x.sub_elem()) { M_init(); }    // (8)
+  Matrix(const     MaskMatrix<Tp>&  x) : Matrix_base<Tp>(x.sub_elem()) { M_init(); }    // (9)
+  Matrix(const IndirectMatrix<Tp>&  x) : Matrix_base<Tp>(x.sub_elem()) { M_init(); }    // (10)
 #if defined(MATRIX_LIB_USE_CPP11)
-  Matrix(Matrix&& x) = default;                                                             // (6)
-  Matrix(std::initializer_list<Tp>  x) : Matrix_base<Tp>(x               ) { M_init(); }    // (11)
+  Matrix(Matrix&& x) = default;                                                         // (6)
+  Matrix(std::initializer_list<Tp>  x) : Matrix_base<Tp>(x           ) { M_init(); }    // (11)
   Matrix(Matrix<Tp, 2>&& x);
 #endif
-  Matrix(const std::valarray<Tp>  & x) : Matrix_base<Tp>(x               ) { M_init(); }    // (12)
+  Matrix(const std::valarray<Tp>  & x) : Matrix_base<Tp>(x           ) { M_init(); }    // (12)
 
 #if defined(MATRIX_LIB_USE_R)
   Matrix(SEXP                         x) : Matrix_base<Tp>(x               ) { M_init(); }
@@ -305,18 +305,18 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
   ~Matrix() {}
 
   // assignment:
-  Matrix& operator=(const         Matrix    & x) { this->set_elem(x.M_elem                    ); M_init();     return *this; }    // (1)
-  Matrix& operator=(const       elem_type   & x) { this->M_elem = x                            ;               return *this; }    // (3)
-  Matrix& operator=(const    SliceMatrix<Tp>& x) { this->set_elem(x.get_sub_elem(), x.n_elem()); M_init(x.is_col()); return *this; }    // (4)
-  Matrix& operator=(const   GsliceMatrix<Tp>& x) { this->set_elem(x.get_sub_elem(), x.n_elem()); M_init();     return *this; }    // (5)
-  Matrix& operator=(const     MaskMatrix<Tp>& x) { this->set_elem(x.get_sub_elem(), x.n_elem()); M_init(true); return *this; }    // (6)
-  Matrix& operator=(const IndirectMatrix<Tp>& x) { this->set_elem(x.get_sub_elem(), x.n_elem()); M_init();     return *this; }    // (7)
+  Matrix& operator=(const         Matrix    & x) { this->set_elem(x.M_elem                ); M_init();     return *this; }    // (1)
+  Matrix& operator=(const       elem_type   & x) { this->M_elem = x                        ;               return *this; }    // (3)
+  Matrix& operator=(const    SliceMatrix<Tp>& x) { this->set_elem(x.sub_elem(), x.n_elem()); M_init(x.is_col()); return *this; }    // (4)
+  Matrix& operator=(const   GsliceMatrix<Tp>& x) { this->set_elem(x.sub_elem(), x.n_elem()); M_init();     return *this; }    // (5)
+  Matrix& operator=(const     MaskMatrix<Tp>& x) { this->set_elem(x.sub_elem(), x.n_elem()); M_init(true); return *this; }    // (6)
+  Matrix& operator=(const IndirectMatrix<Tp>& x) { this->set_elem(x.sub_elem(), x.n_elem()); M_init();     return *this; }    // (7)
 #if defined(MATRIX_LIB_USE_CPP11)
-  Matrix& operator=(Matrix&& x) = default;                                                                                        // (2)
-  Matrix& operator=(std::initializer_list<Tp> x) { this->M_elem = x;                             M_init();     return *this; }    // (8)
-  Matrix& operator=(Matrix<Tp, 2>&& x);                                                                                           // (10)
+  Matrix& operator=(Matrix&& x) = default;                                                                                    // (2)
+  Matrix& operator=(std::initializer_list<Tp> x) { this->M_elem = x                        ; M_init();     return *this; }    // (8)
+  Matrix& operator=(Matrix<Tp, 2>&& x);                                                                                       // (10)
 #endif
-  Matrix& operator=(const Matrix<Tp, 2>     & x);                                                                                 // (9)
+  Matrix& operator=(const Matrix<Tp, 2>     & x);                                                                             // (9)
 
 #if defined(MATRIX_LIB_USE_R)
   // this operator enables implicit Rcpp::wrap
@@ -325,9 +325,9 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
   SEXP export_matrix_to_sexp() const;
 #endif
 
-  index_array get_dims() const { return index_array(M_dims, 1); }
-  uword         n_rows() const { return  is_column_vector ? M_dims[0] : (M_dims[0] ? 1 : 0); }
-  uword         n_cols() const { return !is_column_vector ? M_dims[0] : (M_dims[0] ? 1 : 0); }
+  index_array size() const { return index_array(M_dims, 1); }
+  uword     n_rows() const { return  is_column_vector ? M_dims[0] : (M_dims[0] ? 1 : 0); }
+  uword     n_cols() const { return !is_column_vector ? M_dims[0] : (M_dims[0] ? 1 : 0); }
 
   void M_range_check(uword n1) const {
     matrix_assert(n1 < this->n_elem(),
@@ -447,21 +447,21 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
 
   // clang-format off
   // construct/destroy:
-  Matrix()                                       : Matrix_base<Tp>(                ) { M_init( 0,  0      ); }    // (1)
-  Matrix(uword n1, uword n2)                     : Matrix_base<Tp>(         n1 * n2) { M_init(n1, n2      ); }    // (2)
-  Matrix(const elem_type& x, uword n1, uword n2) : Matrix_base<Tp>(x,       n1 * n2) { M_init(n1, n2      ); }    // (3)
-  Matrix(const elem_type* x, uword n1, uword n2) : Matrix_base<Tp>(x,       n1 * n2) { M_init(n1, n2      ); }    // (4)
-  Matrix(const                    Matrix    & x) : Matrix_base<Tp>(x.M_elem        ) { M_init(x.M_dims    ); }    // (5)
-  Matrix(const               SliceMatrix<Tp>& x) : Matrix_base<Tp>(x.get_sub_elem()) { M_init(x.is_col()  ); }    // (7)
-  Matrix(const              GsliceMatrix<Tp>& x) : Matrix_base<Tp>(x.get_sub_elem()) { M_init(x.get_dims()); }    // (8)
-  Matrix(const                MaskMatrix<Tp>& x) : Matrix_base<Tp>(x.get_sub_elem()) { M_init(true        ); }    // (9)
-  Matrix(const            IndirectMatrix<Tp>& x) : Matrix_base<Tp>(x.get_sub_elem()) { M_init(x.get_dims()); }    // (10)
+  Matrix()                                       : Matrix_base<Tp>(            ) { M_init( 0,  0    ); }    // (1)
+  Matrix(uword n1, uword n2)                     : Matrix_base<Tp>(     n1 * n2) { M_init(n1, n2    ); }    // (2)
+  Matrix(const elem_type& x, uword n1, uword n2) : Matrix_base<Tp>(x,   n1 * n2) { M_init(n1, n2    ); }    // (3)
+  Matrix(const elem_type* x, uword n1, uword n2) : Matrix_base<Tp>(x,   n1 * n2) { M_init(n1, n2    ); }    // (4)
+  Matrix(const                    Matrix    & x) : Matrix_base<Tp>(x.M_elem    ) { M_init(x.M_dims  ); }    // (5)
+  Matrix(const               SliceMatrix<Tp>& x) : Matrix_base<Tp>(x.sub_elem()) { M_init(x.is_col()); }    // (7)
+  Matrix(const              GsliceMatrix<Tp>& x) : Matrix_base<Tp>(x.sub_elem()) { M_init(x.size()  ); }    // (8)
+  Matrix(const                MaskMatrix<Tp>& x) : Matrix_base<Tp>(x.sub_elem()) { M_init(true      ); }    // (9)
+  Matrix(const            IndirectMatrix<Tp>& x) : Matrix_base<Tp>(x.sub_elem()) { M_init(x.size()  ); }    // (10)
 #if defined(MATRIX_LIB_USE_CPP11)
-  Matrix(Matrix&& x) = default;                                                                                   // (6)
-  Matrix(std::initializer_list<std::initializer_list<Tp>> x);                                                     // (11)
+  Matrix(Matrix&& x) = default;                                                                             // (6)
+  Matrix(std::initializer_list<std::initializer_list<Tp>> x);                                               // (11)
   Matrix(Matrix<Tp, 1>&& x);
 #endif
-  Matrix(const std::valarray<Tp>&  x, uword n1, uword n2) : Matrix_base<Tp>(x)         { M_init(n1, n2  ); }      // (12)
+  Matrix(const std::valarray<Tp>&  x, uword n1, uword n2) : Matrix_base<Tp>(x)   { M_init(n1, n2    ); }    // (12)
 #if defined(MATRIX_LIB_USE_R)
   Matrix(SEXP x) : Matrix_base<Tp>(x) { SEXP dims = Rf_getAttrib(x, R_DimSymbol); M_init(INTEGER(dims)[0], INTEGER(dims)[1]); }
 #endif
@@ -471,18 +471,18 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
   ~Matrix() {}
 
   // assignment:
-  Matrix& operator=(const         Matrix    & x) { this->set_elem(x.M_elem                    ); M_init(x.M_dims    ); return *this; }    // (1)
-  Matrix& operator=(const       elem_type   & x) { this->M_elem = x                            ;                       return *this; }    // (3)
-  Matrix& operator=(const    SliceMatrix<Tp>& x) { this->set_elem(x.get_sub_elem(), x.n_elem()); M_init(x.is_col()  ); return *this; }    // (4)
-  Matrix& operator=(const   GsliceMatrix<Tp>& x) { this->set_elem(x.get_sub_elem(), x.n_elem()); M_init(x.get_dims()); return *this; }    // (5)
-  Matrix& operator=(const     MaskMatrix<Tp>& x) { this->set_elem(x.get_sub_elem(), x.n_elem()); M_init(true        ); return *this; }    // (6)
-  Matrix& operator=(const IndirectMatrix<Tp>& x) { this->set_elem(x.get_sub_elem(), x.n_elem()); M_init(x.get_dims()); return *this; }    // (7)
+  Matrix& operator=(const         Matrix    & x) { this->set_elem(x.M_elem                ); M_init(x.M_dims  ); return *this; }    // (1)
+  Matrix& operator=(const       elem_type   & x) { this->M_elem = x                        ;                     return *this; }    // (3)
+  Matrix& operator=(const    SliceMatrix<Tp>& x) { this->set_elem(x.sub_elem(), x.n_elem()); M_init(x.is_col()); return *this; }    // (4)
+  Matrix& operator=(const   GsliceMatrix<Tp>& x) { this->set_elem(x.sub_elem(), x.n_elem()); M_init(x.size()  ); return *this; }    // (5)
+  Matrix& operator=(const     MaskMatrix<Tp>& x) { this->set_elem(x.sub_elem(), x.n_elem()); M_init(true      ); return *this; }    // (6)
+  Matrix& operator=(const IndirectMatrix<Tp>& x) { this->set_elem(x.sub_elem(), x.n_elem()); M_init(x.size()  ); return *this; }    // (7)
 #if defined(MATRIX_LIB_USE_CPP11)
-  Matrix& operator=(Matrix&& x) = default;                                                                                                // (2)
-  Matrix& operator=(std::initializer_list<std::initializer_list<Tp>> x);                                                                  // (8)
-  Matrix& operator=(Matrix<Tp, 1>          && x);                                                                                         // (10)
+  Matrix& operator=(Matrix&& x) = default;                                                                                          // (2)
+  Matrix& operator=(std::initializer_list<std::initializer_list<Tp>> x);                                                            // (8)
+  Matrix& operator=(Matrix<Tp, 1>          && x);                                                                                   // (10)
 #endif
-  Matrix& operator=(const      Matrix<Tp, 1>& x);                                                                                         // (9)
+  Matrix& operator=(const      Matrix<Tp, 1>& x);                                                                                   // (9)
 
 #if defined(MATRIX_LIB_USE_R)
   // this operator enables implicit Rcpp::wrap
@@ -491,9 +491,9 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
   SEXP export_matrix_to_sexp() const;
 #endif
 
-  index_array get_dims() const { return index_array(M_dims, 2); }
-  uword         n_rows() const { return M_dims[0]; }
-  uword         n_cols() const { return M_dims[1]; }
+  index_array size() const { return index_array(M_dims, 2); }
+  uword     n_rows() const { return M_dims[0]; }
+  uword     n_cols() const { return M_dims[1]; }
 
   void M_range_check(uword n1, uword n2) const {
     matrix_assert(n1 < n_rows(), "Matrix<T, 2>::M_range_check: index is out of bound for dimension 1");
@@ -607,34 +607,34 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
 
   // clang-format off
   // construct/destroy:
-  Matrix()                                                 : Matrix_base<Tp>(                  ) { M_init( 0,  0,  0); }    // (1)
-  Matrix(                    uword n1, uword n2, uword n3) : Matrix_base<Tp>(      n1 * n2 * n3) { M_init(n1, n2, n3); }    // (2)
-  Matrix(const elem_type& x, uword n1, uword n2, uword n3) : Matrix_base<Tp>(x,    n1 * n2 * n3) { M_init(n1, n2, n3); }    // (3)
-  Matrix(const elem_type* x, uword n1, uword n2, uword n3) : Matrix_base<Tp>(x,    n1 * n2 * n3) { M_init(n1, n2, n3); }    // (4)
-  Matrix(const         Matrix    & x                     ) : Matrix_base<Tp>(x.M_elem          ) { M_init(x.M_dims  ); }    // (5)
-  Matrix(const   GsliceMatrix<Tp>& x                     ) : Matrix_base<Tp>(x.get_sub_elem()) { M_init(x.get_dims()); }    // (8)
-  Matrix(const IndirectMatrix<Tp>& x                     ) : Matrix_base<Tp>(x.get_sub_elem()) { M_init(x.get_dims()); }    // (10)
+  Matrix()                                                 : Matrix_base<Tp>(            ) { M_init( 0,  0,  0); }    // (1)
+  Matrix(                    uword n1, uword n2, uword n3) : Matrix_base<Tp>(    n1*n2*n3) { M_init(n1, n2, n3); }    // (2)
+  Matrix(const elem_type& x, uword n1, uword n2, uword n3) : Matrix_base<Tp>(x,  n1*n2*n3) { M_init(n1, n2, n3); }    // (3)
+  Matrix(const elem_type* x, uword n1, uword n2, uword n3) : Matrix_base<Tp>(x,  n1*n2*n3) { M_init(n1, n2, n3); }    // (4)
+  Matrix(const         Matrix    & x                     ) : Matrix_base<Tp>(x.M_elem    ) { M_init(x.M_dims  ); }    // (5)
+  Matrix(const   GsliceMatrix<Tp>& x                     ) : Matrix_base<Tp>(x.sub_elem()) { M_init(x.size()  ); }    // (8)
+  Matrix(const IndirectMatrix<Tp>& x                     ) : Matrix_base<Tp>(x.sub_elem()) { M_init(x.size()  ); }    // (10)
 #if defined(MATRIX_LIB_USE_CPP11)
-  Matrix(Matrix&& x) = default;                                                                                             // (6)
-  Matrix(std::initializer_list<std::initializer_list<std::initializer_list<Tp>>> x);                                        // (11)
+  Matrix(Matrix&& x) = default;                                                                                       // (6)
+  Matrix(std::initializer_list<std::initializer_list<std::initializer_list<Tp>>> x);                                  // (11)
 
 #endif
-  Matrix(const std::valarray<Tp>&  x, uword n1, uword n2, uword n3) : Matrix_base<Tp>(x)         { M_init(n1, n2, n3); }    // (12)
-  Matrix(const std::valarray<Tp>&  x, const uword          dims[3]) : Matrix_base<Tp>(x)         { M_init(dims      ); }
-  Matrix(const std::valarray<Tp>&  x, const index_array&   dims   ) : Matrix_base<Tp>(x)         { M_init(dims      ); }
+  Matrix(const std::valarray<Tp>&  x, uword n1, uword n2, uword n3) : Matrix_base<Tp>(x)   { M_init(n1, n2, n3); }    // (12)
+  Matrix(const std::valarray<Tp>&  x, const uword          dims[3]) : Matrix_base<Tp>(x)   { M_init(dims      ); }
+  Matrix(const std::valarray<Tp>&  x, const index_array&   dims   ) : Matrix_base<Tp>(x)   { M_init(dims      ); }
 #if defined(MATRIX_LIB_USE_R)
   Matrix(SEXP x) : Matrix_base<Tp>(x) { SEXP dims = Rf_getAttrib(x, R_DimSymbol); M_init(INTEGER(dims)[0], INTEGER(dims)[1], INTEGER(dims)[2]); }
 #endif
   ~Matrix() {}
 
   // assignment:
-  Matrix& operator=(const         Matrix    & x) { this->set_elem(x.M_elem                        ); M_init(x.M_dims); return *this; }    // (1)
-  Matrix& operator=(const       elem_type   & x) { this->M_elem = x                                ;                   return *this; }    // (3)
-  Matrix& operator=(const   GsliceMatrix<Tp>& x) { this->set_elem(x.get_sub_elem(), x.n_elem()); M_init(x.get_dims()); return *this; }    // (5)
-  Matrix& operator=(const IndirectMatrix<Tp>& x) { this->set_elem(x.get_sub_elem(), x.n_elem()); M_init(x.get_dims()); return *this; }    // (7)
+  Matrix& operator=(const         Matrix    & x) { this->set_elem(x.M_elem                ); M_init(x.M_dims); return *this; }    // (1)
+  Matrix& operator=(const       elem_type   & x) { this->M_elem = x                        ;                   return *this; }    // (3)
+  Matrix& operator=(const   GsliceMatrix<Tp>& x) { this->set_elem(x.sub_elem(), x.n_elem()); M_init(x.size()); return *this; }    // (5)
+  Matrix& operator=(const IndirectMatrix<Tp>& x) { this->set_elem(x.sub_elem(), x.n_elem()); M_init(x.size()); return *this; }    // (7)
 #if defined(MATRIX_LIB_USE_CPP11)
-  Matrix& operator=(Matrix&& x) = default;                                                                                                // (2)
-  Matrix& operator=(std::initializer_list<std::initializer_list<std::initializer_list<Tp>>> x);                                           // (8)
+  Matrix& operator=(Matrix&& x) = default;                                                                                        // (2)
+  Matrix& operator=(std::initializer_list<std::initializer_list<std::initializer_list<Tp>>> x);                                   // (8)
 #endif
 
 #if defined(MATRIX_LIB_USE_R)
@@ -644,7 +644,7 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
   SEXP export_matrix_to_sexp() const;
 #endif
 
-  index_array get_dims() const { return index_array(M_dims, 3); }
+  index_array size() const { return index_array(M_dims, 3); }
   uword         n_rows() const { return M_dims[0]; }
   uword         n_cols() const { return M_dims[1]; }
   uword       n_slices() const { return M_dims[2]; }
@@ -967,7 +967,7 @@ struct SliceMatrix : public SubMatrix_base<Tp> {
   std::valarray<Tp> elem() const {
     return std::valarray<Tp>(this->M_elem[M_desc]);
   }
-  std::slice_array<Tp> get_sub_elem() const { return this->M_elem[M_desc]; }
+  std::slice_array<Tp> sub_elem() const { return this->M_elem[M_desc]; }
   bool is_col() const { return is_column_vector; }
 
   // clang-format off
@@ -1008,8 +1008,8 @@ struct GsliceMatrix : public SubMatrix_base<Tp> {
   std::valarray<Tp> elem() const {
     return std::valarray<Tp>(this->M_elem[M_desc]);
   }
-  std::gslice_array<Tp> get_sub_elem() const { return this->M_elem[M_desc]; }
-  index_array get_dims() const { return M_dims; }
+  std::gslice_array<Tp> sub_elem() const { return this->M_elem[M_desc]; }
+  index_array size() const { return M_dims; }
 
   // clang-format off
   GsliceMatrix& operator= (const elem_type& x) { this->M_elem[M_desc]  =                              x; return *this; }
@@ -1045,7 +1045,7 @@ struct MaskMatrix : public SubMatrix_base<Tp> {
   std::valarray<Tp> elem() const {
     return std::valarray<Tp>(this->M_elem[M_desc]);
   }
-  std::mask_array<Tp> get_sub_elem() const { return this->M_elem[M_desc]; }
+  std::mask_array<Tp> sub_elem() const { return this->M_elem[M_desc]; }
 
   // clang-format off
   MaskMatrix& operator= (const elem_type& x) { this->M_elem[M_desc]  =                              x; return *this; }
@@ -1079,8 +1079,8 @@ struct IndirectMatrix : public SubMatrix_base<Tp> {
   std::valarray<Tp> elem() const {
     return std::valarray<Tp>(this->M_elem[M_desc]);
   }
-  std::indirect_array<Tp> get_sub_elem() const { return this->M_elem[M_desc]; }
-  index_array get_dims() const { return M_dims; }
+  std::indirect_array<Tp> sub_elem() const { return this->M_elem[M_desc]; }
+  index_array size() const { return M_dims; }
 
   // clang-format off
   IndirectMatrix& operator= (const elem_type& x) { this->M_elem[M_desc]  =                              x; return *this; }
@@ -1460,7 +1460,7 @@ inline IndirectMatrix<Tp> Matrix<Tp, 3>::operator()(const index_array& ia1,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator+(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp += y;
 }
@@ -1468,7 +1468,7 @@ inline Matrix<Tp, Size> operator+(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator-(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp -= y;
 }
@@ -1476,7 +1476,7 @@ inline Matrix<Tp, Size> operator-(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator*(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp *= y;
 }
@@ -1484,7 +1484,7 @@ inline Matrix<Tp, Size> operator*(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator/(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp /= y;
 }
@@ -1492,7 +1492,7 @@ inline Matrix<Tp, Size> operator/(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator%(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp %= y;
 }
@@ -1500,7 +1500,7 @@ inline Matrix<Tp, Size> operator%(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator&(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp &= y;
 }
@@ -1508,7 +1508,7 @@ inline Matrix<Tp, Size> operator&(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator|(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp |= y;
 }
@@ -1516,7 +1516,7 @@ inline Matrix<Tp, Size> operator|(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator^(const Matrix<Tp, Size>& x,
                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp ^= y;
 }
@@ -1524,7 +1524,7 @@ inline Matrix<Tp, Size> operator^(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator<<(const Matrix<Tp, Size>& x,
                                    const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp <<= y;
 }
@@ -1532,7 +1532,7 @@ inline Matrix<Tp, Size> operator<<(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator>>(const Matrix<Tp, Size>& x,
                                    const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   Matrix<Tp, Size> tmp(x);
   return tmp >>= y;
 }
@@ -1540,14 +1540,14 @@ inline Matrix<Tp, Size> operator>>(const Matrix<Tp, Size>& x,
 template <class Tp, uword Size>
 inline bool_array operator&&(const Matrix<Tp, Size>& x,
                              const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   return x.elem() && y.elem();
 }
 
 template <class Tp, uword Size>
 inline bool_array operator||(const Matrix<Tp, Size>& x,
                              const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   return x.elem() || y.elem();
 }
 
@@ -1561,7 +1561,7 @@ inline Matrix<Tp, Size> operator+(const Matrix<Tp, Size>& x, const Tp& c) {
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator+(const Tp& c, const Matrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c + x.elem(), x.get_dims());
+  return Matrix<Tp, Size>(c + x.elem(), x.size());
 }
 
 template <class Tp, uword Size>
@@ -1572,7 +1572,7 @@ inline Matrix<Tp, Size> operator-(const Matrix<Tp, Size>& x, const Tp& c) {
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator-(const Tp& c, const Matrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c - x.elem(), x.get_dims());
+  return Matrix<Tp, Size>(c - x.elem(), x.size());
 }
 
 template <class Tp, uword Size>
@@ -1583,7 +1583,7 @@ inline Matrix<Tp, Size> operator*(const Matrix<Tp, Size>& x, const Tp& c) {
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator*(const Tp& c, const Matrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c * x.elem(), x.get_dims());
+  return Matrix<Tp, Size>(c * x.elem(), x.size());
 }
 
 template <class Tp, uword Size>
@@ -1594,7 +1594,7 @@ inline Matrix<Tp, Size> operator/(const Matrix<Tp, Size>& x, const Tp& c) {
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator/(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c / x.elem(), x.get_dims());
+  Matrix<Tp, Size> tmp(c / x.elem(), x.size());
   return tmp;
 }
 
@@ -1606,7 +1606,7 @@ inline Matrix<Tp, Size> operator%(const Matrix<Tp, Size>& x, const Tp& c) {
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator%(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c % x.elem(), x.get_dims());
+  Matrix<Tp, Size> tmp(c % x.elem(), x.size());
   return tmp;
 }
 
@@ -1618,7 +1618,7 @@ inline Matrix<Tp, Size> operator&(const Matrix<Tp, Size>& x, const Tp& c) {
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator&(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c & x.elem(), x.get_dims());
+  Matrix<Tp, Size> tmp(c & x.elem(), x.size());
   return tmp;
 }
 
@@ -1630,7 +1630,7 @@ inline Matrix<Tp, Size> operator|(const Matrix<Tp, Size>& x, const Tp& c) {
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator|(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c | x.elem(), x.get_dims());
+  Matrix<Tp, Size> tmp(c | x.elem(), x.size());
   return tmp;
 }
 
@@ -1642,7 +1642,7 @@ inline Matrix<Tp, Size> operator^(const Matrix<Tp, Size>& x, const Tp& c) {
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator^(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c ^ x.elem(), x.get_dims());
+  Matrix<Tp, Size> tmp(c ^ x.elem(), x.size());
   return tmp;
 }
 
@@ -1654,7 +1654,7 @@ inline Matrix<Tp, Size> operator<<(const Matrix<Tp, Size>& x, const Tp& c) {
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator<<(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c << x.elem(), x.get_dims());
+  Matrix<Tp, Size> tmp(c << x.elem(), x.size());
   return tmp;
 }
 
@@ -1666,7 +1666,7 @@ inline Matrix<Tp, Size> operator>>(const Matrix<Tp, Size>& x, const Tp& c) {
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator>>(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c >> x.elem(), x.get_dims());
+  Matrix<Tp, Size> tmp(c >> x.elem(), x.size());
   return tmp;
 }
 
@@ -1695,42 +1695,42 @@ inline bool_array operator||(const Tp& c, const Matrix<Tp, Size>& x) {
 template <class Tp, uword Size>
 inline bool_array operator==(const Matrix<Tp, Size>& x,
                              const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   return x.elem() == y.elem();
 }
 
 template <class Tp, uword Size>
 inline bool_array operator!=(const Matrix<Tp, Size>& x,
                              const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   return x.elem() != y.elem();
 }
 
 template <class Tp, uword Size>
 inline bool_array operator<(const Matrix<Tp, Size>& x,
                             const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   return x.elem() < y.elem();
 }
 
 template <class Tp, uword Size>
 inline bool_array operator<=(const Matrix<Tp, Size>& x,
                              const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   return x.elem() <= y.elem();
 }
 
 template <class Tp, uword Size>
 inline bool_array operator>(const Matrix<Tp, Size>& x,
                             const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   return x.elem() > y.elem();
 }
 
 template <class Tp, uword Size>
 inline bool_array operator>=(const Matrix<Tp, Size>& x,
                              const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.get_dims(), y.get_dims()), "dimension mismatch");
+  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
   return x.elem() >= y.elem();
 }
 
@@ -1801,25 +1801,25 @@ inline bool_array operator>=(const Tp& c, const Matrix<Tp, Size>& x) {
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> abs(const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(std::abs(x.elem()), x.get_dims());
+  Matrix<Tp, Size> tmp(std::abs(x.elem()), x.size());
   return tmp;
 }
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> exp(const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(std::exp(x.elem()), x.get_dims());
+  Matrix<Tp, Size> tmp(std::exp(x.elem()), x.size());
   return tmp;
 }
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> log(const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(std::log(x.elem()), x.get_dims());
+  Matrix<Tp, Size> tmp(std::log(x.elem()), x.size());
   return tmp;
 }
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> log10(const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(std::log10(x.elem()), x.get_dims());
+  Matrix<Tp, Size> tmp(std::log10(x.elem()), x.size());
   return tmp;
 }
 
