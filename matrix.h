@@ -935,20 +935,16 @@ SEXP Matrix<Tp, 3>::export_matrix_to_sexp() const {
 }
 #endif
 
-template <class Tp, class Tpx>
+template <class Tp>
 struct SubMatrix_base {
  public:
   typedef Tp elem_type;
 
   SubMatrix_base(std::valarray<Tp>& va) : M_elem(va) {}
+  virtual ~SubMatrix_base() {}
 
   virtual uword n_elem() const = 0;
-  virtual Tpx& desc() = 0;
-  virtual const Tpx& desc() const = 0;
-
-  std::valarray<Tp> get_elem() const {
-    return std::valarray<Tp>(M_elem[this->desc()]);
-  }
+  virtual std::valarray<Tp> get_elem() const { return std::valarray<Tp>(); }
 
   elem_type sum() const { return get_elem().sum(); }
   elem_type min() const { return get_elem().min(); }
@@ -962,18 +958,19 @@ struct SubMatrix_base {
 // SliceMatrix
 
 template <class Tp>
-struct SliceMatrix : public SubMatrix_base<Tp, std::slice> {
+struct SliceMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
 
   SliceMatrix(std::valarray<Tp>& va, uword start, uword size, uword stride,
               bool is_colvec = true)
-      : SubMatrix_base<Tp, std::slice>(va),
+      : SubMatrix_base<Tp>(va),
         M_desc(start, size, stride),
         is_column_vector(is_colvec) {}
   uword n_elem() const { return M_desc.size(); }
-  std::slice& desc() { return M_desc; }
-  const std::slice& desc() const { return M_desc; }
+  std::valarray<Tp> get_elem() const {
+    return std::valarray<Tp>(this->M_elem[M_desc]);
+  }
   std::slice_array<Tp> get_sub_elem() const { return this->M_elem[M_desc]; }
   bool is_col() const { return is_column_vector; }
 
@@ -995,13 +992,13 @@ struct SliceMatrix : public SubMatrix_base<Tp, std::slice> {
 // GsliceMatrix
 
 template <class Tp>
-struct GsliceMatrix : public SubMatrix_base<Tp, std::gslice> {
+struct GsliceMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
 
   GsliceMatrix(std::valarray<Tp>& va, uword start, const index_array& size,
                const index_array& stride)
-      : SubMatrix_base<Tp, std::gslice>(va),
+      : SubMatrix_base<Tp>(va),
         M_desc(start, size, stride),
         M_order(size.size()),
         M_dims(M_order),
@@ -1012,8 +1009,9 @@ struct GsliceMatrix : public SubMatrix_base<Tp, std::gslice> {
     }
   }
   uword n_elem() const { return M_size; }
-  std::gslice& desc() { return M_desc; }
-  const std::gslice& desc() const { return M_desc; }
+  std::valarray<Tp> get_elem() const {
+    return std::valarray<Tp>(this->M_elem[M_desc]);
+  }
   std::gslice_array<Tp> get_sub_elem() const { return this->M_elem[M_desc]; }
   index_array get_dims() const { return M_dims; }
 
@@ -1037,19 +1035,20 @@ struct GsliceMatrix : public SubMatrix_base<Tp, std::gslice> {
 // MaskMatrix
 
 template <class Tp>
-struct MaskMatrix : public SubMatrix_base<Tp, bool_array> {
+struct MaskMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
 
   MaskMatrix(std::valarray<Tp>& va, const bool_array& boolarr)
-      : SubMatrix_base<Tp, bool_array>(va), M_desc(boolarr), M_size(0) {
+      : SubMatrix_base<Tp>(va), M_desc(boolarr), M_size(0) {
     std::valarray<uword> tmp((uword)0, boolarr.size());
     tmp[boolarr] = 1;
     M_size = tmp.sum();
   }
   uword n_elem() const { return M_size; }
-  bool_array& desc() { return M_desc; }
-  const bool_array& desc() const { return M_desc; }
+  std::valarray<Tp> get_elem() const {
+    return std::valarray<Tp>(this->M_elem[M_desc]);
+  }
   std::mask_array<Tp> get_sub_elem() const { return this->M_elem[M_desc]; }
 
   // clang-format off
@@ -1070,19 +1069,20 @@ struct MaskMatrix : public SubMatrix_base<Tp, bool_array> {
 // IndirectMatrix
 
 template <class Tp>
-struct IndirectMatrix : public SubMatrix_base<Tp, index_array> {
+struct IndirectMatrix : public SubMatrix_base<Tp> {
  public:
   typedef Tp elem_type;
 
   IndirectMatrix(std::valarray<Tp>& va, const index_array& ind_arr,
                  const index_array& dims)
-      : SubMatrix_base<Tp, index_array>(va),
+      : SubMatrix_base<Tp>(va),
         M_desc(ind_arr),
         M_dims(dims),
         M_order(dims.size()) {}
   uword n_elem() const { return M_desc.size(); }
-  index_array& desc() { return M_desc; }
-  const index_array& desc() const { return M_desc; }
+  std::valarray<Tp> get_elem() const {
+    return std::valarray<Tp>(this->M_elem[M_desc]);
+  }
   std::indirect_array<Tp> get_sub_elem() const { return this->M_elem[M_desc]; }
   index_array get_dims() const { return M_dims; }
 
