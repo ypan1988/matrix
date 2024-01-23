@@ -54,7 +54,7 @@ ordering](https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major
 its sizes on each dimension:
 
 + **Elements** (or the raw `std::valarray<T>`) can be accessed as a
-  whole by `get_elem()/e()` (i.e., convert a `Matrix<T, N>` back to a
+  whole by `elem()/e()` (i.e., convert a `Matrix<T, N>` back to a
   `std::valarray<T>`):
 
   ```cpp
@@ -62,9 +62,9 @@ its sizes on each dimension:
   Matrix<double, 2> x;
   // ...
   // extract a read-only array of elements
-  const std::valarray<double> &va2 = x.get_elem(); // Or x.e()
+  const std::valarray<double> &va2 = x.elem(); // Or x.e()
   // make a copy for the array of elements
-  std::valarray<double> va1 = x.get_elem(); // Or x.e() again
+  std::valarray<double> va1 = x.elem(); // Or x.e() again
   ```
 
 + **Dimensions** of `Matrix<T, N>` can be accessed similarly by
