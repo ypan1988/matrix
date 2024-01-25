@@ -932,12 +932,12 @@ SEXP Matrix<Tp, 3>::export_matrix_to_sexp() const {
 #endif
 
 template <class Tp, uword Size>
-struct SubMatrix_base {
+struct SubMatrix {
  public:
   typedef Tp elem_type;
 
-  SubMatrix_base(std::valarray<Tp>& va) : M_elem(va) {}
-  virtual ~SubMatrix_base() {}
+  SubMatrix(std::valarray<Tp>& va) : M_elem(va) {}
+  virtual ~SubMatrix() {}
 
   virtual uword n_elem() const = 0;
   virtual std::valarray<Tp> elem() const { return std::valarray<Tp>(); }
@@ -954,13 +954,13 @@ struct SubMatrix_base {
 // SliceMatrix
 
 template <class Tp>
-struct SliceMatrix : public SubMatrix_base<Tp, 1> {
+struct SliceMatrix : public SubMatrix<Tp, 1> {
  public:
   typedef Tp elem_type;
 
   SliceMatrix(std::valarray<Tp>& va, uword start, uword size, uword stride,
               bool is_colvec = true)
-      : SubMatrix_base<Tp, 1>(va),
+      : SubMatrix<Tp, 1>(va),
         M_desc(start, size, stride),
         is_column_vector(is_colvec) {}
   uword n_elem() const { return M_desc.size(); }
@@ -988,13 +988,13 @@ struct SliceMatrix : public SubMatrix_base<Tp, 1> {
 // GsliceMatrix
 
 template <class Tp, uword Size>
-struct GsliceMatrix : public SubMatrix_base<Tp, Size> {
+struct GsliceMatrix : public SubMatrix<Tp, Size> {
  public:
   typedef Tp elem_type;
 
   GsliceMatrix(std::valarray<Tp>& va, uword start, const index_array& size,
                const index_array& stride)
-      : SubMatrix_base<Tp, Size>(va),
+      : SubMatrix<Tp, Size>(va),
         M_desc(start, size, stride),
         M_order(size.size()),
         M_dims(M_order),
@@ -1031,12 +1031,12 @@ struct GsliceMatrix : public SubMatrix_base<Tp, Size> {
 // MaskMatrix
 
 template <class Tp>
-struct MaskMatrix : public SubMatrix_base<Tp, 1> {
+struct MaskMatrix : public SubMatrix<Tp, 1> {
  public:
   typedef Tp elem_type;
 
   MaskMatrix(std::valarray<Tp>& va, const bool_array& boolarr)
-      : SubMatrix_base<Tp, 1>(va), M_desc(boolarr), M_size(0) {
+      : SubMatrix<Tp, 1>(va), M_desc(boolarr), M_size(0) {
     std::valarray<uword> tmp((uword)0, boolarr.size());
     tmp[boolarr] = 1;
     M_size = tmp.sum();
@@ -1065,13 +1065,13 @@ struct MaskMatrix : public SubMatrix_base<Tp, 1> {
 // IndirectMatrix
 
 template <class Tp, uword Size>
-struct IndirectMatrix : public SubMatrix_base<Tp, Size> {
+struct IndirectMatrix : public SubMatrix<Tp, Size> {
  public:
   typedef Tp elem_type;
 
   IndirectMatrix(std::valarray<Tp>& va, const index_array& ind_arr,
                  const index_array& dims)
-      : SubMatrix_base<Tp, Size>(va),
+      : SubMatrix<Tp, Size>(va),
         M_desc(ind_arr),
         M_dims(dims),
         M_order(dims.size()) {}
