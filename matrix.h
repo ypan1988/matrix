@@ -325,7 +325,11 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
   SEXP export_matrix_to_sexp() const;
 #endif
 
-  index_array size() const { return index_array(M_dims, 1); }
+  index_array size() const {
+    index_array res(1, 2);
+    is_column_vector ? res[0] = this->M_dims[0] : res[1] = this->M_dims[0];
+    return res;
+  }
   uword     n_rows() const { return  is_column_vector ? M_dims[0] : (M_dims[0] ? 1 : 0); }
   uword     n_cols() const { return !is_column_vector ? M_dims[0] : (M_dims[0] ? 1 : 0); }
 
@@ -409,10 +413,14 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
     M_dims[0] = dims[0];
     is_column_vector = is_colvec;
   }
-  void M_init(const index_array& dims, bool is_colvec = true) {
-    if (this->n_elem() != dims[0]) error("1D Cstor error: dimension mismatch");
-    M_dims[0] = dims[0];
-    is_column_vector = is_colvec;
+  void M_init(const index_array& dims) {
+    if (dims.size() == 1) {
+      M_dims[0] = dims[0];
+      is_column_vector = true;
+    } else if (dims.size() == 2) {
+      M_dims[0] = dims[0] * dims[1];
+      is_column_vector = (dims[1] == 1);
+    }
   }
   Matrix(const std::valarray<Tp>& va, uword start, const uword size,
          const uword stride, bool is_colvec = true)
@@ -940,7 +948,7 @@ struct SubMatrix {
   virtual ~SubMatrix() {}
 
   virtual std::valarray<Tp> elem() const { return std::valarray<Tp>(); }
-  index_array size() const { return this->M_dims; }
+  virtual index_array size() const { return this->M_dims; }
   uword n_elem() const { return M_n_elem; }
 
   elem_type sum() const { return elem().sum(); }
@@ -974,6 +982,11 @@ struct SliceMatrix : public SubMatrix<Tp, 1> {
   }
   std::slice_array<Tp> sub_elem() const { return this->M_elem[M_desc]; }
   bool is_col() const { return is_column_vector; }
+  index_array size() const {
+    index_array res(1, 2);
+    is_col() ? res[0] = this->M_dims[0] : res[1] = this->M_dims[0];
+    return res;
+  }
 
   // clang-format off
   SliceMatrix& operator= (const elem_type& x) { this->M_elem[M_desc]  =                   x                 ; return *this; }
@@ -1548,12 +1561,21 @@ inline bool_array operator||(const Matrix<Tp, Size>& x,
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator+(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp += c;
+  return Matrix<Tp, Size>(x.elem() + c, x.size());
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator+(const SubMatrix<Tp, Size>& x, const Tp& c) {
+  return Matrix<Tp, Size>(x.elem() + c, x.size());
 }
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator+(const Tp& c, const Matrix<Tp, Size>& x) {
+  return Matrix<Tp, Size>(c + x.elem(), x.size());
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator+(const Tp& c, const SubMatrix<Tp, Size>& x) {
   return Matrix<Tp, Size>(c + x.elem(), x.size());
 }
 

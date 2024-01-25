@@ -2342,26 +2342,32 @@ void matrix_test_scalar_operations_c2_01(bool print = false) {
 
 void matrix_test_scalar_operations_c2_02(bool print = false) {
   std::cout << "[TEST]: C2_02. scalar operations on slicematrix" << std::endl;
-  Matrix<double, 2> mat2d(arr_2d, 4, 3);
-  if (print) test_print(mat2d, "mat2d = ");
-  mat2d.row(0) += 1;
-  mat2d.col(2) += 2;
-  if (print) test_print(mat2d, "mat2d = ");
-  assert(mat2d.n_elem() == 12);
-  assert(mat2d.n_rows() == 4);
-  assert(mat2d.n_cols() == 3);
-  assert(mat2d(0, 0) == 2);
-  assert(mat2d(1, 0) == 2);
-  assert(mat2d(2, 0) == 3);
-  assert(mat2d(3, 0) == 4);
-  assert(mat2d(0, 1) == 6);
-  assert(mat2d(1, 1) == 6);
-  assert(mat2d(2, 1) == 7);
-  assert(mat2d(3, 1) == 8);
-  assert(mat2d(0, 2) == 12);
-  assert(mat2d(1, 2) == 12);
-  assert(mat2d(2, 2) == 13);
-  assert(mat2d(3, 2) == 14);
+  Matrix<double, 2> mat2d_a(arr_2d, 4, 3);
+  if (print) test_print(mat2d_a, "mat2d = ");
+  mat2d_a.row(0) += 1;
+  mat2d_a.col(2) += 2;
+  if (print) test_print(mat2d_a, "mat2d = ");
+  assert(mat2d_a.n_elem() == 12);
+  assert(mat2d_a.n_rows() == 4);
+  assert(mat2d_a.n_cols() == 3);
+  assert(mat2d_a(0, 0) == 2);
+  assert(mat2d_a(1, 0) == 2);
+  assert(mat2d_a(2, 0) == 3);
+  assert(mat2d_a(3, 0) == 4);
+  assert(mat2d_a(0, 1) == 6);
+  assert(mat2d_a(1, 1) == 6);
+  assert(mat2d_a(2, 1) == 7);
+  assert(mat2d_a(3, 1) == 8);
+  assert(mat2d_a(0, 2) == 12);
+  assert(mat2d_a(1, 2) == 12);
+  assert(mat2d_a(2, 2) == 13);
+  assert(mat2d_a(3, 2) == 14);
+
+  const Matrix<double, 2> mat2d_b(arr_2d, 4, 3);
+
+  Matrix<double, 1> mat1d_a = mat2d_b.row(0) + 1.0;
+  test_print(mat2d_b, "mat2d_b = ");
+  test_print(mat1d_a, "mat1d_a = ");
 }
 
 void matrix_test_unary_add_minus_operator(bool print = false) {
