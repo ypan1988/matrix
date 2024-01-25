@@ -999,12 +999,10 @@ struct GsliceMatrix : public SubMatrix<Tp, Size> {
 
   GsliceMatrix(std::valarray<Tp>& va, uword start, const index_array& size,
                const index_array& stride)
-      : SubMatrix<Tp, Size>(va),
-        M_desc(start, size, stride),
-        M_order(size.size()) {
+      : SubMatrix<Tp, Size>(va), M_desc(start, size, stride) {
     this->M_n_elem = 1;
-    for (uword idx = 0; idx < M_order; ++idx) {
-      this->M_dims[idx] = size[M_order - idx - 1];
+    for (uword idx = 0; idx < Size; ++idx) {
+      this->M_dims[idx] = size[Size - idx - 1];
       this->M_n_elem *= this->M_dims[idx];
     }
   }
@@ -1024,7 +1022,6 @@ struct GsliceMatrix : public SubMatrix<Tp, Size> {
 
  private:
   std::gslice M_desc;
-  uword M_order;
 };
 
 //----------------------------------------------------------------------
@@ -1069,7 +1066,7 @@ struct IndirectMatrix : public SubMatrix<Tp, Size> {
 
   IndirectMatrix(std::valarray<Tp>& va, const index_array& ia,
                  const index_array& dims)
-      : SubMatrix<Tp, Size>(va), M_desc(ia), M_order(dims.size()) {
+      : SubMatrix<Tp, Size>(va), M_desc(ia) {
     this->M_dims = dims;
     this->M_n_elem = M_desc.size();
   }
@@ -1089,7 +1086,6 @@ struct IndirectMatrix : public SubMatrix<Tp, Size> {
 
  private:
   index_array M_desc;
-  uword M_order;
 };
 
 // Matrix member functions dealing with SliceMatrix
