@@ -326,8 +326,8 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
 #endif
 
   index_array size() const {
-    index_array res(1, 2);
-    is_column_vector ? res[0] = this->M_dims[0] : res[1] = this->M_dims[0];
+    if (is_column_vector) return index_array(M_dims, 1);
+    INIT_ARR2E(res, 1, this->n_elem());
     return res;
   }
   uword     n_rows() const { return  is_column_vector ? M_dims[0] : (M_dims[0] ? 1 : 0); }
@@ -410,17 +410,11 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
   }
   void M_init(const uword dims[1], bool is_colvec = true) {
     if (this->n_elem() != dims[0]) error("1D Cstor error: dimension mismatch");
-    M_dims[0] = dims[0];
-    is_column_vector = is_colvec;
+    M_init(is_colvec);
   }
   void M_init(const index_array& dims) {
-    if (dims.size() == 1) {
-      M_dims[0] = dims[0];
-      is_column_vector = true;
-    } else if (dims.size() == 2) {
-      M_dims[0] = dims[0] * dims[1];
-      is_column_vector = (dims[1] == 1);
-    }
+    bool is_rowvec = (dims.size() == 2) && (dims[0] == 1);
+    M_init(!is_rowvec);
   }
   Matrix(const std::valarray<Tp>& va, uword start, const uword size,
          const uword stride, bool is_colvec = true)
@@ -428,17 +422,17 @@ struct Matrix<Tp, 1> : public Matrix_base<Tp> {
     M_init(is_colvec);
   }
   Matrix(const std::valarray<Tp>& va, uword start, const index_array& size,
-         const index_array& stride, bool is_colvec = true)
+         const index_array& stride)
       : Matrix_base<Tp>(va[std::gslice(start, size, stride)]) {
-    M_init(is_colvec);
-  }
-  Matrix(const std::valarray<Tp>& va, const bool_array& bool_arr)
-      : Matrix_base<Tp>(va[bool_arr]) {
     M_init();
   }
-  Matrix(const std::valarray<Tp>& va, const index_array& idx_arr,
+  Matrix(const std::valarray<Tp>& va, const bool_array& ba)
+      : Matrix_base<Tp>(va[ba]) {
+    M_init();
+  }
+  Matrix(const std::valarray<Tp>& va, const index_array& ia,
          const index_array& dims)
-      : Matrix_base<Tp>(va[idx_arr]) {
+      : Matrix_base<Tp>(va[ia]) {
     M_init();
   }
   uword sub2ind(uword i) const { return i; }
@@ -598,9 +592,9 @@ struct Matrix<Tp, 2> : public Matrix_base<Tp> {
       : Matrix_base<Tp>(va[std::gslice(start, size, stride)]) {
     M_init(size[1], size[0]);
   }
-  Matrix(const std::valarray<Tp>& va, const index_array& idx_arr,
+  Matrix(const std::valarray<Tp>& va, const index_array& ia,
          const index_array& dims)
-      : Matrix_base<Tp>(va[idx_arr]) {
+      : Matrix_base<Tp>(va[ia]) {
     M_init(dims);
   }
   uword sub2ind(uword i, uword j) const { return i + j * M_dims[0]; }
@@ -753,9 +747,9 @@ struct Matrix<Tp, 3> : public Matrix_base<Tp> {
       : Matrix_base<Tp>(va[std::gslice(start, size, stride)]) {
     M_init(size[2], size[1], size[0]);
   }
-  Matrix(const std::valarray<Tp>& va, const index_array& idx_arr,
+  Matrix(const std::valarray<Tp>& va, const index_array& ia,
          const index_array& dims)
-      : Matrix_base<Tp>(va[idx_arr]) {
+      : Matrix_base<Tp>(va[ia]) {
     M_init(dims);
   }
   uword sub2ind(uword i, uword j, uword k) const {
@@ -983,8 +977,8 @@ struct SliceMatrix : public SubMatrix<Tp, 1> {
   std::slice_array<Tp> sub_elem() const { return this->M_elem[M_desc]; }
   bool is_col() const { return is_column_vector; }
   index_array size() const {
-    index_array res(1, 2);
-    is_col() ? res[0] = this->M_dims[0] : res[1] = this->M_dims[0];
+    if (is_column_vector) return this->M_dims;
+    INIT_ARR2E(res, 1, this->n_elem());
     return res;
   }
 
