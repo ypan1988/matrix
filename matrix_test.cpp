@@ -2365,9 +2365,24 @@ void matrix_test_scalar_operations_c2_02(bool print = false) {
 
   const Matrix<double, 2> mat2d_b(arr_2d, 4, 3);
 
-  Matrix<double, 1> mat1d_a = mat2d_b.row(0) + 1.0;
-  test_print(mat2d_b, "mat2d_b = ");
-  test_print(mat1d_a, "mat1d_a = ");
+  Matrix<double, 2> mat2d_c = mat2d_b.row(0) + 1.0;
+  if (print) test_print(mat2d_c, "mat2d_c = ");
+  assert(mat2d_c.n_elem() == 3);
+  assert(mat2d_c.n_rows() == 1);
+  assert(mat2d_c.n_cols() == 3);
+  assert(mat2d_c(0, 0) == 2);
+  assert(mat2d_c(0, 1) == 6);
+  assert(mat2d_c(0, 2) == 10);
+
+  Matrix<double, 2> mat2d_d = 2.0 + mat2d_b.col(2);
+  if (print) test_print(mat2d_d, "mat2d_d = ");
+  assert(mat2d_d.n_elem() == 4);
+  assert(mat2d_d.n_rows() == 4);
+  assert(mat2d_d.n_cols() == 1);
+  assert(mat2d_d(0, 0) == 11);
+  assert(mat2d_d(1, 0) == 12);
+  assert(mat2d_d(2, 0) == 13);
+  assert(mat2d_d(3, 0) == 14);
 }
 
 void matrix_test_unary_add_minus_operator(bool print = false) {
