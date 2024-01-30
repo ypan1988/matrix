@@ -1575,8 +1575,12 @@ inline Matrix<Tp, Size> operator+(const Tp& c, const SubMatrix<Tp, Size>& x) {
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator-(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp -= c;
+  return Matrix<Tp, Size>(x.elem() - c, x.size());
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator-(const SubMatrix<Tp, Size>& x, const Tp& c) {
+  return Matrix<Tp, Size>(x.elem() - c, x.size());
 }
 
 template <class Tp, uword Size>
@@ -1585,9 +1589,18 @@ inline Matrix<Tp, Size> operator-(const Tp& c, const Matrix<Tp, Size>& x) {
 }
 
 template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator-(const Tp& c, const SubMatrix<Tp, Size>& x) {
+  return Matrix<Tp, Size>(c - x.elem(), x.size());
+}
+
+template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator*(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp *= c;
+  return Matrix<Tp, Size>(x.elem() * c, x.size());
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator*(const SubMatrix<Tp, Size>& x, const Tp& c) {
+  return Matrix<Tp, Size>(x.elem() * c, x.size());
 }
 
 template <class Tp, uword Size>
@@ -1596,15 +1609,28 @@ inline Matrix<Tp, Size> operator*(const Tp& c, const Matrix<Tp, Size>& x) {
 }
 
 template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator*(const Tp& c, const SubMatrix<Tp, Size>& x) {
+  return Matrix<Tp, Size>(c * x.elem(), x.size());
+}
+
+template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator/(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp /= c;
+  return Matrix<Tp, Size>(x.elem() / c, x.size());
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator/(const SubMatrix<Tp, Size>& x, const Tp& c) {
+  return Matrix<Tp, Size>(x.elem() / c, x.size());
 }
 
 template <class Tp, uword Size>
 inline Matrix<Tp, Size> operator/(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c / x.elem(), x.size());
-  return tmp;
+  return Matrix<Tp, Size>(c / x.elem(), x.size());
+}
+
+template <class Tp, uword Size>
+inline Matrix<Tp, Size> operator/(const Tp& c, const SubMatrix<Tp, Size>& x) {
+  return Matrix<Tp, Size>(c / x.elem(), x.size());
 }
 
 template <class Tp, uword Size>
