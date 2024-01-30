@@ -2385,6 +2385,58 @@ void matrix_test_scalar_operations_c2_02(bool print = false) {
   assert(mat2d_d(3, 0) == 14);
 }
 
+void matrix_test_scalar_operations_c2_03(bool print = false) {
+  std::cout << "[TEST]: C2_03. scalar operations on gslicematrix" << std::endl;
+  Matrix<double, 2> mat2d_a(arr_2d, 4, 3);
+  if (print) test_print(mat2d_a, "mat2d = ");
+  mat2d_a.rows(0, 1) += 1;
+  mat2d_a.cols(1, 2) += 2;
+  if (print) test_print(mat2d_a, "mat2d = ");
+  assert(mat2d_a.n_elem() == 12);
+  assert(mat2d_a.n_rows() == 4);
+  assert(mat2d_a.n_cols() == 3);
+  assert(mat2d_a(0, 0) == 2);
+  assert(mat2d_a(1, 0) == 3);
+  assert(mat2d_a(2, 0) == 3);
+  assert(mat2d_a(3, 0) == 4);
+  assert(mat2d_a(0, 1) == 8);
+  assert(mat2d_a(1, 1) == 9);
+  assert(mat2d_a(2, 1) == 9);
+  assert(mat2d_a(3, 1) == 10);
+  assert(mat2d_a(0, 2) == 12);
+  assert(mat2d_a(1, 2) == 13);
+  assert(mat2d_a(2, 2) == 13);
+  assert(mat2d_a(3, 2) == 14);
+
+  const Matrix<double, 2> mat2d_b(arr_2d, 4, 3);
+
+  Matrix<double, 2> mat2d_c = mat2d_b.rows(0, 1) + 1.0;
+  if (print) test_print(mat2d_c, "mat2d_c = ");
+  assert(mat2d_c.n_elem() == 6);
+  assert(mat2d_c.n_rows() == 2);
+  assert(mat2d_c.n_cols() == 3);
+  assert(mat2d_c(0, 0) == 2);
+  assert(mat2d_c(1, 0) == 3);
+  assert(mat2d_c(0, 1) == 6);
+  assert(mat2d_c(1, 1) == 7);
+  assert(mat2d_c(0, 2) == 10);
+  assert(mat2d_c(1, 2) == 11);
+
+  Matrix<double, 2> mat2d_d = 2.0 + mat2d_b.cols(1, 2);
+  if (print) test_print(mat2d_d, "mat2d_d = ");
+  assert(mat2d_d.n_elem() == 8);
+  assert(mat2d_d.n_rows() == 4);
+  assert(mat2d_d.n_cols() == 2);
+  assert(mat2d_d(0, 0) == 7);
+  assert(mat2d_d(1, 0) == 8);
+  assert(mat2d_d(2, 0) == 9);
+  assert(mat2d_d(3, 0) == 10);
+  assert(mat2d_d(0, 1) == 11);
+  assert(mat2d_d(1, 1) == 12);
+  assert(mat2d_d(2, 1) == 13);
+  assert(mat2d_d(3, 1) == 14);
+}
+
 void matrix_test_unary_add_minus_operator(bool print = false) {
   std::cout << "[TEST]: Applies unary add/minus operators to each element\n";
 
@@ -3151,6 +3203,7 @@ int main() {
   print_msg("C2: Testing Scalar Operations");
   matrix_test_scalar_operations_c2_01(print_flag);
   matrix_test_scalar_operations_c2_02(print_flag);
+  matrix_test_scalar_operations_c2_03(print_flag);
 
   matrix_test_unary_add_minus_operator(print_flag);
   matrix_test_addition_assignment_operator(print_flag);
