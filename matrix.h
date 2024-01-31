@@ -1457,99 +1457,69 @@ inline IndirectMatrix<Tp, 3> Matrix<Tp, 3>::operator()(const index_array& ia1,
 
 // Binary arithmetic operations between two Matrix.
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator+(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp += y;
-}
+// clang-format off
+template <class Tp, uword Size> void check_size(const Matrix<Tp, Size>& x, const Matrix<Tp, Size>& y) { matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch"); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator-(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp -= y;
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator+(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() + y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator+(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() + y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator+(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() + y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator+(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() + y.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator*(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp *= y;
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator-(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() - y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator-(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() - y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator-(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() - y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator-(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() - y.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator/(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp /= y;
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator*(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() * y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator*(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() * y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator*(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() * y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator*(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() * y.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator%(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp %= y;
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator/(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() / y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator/(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() / y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator/(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() / y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator/(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() / y.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator&(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp &= y;
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator%(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() % y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator%(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() % y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator%(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() % y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator%(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() % y.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator|(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp |= y;
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator&(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() & y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator&(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() & y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator&(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() & y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator&(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() & y.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator^(const Matrix<Tp, Size>& x,
-                                  const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp ^= y;
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator|(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() | y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator|(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() | y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator|(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() | y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator|(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() | y.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator<<(const Matrix<Tp, Size>& x,
-                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp <<= y;
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator^(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() ^ y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator^(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() ^ y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator^(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() ^ y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator^(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() ^ y.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator>>(const Matrix<Tp, Size>& x,
-                                   const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  Matrix<Tp, Size> tmp(x);
-  return tmp >>= y;
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator<<(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() << y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator<<(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() << y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator<<(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() << y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator<<(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() << y.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline bool_array operator&&(const Matrix<Tp, Size>& x,
-                             const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  return x.elem() && y.elem();
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator>>(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() >> y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator>>(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() >> y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator>>(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() >> y.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator>>(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() >> y.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline bool_array operator||(const Matrix<Tp, Size>& x,
-                             const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  return x.elem() || y.elem();
-}
+template <class Tp, uword Size> inline bool_array operator&&(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() && y.elem(); }
+template <class Tp, uword Size> inline bool_array operator&&(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() && y.elem(); }
+template <class Tp, uword Size> inline bool_array operator&&(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() && y.elem(); }
+template <class Tp, uword Size> inline bool_array operator&&(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() && y.elem(); }
+
+template <class Tp, uword Size> inline bool_array operator||(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() || y.elem(); }
+template <class Tp, uword Size> inline bool_array operator||(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() || y.elem(); }
+template <class Tp, uword Size> inline bool_array operator||(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() || y.elem(); }
+template <class Tp, uword Size> inline bool_array operator||(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() || y.elem(); }
+// clang-format on
 
 // Binary arithmetic operations between an array and a scalar.
 
@@ -1604,149 +1574,93 @@ template <class Tp, uword Size> inline Matrix<Tp, Size> operator>>(const SubMatr
 template <class Tp, uword Size> inline Matrix<Tp, Size> operator>>(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c >> x.elem(), x.size()); }
 template <class Tp, uword Size> inline Matrix<Tp, Size> operator>>(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c >> x.elem(), x.size()); }
 
-template <class Tp, uword Size> inline Matrix<Tp, Size> operator&&(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() && c, x.size()); }
-template <class Tp, uword Size> inline Matrix<Tp, Size> operator&&(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() && c, x.size()); }
-template <class Tp, uword Size> inline Matrix<Tp, Size> operator&&(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c && x.elem(), x.size()); }
-template <class Tp, uword Size> inline Matrix<Tp, Size> operator&&(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c && x.elem(), x.size()); }
+template <class Tp, uword Size> inline bool_array operator&&(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() && c, x.size()); }
+template <class Tp, uword Size> inline bool_array operator&&(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() && c, x.size()); }
+template <class Tp, uword Size> inline bool_array operator&&(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c && x.elem(), x.size()); }
+template <class Tp, uword Size> inline bool_array operator&&(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c && x.elem(), x.size()); }
 
-template <class Tp, uword Size> inline Matrix<Tp, Size> operator||(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() || c, x.size()); }
-template <class Tp, uword Size> inline Matrix<Tp, Size> operator||(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() || c, x.size()); }
-template <class Tp, uword Size> inline Matrix<Tp, Size> operator||(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c || x.elem(), x.size()); }
-template <class Tp, uword Size> inline Matrix<Tp, Size> operator||(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c || x.elem(), x.size()); }
+template <class Tp, uword Size> inline bool_array operator||(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() || c, x.size()); }
+template <class Tp, uword Size> inline bool_array operator||(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() || c, x.size()); }
+template <class Tp, uword Size> inline bool_array operator||(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c || x.elem(), x.size()); }
+template <class Tp, uword Size> inline bool_array operator||(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c || x.elem(), x.size()); }
 // clang-format on
 
 // Binary logical operations between two Matrices.
 
-template <class Tp, uword Size>
-inline bool_array operator==(const Matrix<Tp, Size>& x,
-                             const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  return x.elem() == y.elem();
-}
+// clang-format off
+template <class Tp, uword Size> inline bool_array operator==(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() == y.elem(); }
+template <class Tp, uword Size> inline bool_array operator==(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() == y.elem(); }
+template <class Tp, uword Size> inline bool_array operator==(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() == y.elem(); }
+template <class Tp, uword Size> inline bool_array operator==(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() == y.elem(); }
 
-template <class Tp, uword Size>
-inline bool_array operator!=(const Matrix<Tp, Size>& x,
-                             const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  return x.elem() != y.elem();
-}
+template <class Tp, uword Size> inline bool_array operator!=(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() != y.elem(); }
+template <class Tp, uword Size> inline bool_array operator!=(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() != y.elem(); }
+template <class Tp, uword Size> inline bool_array operator!=(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() != y.elem(); }
+template <class Tp, uword Size> inline bool_array operator!=(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() != y.elem(); }
 
-template <class Tp, uword Size>
-inline bool_array operator<(const Matrix<Tp, Size>& x,
-                            const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  return x.elem() < y.elem();
-}
+template <class Tp, uword Size> inline bool_array operator< (const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() <  y.elem(); }
+template <class Tp, uword Size> inline bool_array operator< (const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() <  y.elem(); }
+template <class Tp, uword Size> inline bool_array operator< (const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() <  y.elem(); }
+template <class Tp, uword Size> inline bool_array operator< (const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() <  y.elem(); }
 
-template <class Tp, uword Size>
-inline bool_array operator<=(const Matrix<Tp, Size>& x,
-                             const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  return x.elem() <= y.elem();
-}
+template <class Tp, uword Size> inline bool_array operator<=(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() <= y.elem(); }
+template <class Tp, uword Size> inline bool_array operator<=(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() <= y.elem(); }
+template <class Tp, uword Size> inline bool_array operator<=(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() <= y.elem(); }
+template <class Tp, uword Size> inline bool_array operator<=(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() <= y.elem(); }
 
-template <class Tp, uword Size>
-inline bool_array operator>(const Matrix<Tp, Size>& x,
-                            const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  return x.elem() > y.elem();
-}
+template <class Tp, uword Size> inline bool_array operator> (const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() >  y.elem(); }
+template <class Tp, uword Size> inline bool_array operator> (const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() >  y.elem(); }
+template <class Tp, uword Size> inline bool_array operator> (const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() >  y.elem(); }
+template <class Tp, uword Size> inline bool_array operator> (const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() >  y.elem(); }
 
-template <class Tp, uword Size>
-inline bool_array operator>=(const Matrix<Tp, Size>& x,
-                             const Matrix<Tp, Size>& y) {
-  matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch");
-  return x.elem() >= y.elem();
-}
+template <class Tp, uword Size> inline bool_array operator>=(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() >= y.elem(); }
+template <class Tp, uword Size> inline bool_array operator>=(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return x.elem() >= y.elem(); }
+template <class Tp, uword Size> inline bool_array operator>=(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() >= y.elem(); }
+template <class Tp, uword Size> inline bool_array operator>=(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { check_size(x, y); return x.elem() >= y.elem(); }
+// clang-format on
 
 // Logical operations between a Matrix and a scalar.
+// clang-format off
+template <class Tp, uword Size> inline bool_array operator==(const    Matrix<Tp, Size>& x, const Tp& c) { return x.elem() == c; }
+template <class Tp, uword Size> inline bool_array operator==(const SubMatrix<Tp, Size>& x, const Tp& c) { return x.elem() == c; }
+template <class Tp, uword Size> inline bool_array operator==(const Tp& c, const    Matrix<Tp, Size>& x) { return c == x.elem(); }
+template <class Tp, uword Size> inline bool_array operator==(const Tp& c, const SubMatrix<Tp, Size>& x) { return c == x.elem(); }
 
-template <class Tp, uword Size>
-inline bool_array operator==(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.elem() == c;
-}
+template <class Tp, uword Size> inline bool_array operator!=(const    Matrix<Tp, Size>& x, const Tp& c) { return x.elem() != c; }
+template <class Tp, uword Size> inline bool_array operator!=(const SubMatrix<Tp, Size>& x, const Tp& c) { return x.elem() != c; }
+template <class Tp, uword Size> inline bool_array operator!=(const Tp& c, const    Matrix<Tp, Size>& x) { return c != x.elem(); }
+template <class Tp, uword Size> inline bool_array operator!=(const Tp& c, const SubMatrix<Tp, Size>& x) { return c != x.elem(); }
 
-template <class Tp, uword Size>
-inline bool_array operator==(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c == x.elem();
-}
+template <class Tp, uword Size> inline bool_array operator< (const    Matrix<Tp, Size>& x, const Tp& c) { return x.elem() < c; }
+template <class Tp, uword Size> inline bool_array operator< (const SubMatrix<Tp, Size>& x, const Tp& c) { return x.elem() < c; }
+template <class Tp, uword Size> inline bool_array operator< (const Tp& c, const    Matrix<Tp, Size>& x) { return c < x.elem(); }
+template <class Tp, uword Size> inline bool_array operator< (const Tp& c, const SubMatrix<Tp, Size>& x) { return c < x.elem(); }
 
-template <class Tp, uword Size>
-inline bool_array operator!=(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.elem() != c;
-}
+template <class Tp, uword Size> inline bool_array operator<=(const    Matrix<Tp, Size>& x, const Tp& c) { return x.elem() <= c; }
+template <class Tp, uword Size> inline bool_array operator<=(const SubMatrix<Tp, Size>& x, const Tp& c) { return x.elem() <= c; }
+template <class Tp, uword Size> inline bool_array operator<=(const Tp& c, const    Matrix<Tp, Size>& x) { return c <= x.elem(); }
+template <class Tp, uword Size> inline bool_array operator<=(const Tp& c, const SubMatrix<Tp, Size>& x) { return c <= x.elem(); }
 
-template <class Tp, uword Size>
-inline bool_array operator!=(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c != x.elem();
-}
+template <class Tp, uword Size> inline bool_array operator> (const    Matrix<Tp, Size>& x, const Tp& c) { return x.elem() > c; }
+template <class Tp, uword Size> inline bool_array operator> (const SubMatrix<Tp, Size>& x, const Tp& c) { return x.elem() > c; }
+template <class Tp, uword Size> inline bool_array operator> (const Tp& c, const    Matrix<Tp, Size>& x) { return c > x.elem(); }
+template <class Tp, uword Size> inline bool_array operator> (const Tp& c, const SubMatrix<Tp, Size>& x) { return c > x.elem(); }
 
-template <class Tp, uword Size>
-inline bool_array operator<(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.elem() < c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator<(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c < x.elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator<=(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.elem() <= c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator<=(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c <= x.elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator>(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.elem() > c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator>(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c > x.elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator>=(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.elem() >= c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator>=(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c >= x.elem();
-}
+template <class Tp, uword Size> inline bool_array operator>=(const    Matrix<Tp, Size>& x, const Tp& c) { return x.elem() >= c; }
+template <class Tp, uword Size> inline bool_array operator>=(const SubMatrix<Tp, Size>& x, const Tp& c) { return x.elem() >= c; }
+template <class Tp, uword Size> inline bool_array operator>=(const Tp& c, const    Matrix<Tp, Size>& x) { return c >= x.elem(); }
+template <class Tp, uword Size> inline bool_array operator>=(const Tp& c, const SubMatrix<Tp, Size>& x) { return c >= x.elem(); }
+// clang-format on
 
 // Matrix "transcendentals" (the list includes abs and sqrt, which,
 // of course, are not transcendental).
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> abs(const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(std::abs(x.elem()), x.size());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> exp(const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(std::exp(x.elem()), x.size());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> log(const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(std::log(x.elem()), x.size());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> log10(const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(std::log10(x.elem()), x.size());
-  return tmp;
-}
+// clang-format off
+template <class Tp, uword Size> inline Matrix<Tp, Size> abs(const Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::abs(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> exp(const Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::exp(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> log(const Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::log(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> log10(const Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::log10(x.elem()), x.size()); }
+// clang-format on
 
 template <class Tp>
 Tp dot(const Matrix<Tp, 1>& x, const Matrix<Tp, 1>& y) {
