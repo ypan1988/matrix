@@ -1553,177 +1553,67 @@ inline bool_array operator||(const Matrix<Tp, Size>& x,
 
 // Binary arithmetic operations between an array and a scalar.
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator+(const Matrix<Tp, Size>& x, const Tp& c) {
-  return Matrix<Tp, Size>(x.elem() + c, x.size());
-}
+// clang-format off
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator+(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() + c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator+(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() + c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator+(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c + x.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator+(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c + x.elem(), x.size());}
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator+(const SubMatrix<Tp, Size>& x, const Tp& c) {
-  return Matrix<Tp, Size>(x.elem() + c, x.size());
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator-(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() - c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator-(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() - c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator-(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c - x.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator-(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c - x.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator+(const Tp& c, const Matrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c + x.elem(), x.size());
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator*(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() * c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator*(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() * c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator*(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c * x.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator*(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c * x.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator+(const Tp& c, const SubMatrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c + x.elem(), x.size());
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator/(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() / c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator/(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() / c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator/(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c / x.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator/(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c / x.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator-(const Matrix<Tp, Size>& x, const Tp& c) {
-  return Matrix<Tp, Size>(x.elem() - c, x.size());
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator%(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() % c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator%(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() % c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator%(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c % x.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator%(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c % x.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator-(const SubMatrix<Tp, Size>& x, const Tp& c) {
-  return Matrix<Tp, Size>(x.elem() - c, x.size());
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator&(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() & c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator&(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() & c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator&(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c & x.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator&(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c & x.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator-(const Tp& c, const Matrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c - x.elem(), x.size());
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator|(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() | c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator|(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() | c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator|(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c | x.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator|(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c | x.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator-(const Tp& c, const SubMatrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c - x.elem(), x.size());
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator^(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() ^ c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator^(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() ^ c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator^(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c ^ x.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator^(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c ^ x.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator*(const Matrix<Tp, Size>& x, const Tp& c) {
-  return Matrix<Tp, Size>(x.elem() * c, x.size());
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator<<(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() << c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator<<(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() << c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator<<(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c << x.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator<<(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c << x.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator*(const SubMatrix<Tp, Size>& x, const Tp& c) {
-  return Matrix<Tp, Size>(x.elem() * c, x.size());
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator>>(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() >> c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator>>(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() >> c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator>>(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c >> x.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator>>(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c >> x.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator*(const Tp& c, const Matrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c * x.elem(), x.size());
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator&&(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() && c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator&&(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() && c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator&&(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c && x.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator&&(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c && x.elem(), x.size()); }
 
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator*(const Tp& c, const SubMatrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c * x.elem(), x.size());
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator/(const Matrix<Tp, Size>& x, const Tp& c) {
-  return Matrix<Tp, Size>(x.elem() / c, x.size());
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator/(const SubMatrix<Tp, Size>& x, const Tp& c) {
-  return Matrix<Tp, Size>(x.elem() / c, x.size());
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator/(const Tp& c, const Matrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c / x.elem(), x.size());
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator/(const Tp& c, const SubMatrix<Tp, Size>& x) {
-  return Matrix<Tp, Size>(c / x.elem(), x.size());
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator%(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp %= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator%(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c % x.elem(), x.size());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator&(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp &= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator&(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c & x.elem(), x.size());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator|(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp |= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator|(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c | x.elem(), x.size());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator^(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp ^= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator^(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c ^ x.elem(), x.size());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator<<(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp <<= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator<<(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c << x.elem(), x.size());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator>>(const Matrix<Tp, Size>& x, const Tp& c) {
-  Matrix<Tp, Size> tmp(x);
-  return tmp >>= c;
-}
-
-template <class Tp, uword Size>
-inline Matrix<Tp, Size> operator>>(const Tp& c, const Matrix<Tp, Size>& x) {
-  Matrix<Tp, Size> tmp(c >> x.elem(), x.size());
-  return tmp;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator&&(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.elem() && c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator&&(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c && x.elem();
-}
-
-template <class Tp, uword Size>
-inline bool_array operator||(const Matrix<Tp, Size>& x, const Tp& c) {
-  return x.elem() || c;
-}
-
-template <class Tp, uword Size>
-inline bool_array operator||(const Tp& c, const Matrix<Tp, Size>& x) {
-  return c || x.elem();
-}
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator||(const    Matrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() || c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator||(const SubMatrix<Tp, Size>& x, const Tp& c) { return Matrix<Tp, Size>(x.elem() || c, x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator||(const Tp& c, const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(c || x.elem(), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> operator||(const Tp& c, const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(c || x.elem(), x.size()); }
+// clang-format on
 
 // Binary logical operations between two Matrices.
 
