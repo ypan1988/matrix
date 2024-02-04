@@ -1656,10 +1656,47 @@ template <class Tp, uword Size> inline bool_array operator>=(const Tp& c, const 
 // of course, are not transcendental).
 
 // clang-format off
-template <class Tp, uword Size> inline Matrix<Tp, Size> abs(const Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::abs(x.elem()), x.size()); }
-template <class Tp, uword Size> inline Matrix<Tp, Size> exp(const Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::exp(x.elem()), x.size()); }
-template <class Tp, uword Size> inline Matrix<Tp, Size> log(const Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::log(x.elem()), x.size()); }
-template <class Tp, uword Size> inline Matrix<Tp, Size> log10(const Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::log10(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> abs(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::abs(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> abs(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::abs(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> exp(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::exp(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> exp(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::exp(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> log(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::log(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> log(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::log(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> log10(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::log10(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> log10(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::log10(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> sqrt(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::sqrt(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> sqrt(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::sqrt(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> sin(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::sin(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> sin(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::sin(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> cos(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::cos(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> cos(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::cos(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> tan(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::tan(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> tan(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::tan(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> asin(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::asin(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> asin(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::asin(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> acos(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::acos(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> acos(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::acos(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> atan(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::atan(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> atan(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::atan(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> sinh(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::sinh(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> sinh(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::sinh(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> cosh(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::cosh(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> cosh(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::cosh(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> tanh(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::tanh(x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> tanh(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::tanh(x.elem()), x.size()); }
 // clang-format on
 
 template <class Tp>
