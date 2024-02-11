@@ -1458,7 +1458,10 @@ inline IndirectMatrix<Tp, 3> Matrix<Tp, 3>::operator()(const index_array& ia1,
 // Binary arithmetic operations between two Matrix.
 
 // clang-format off
-template <class Tp, uword Size> void check_size(const Matrix<Tp, Size>& x, const Matrix<Tp, Size>& y) { matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch"); }
+template <class Tp, uword Size> void check_size(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch"); }
+template <class Tp, uword Size> void check_size(const    Matrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch"); }
+template <class Tp, uword Size> void check_size(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch"); }
+template <class Tp, uword Size> void check_size(const SubMatrix<Tp, Size>& x, const SubMatrix<Tp, Size>& y) { matrix_assert(all_equal(x.size(), y.size()), "dimension mismatch"); }
 
 template <class Tp, uword Size> inline Matrix<Tp, Size> operator+(const    Matrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() + y.elem(), x.size()); }
 template <class Tp, uword Size> inline Matrix<Tp, Size> operator+(const SubMatrix<Tp, Size>& x, const    Matrix<Tp, Size>& y) { check_size(x, y); return Matrix<Tp, Size>(x.elem() + y.elem(), x.size()); }
@@ -1668,6 +1671,15 @@ template <class Tp, uword Size> inline Matrix<Tp, Size> log(const SubMatrix<Tp, 
 template <class Tp, uword Size> inline Matrix<Tp, Size> log10(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::log10(x.elem()), x.size()); }
 template <class Tp, uword Size> inline Matrix<Tp, Size> log10(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::log10(x.elem()), x.size()); }
 
+template <class Tp, uword Size> inline Matrix<Tp, Size> pow(const    Matrix<Tp, Size>&  x, const    Matrix<Tp, Size>&  y) { check_size(x, y); return Matrix<Tp, Size>(std::pow( x.elem(),  y.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> pow(const SubMatrix<Tp, Size>&  x, const    Matrix<Tp, Size>&  y) { check_size(x, y); return Matrix<Tp, Size>(std::pow( x.elem(),  y.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> pow(const    Matrix<Tp, Size>&  x, const SubMatrix<Tp, Size>&  y) { check_size(x, y); return Matrix<Tp, Size>(std::pow( x.elem(),  y.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> pow(const SubMatrix<Tp, Size>&  x, const SubMatrix<Tp, Size>&  y) { check_size(x, y); return Matrix<Tp, Size>(std::pow( x.elem(),  y.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> pow(const    Matrix<Tp, Size>&  x, const           Tp       & vy) {                   return Matrix<Tp, Size>(std::pow( x.elem(), vy       ), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> pow(const SubMatrix<Tp, Size>&  x, const           Tp       & vy) {                   return Matrix<Tp, Size>(std::pow( x.elem(), vy       ), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> pow(const           Tp       & vx, const    Matrix<Tp, Size>&  y) {                   return Matrix<Tp, Size>(std::pow(vx       ,  y.elem()), y.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> pow(const           Tp       & vx, const SubMatrix<Tp, Size>&  y) {                   return Matrix<Tp, Size>(std::pow(vx       ,  y.elem()), y.size()); }
+
 template <class Tp, uword Size> inline Matrix<Tp, Size> sqrt(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::sqrt(x.elem()), x.size()); }
 template <class Tp, uword Size> inline Matrix<Tp, Size> sqrt(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::sqrt(x.elem()), x.size()); }
 
@@ -1688,6 +1700,15 @@ template <class Tp, uword Size> inline Matrix<Tp, Size> acos(const SubMatrix<Tp,
 
 template <class Tp, uword Size> inline Matrix<Tp, Size> atan(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::atan(x.elem()), x.size()); }
 template <class Tp, uword Size> inline Matrix<Tp, Size> atan(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::atan(x.elem()), x.size()); }
+
+template <class Tp, uword Size> inline Matrix<Tp, Size> atan2(const    Matrix<Tp, Size>&  y, const    Matrix<Tp, Size>&  x) { check_size(x, y); return Matrix<Tp, Size>(std::atan2( y.elem(),  x.elem()), y.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> atan2(const SubMatrix<Tp, Size>&  y, const    Matrix<Tp, Size>&  x) { check_size(x, y); return Matrix<Tp, Size>(std::atan2( y.elem(),  x.elem()), y.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> atan2(const    Matrix<Tp, Size>&  y, const SubMatrix<Tp, Size>&  x) { check_size(x, y); return Matrix<Tp, Size>(std::atan2( y.elem(),  x.elem()), y.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> atan2(const SubMatrix<Tp, Size>&  y, const SubMatrix<Tp, Size>&  x) { check_size(x, y); return Matrix<Tp, Size>(std::atan2( y.elem(),  x.elem()), y.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> atan2(const    Matrix<Tp, Size>&  y, const           Tp       & vx) {                   return Matrix<Tp, Size>(std::atan2( y.elem(), vx       ), y.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> atan2(const SubMatrix<Tp, Size>&  y, const           Tp       & vx) {                   return Matrix<Tp, Size>(std::atan2( y.elem(), vx       ), y.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> atan2(const           Tp       & vy, const    Matrix<Tp, Size>&  x) {                   return Matrix<Tp, Size>(std::atan2(vy       ,  x.elem()), x.size()); }
+template <class Tp, uword Size> inline Matrix<Tp, Size> atan2(const           Tp       & vy, const SubMatrix<Tp, Size>&  x) {                   return Matrix<Tp, Size>(std::atan2(vy       ,  x.elem()), x.size()); }
 
 template <class Tp, uword Size> inline Matrix<Tp, Size> sinh(const    Matrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::sinh(x.elem()), x.size()); }
 template <class Tp, uword Size> inline Matrix<Tp, Size> sinh(const SubMatrix<Tp, Size>& x) { return Matrix<Tp, Size>(std::sinh(x.elem()), x.size()); }
