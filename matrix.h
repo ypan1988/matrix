@@ -30,7 +30,10 @@
 #include <initializer_list>
 #endif
 
+#define MATRIX_LIB_USE_COLUMN_MAJOR_ORDER
+
 #if defined(MATRIX_LIB_USE_R)
+#define MATRIX_LIB_USE_COLUMN_MAJOR_ORDER
 #include <R_ext/BLAS.h>
 #include <RcppCommon.h>
 #else
@@ -122,6 +125,53 @@ bool all_equal(const std::valarray<Tp>& va1, const std::valarray<Tp>& va2) {
 }
 
 //-----------------------------------------------------------------------------
+
+template <uword Size>
+struct MatrixDesc {
+  index_array M_dims;
+  index_array M_strides;
+};
+
+template <>
+struct MatrixDesc<1> {
+  MatrixDesc(uword n1) : M_dims(1), M_n_elem(n1) { M_dims[0] = n1; }
+  uword sub2ind(uword i) const { return i; }
+  index_array M_dims;
+  uword M_n_elem;
+};
+
+template <>
+struct MatrixDesc<2> {
+  MatrixDesc(uword n1, uword n2) : M_dims(2), M_n_elem(n1 * n2) {
+    M_dims[0] = n1, M_dims[1] = n2;
+  }
+#if defined(MATRIX_LIB_USE_COLUMN_MAJOR_ORDER)
+  uword sub2ind(uword i, uword j) const { return i + j * M_dims[0]; }
+#else
+  uword sub2ind(uword i, uword j) const { return i * M_dims[1] + j; }
+#endif
+  index_array M_dims;
+  uword M_n_elem;
+};
+
+template <>
+struct MatrixDesc<3> {
+  MatrixDesc(uword n1, uword n2, uword n3)
+      : M_dims(3), M_n_elem(n1 * n2 * n3), M_nrxnc(n1 * n2) {
+    M_dims[0] = n1, M_dims[1] = n2, M_dims[2] = n3;
+  }
+#if defined(MATRIX_LIB_USE_COLUMN_MAJOR_ORDER)
+  uword sub2ind(uword i, uword j, uword k) const {
+    return i + j * M_dims[0] + k * M_nrxnc;
+  }
+#else
+  uword sub2ind(uword i, uword j, uword k) const {
+    return i * M_nrxnc + j * M_dims[1] + k;
+  }
+#endif
+  index_array M_dims;
+  uword M_n_elem, M_nrxnc;
+};
 
 // The general Matrix template is simply a prop for its specializations:
 template <class Tp = double, uword Size = 1>
